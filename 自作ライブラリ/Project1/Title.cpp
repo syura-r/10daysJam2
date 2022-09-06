@@ -42,6 +42,7 @@ void Title::Initialize()
 	easingTimer_zoom = 0;
 	isSceneChange = false;
 
+	Input::Update();
 }
 
 void Title::Update()

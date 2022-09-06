@@ -36,7 +36,7 @@ private:
 	ObjectManager* objectManager = nullptr;	
 	std::unique_ptr<InGameCamera> camera;
 	
-	//Pause* pause = nullptr;
+	Pause* pause = nullptr;
 	TimeLimit* timeLimit = nullptr;
 	int gameEndCount;
 	StockCansBar* cansBar = nullptr;

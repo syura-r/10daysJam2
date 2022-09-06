@@ -49,7 +49,7 @@ Play::Play()
 	limit30Time = gameTime - 30;
 	limit10Time = gameTime - 10;
 
-	//pause = new Pause();
+	pause = new Pause();
 	timeLimit = new TimeLimit();
 	cansBar = new StockCansBar();
 
@@ -60,7 +60,7 @@ Play::Play()
 Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
-	//PtrDelete(pause);
+	PtrDelete(pause);
 	PtrDelete(timeLimit);
 	PtrDelete(cansBar);
 	ParticleManager::GetInstance()->ClearDeadEffect();
@@ -82,7 +82,7 @@ void Play::Initialize()
 	camera->Initialize();
 
 	isEnd = false;
-	//pause->Initialize();
+	pause->Initialize();
 	timeLimit->Initialize();
 	cansBar->Initialize(100);//缶の初期数を渡す
 	gameEndCount = 0;
@@ -106,35 +106,35 @@ void Play::Initialize()
 void Play::Update()
 {
 
-	//pause->Update();
+	pause->Update();
 	//ゲームにもどる
-	//if (pause->GetToGame())
-	//{
-	//	return;
-	//}
-	////やり直す
-	//if (pause->GetRestart())
-	//{
-	//	Audio::StopBGM(nowPlayingBGMName);
-	//	Initialize();
-	//	return;
-	//}
+	if (pause->GetToGame())
+	{
+		return;
+	}
+	//やり直す
+	if (pause->GetRestart())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Initialize();
+		return;
+	}
 	//タイトルにもどる
-	//if (pause->GetToTitle())
-	//{
-	//	Audio::StopBGM(nowPlayingBGMName);
-	//	Audio::AllStopSE();
-	//	next = Title;
-	//	ShutDown();
-	//	return;
-	//}
-	////ポーズ画面を開いているとき
-	//if (pause->GetActivePause())
-	//{
-	//	//BGMの音量変更
-	//	Audio::VolumeChangeBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
-	//	return;
-	//}
+	if (pause->GetToTitle())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Audio::AllStopSE();
+		next = Title;
+		ShutDown();
+		return;
+	}
+	//ポーズ画面を開いているとき
+	if (pause->GetActivePause())
+	{
+		//BGMの音量変更
+		Audio::VolumeChangeBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
+		return;
+	}
 
 
 #ifdef _DEBUG
@@ -204,6 +204,6 @@ void Play::PostDraw()
 	{
 		DirectXLib::GetInstance()->DepthClear();
 	}
-	//pause->Draw();
+	pause->Draw();
 }
 

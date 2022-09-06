@@ -21,7 +21,6 @@ public:
 private:
 	//選択肢を選ぶ処理
 	void Select();
-	void SelectSub_Sound();
 	//決定ボタンを押した後の処理
 	void Decision();
 
@@ -36,24 +35,12 @@ private:
 		ToGame = 0,
 		Restart = 1,
 		ToTitle = 2,
-		Sound = 3,
+		BGM = 3,
+		SE = 4,
 	};
 	SelectState selectState;
 	//選択肢の個数
-	const int selectMax = 4;
-
-	enum SelectState_Sound
-	{
-		BGM = 0,
-		SE = 1,
-	};
-	SelectState_Sound selectState_sound;
-	//選択肢の個数
-	const int selectMax_sound = 2;
-
-	//X座標のずらす基準
-	static const int positionStepMax = 4;
-	static float positions_X[positionStepMax];
+	const int selectMax = 5;
 
 	//ゲーム画面を暗く
 	Sprite* sp_back = nullptr;
@@ -74,15 +61,9 @@ private:
 		void Update();
 		void Draw();
 
-		//動き出す前準備
-		void PreMoveSetting();
-
 		Sprite* sprite = nullptr;
 		std::string texName = "";
 		Vector2 pos = {};
-		Vector2 prevPos = {};
-		int step = 0;
-		int easeTime = 0;
 	};
 
 
@@ -99,22 +80,20 @@ private:
 	bool flag_toTitle = false;
 
 	//音量設定
-	SelectSprite* sound = nullptr;
-	bool flag_sound = false;//BGMとSEの設定を展開する
-	//BGM
+	void VolumeChange();
+
+	//音量設定BGM
 	SelectSprite* bgm = nullptr;
 	Sprite* bar_bgm;
 	Vector2 barPositionLeft_bgm;
 	const Vector2 bar_scale = { 256.0f,5.0f };
 	Sprite* circle_bgm;
 	Vector2 circlePosition_bgm;
-	//SE
+
+	//音量設定SE
 	SelectSprite* se = nullptr;
 	Sprite* bar_se;
 	Vector2 barPositionLeft_se;
 	Sprite* circle_se;
 	Vector2 circlePosition_se;
-
-	//操作説明
-	Sprite* config_sp = nullptr;
 };
