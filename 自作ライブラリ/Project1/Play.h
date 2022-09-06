@@ -36,7 +36,7 @@ private:
 	std::unique_ptr<InGameCamera> camera;
 	
 	//Pause* pause = nullptr;
-	//TimeLimit* timeLimit = nullptr;
+	TimeLimit* timeLimit = nullptr;
 	int gameEndCount;
 
 	std::string nowPlayingBGMName;

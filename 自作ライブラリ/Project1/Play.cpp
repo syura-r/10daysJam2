@@ -50,7 +50,7 @@ Play::Play()
 	limit10Time = gameTime - 10;
 
 	//pause = new Pause();
-	//timeLimit = new TimeLimit(gameTime * 60);//§ŒÀŽžŠÔ‚ÌÝ’è‚Í‚±‚±
+	timeLimit = new TimeLimit();
 
 	ParticleEmitter::SetObjectManager(objectManager);
 }
@@ -60,7 +60,7 @@ Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
 	//PtrDelete(pause);
-	//PtrDelete(timeLimit);
+	PtrDelete(timeLimit);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
@@ -81,7 +81,7 @@ void Play::Initialize()
 
 	isEnd = false;
 	//pause->Initialize();
-	//timeLimit->Initialize();
+	timeLimit->Initialize();
 	gameEndCount = 0;
 
 	//nowPlayingBGMName = "BGM_Play";
@@ -144,7 +144,7 @@ void Play::Update()
 	}
 #endif
 	
-	//timeLimit->Update();
+	timeLimit->Update();
 	//if (timeLimit->GetLimit())
 	//{
 	//	//gameEndCount++;
@@ -170,7 +170,7 @@ void Play::Update()
 
 void Play::PreDraw()
 {
-	//timeLimit->Draw();
+	timeLimit->Draw();
 
 	objectManager->DrawReady();
 #ifdef _DEBUG
