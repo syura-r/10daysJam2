@@ -46,6 +46,15 @@ void Player::Initialize()
 	rotation = 0;
 	prePos = position;
 	direction = { 1,0,0 };
+	jump = false;
+	damage = false;
+	knockBack = false;
+	knockBackCounter = 0;
+	damageCounter = 0;
+	changeOnGroundScale = false;
+	changeJumpScale = false;
+	changeScaleCounter = 0;
+
 }
 
 void Player::Update()
@@ -53,23 +62,26 @@ void Player::Update()
 	//落下処理
 	if (!onGround)
 	{
-		if (Input::DownKey(DIK_D))
+		//ノックバック時は移動できない
+		if (!knockBack)
 		{
-			position.x += 0.1f;
-			direction = { 1,0,0 };
+			if (Input::DownKey(DIK_D))
+			{
+				position.x += 0.1f;
+				direction = { 1,0,0 };
+			}
+			if (Input::DownKey(DIK_A))
+			{
+				position.x -= 0.1f;
+				direction = { -1,0,0 };
+			}
 		}
-		if (Input::DownKey(DIK_A))
-		{
-			position.x -= 0.1f;
-			direction = { -1,0,0 };
-		}
-
-			//加速
-			fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
-			//移動
-			position.x += fallV.m128_f32[0];
-			position.y += fallV.m128_f32[1];
-			position.z += fallV.m128_f32[2];
+		//加速
+		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
+		//移動
+		position.x += fallV.m128_f32[0];
+		position.y += fallV.m128_f32[1];
+		position.z += fallV.m128_f32[2];
 	}
 	//ジャンプ動作
 	else if (!changeOnGroundScale && !jump)
@@ -87,7 +99,9 @@ void Player::Update()
 		//ParticleEmitter::CreateShock(position);
 	}
 	JumpScaleCluc();
+	KnockBack();
 	CheckHit();
+	Damage();
 	Object::Update();
 }
 void Player::CheckHit()
@@ -217,6 +231,38 @@ void Player::CheckHit()
 		fallV.m128_f32[1] = 0;
 	Object::Update();
 
+	
+	if (damage)
+		return;
+	//敵との交差を全検索
+	CollisionManager::GetInstance()->QueryBox(*boxCollider, &callback, COLLISION_ATTR_ENEMYS, (unsigned short)0xffffffff,collider);
+	Vector3 rejectVec2 = callback.move;
+	rejectVec2.Normalize();
+	if (rejectVec2.Length() <= 0)
+		return;
+	//上から当たった場合
+	if(rejectVec2.y>abs(rejectVec2.x))
+	{
+		color = { 0,1,1,1 };
+	}
+	//横から当たった場合
+	else
+	{
+		damage = true;
+		knockBack = true;
+		if (rejectVec2.x > 0)
+			knockBackVel = MaxNockBackVel;
+		else
+			knockBackVel = -MaxNockBackVel;
+		jump = true;
+		onGround = false;
+		//ジャンプ時上向き初速
+		jumpVYFist = 0.1f;
+		//下向き加速
+		fallAcc = -0.02f * val;
+		fallV = { 0,jumpVYFist,0,0 };
+		color = { 1,1,0,1 };
+	}
 }
 
 void Player::JumpScaleCluc()
@@ -250,7 +296,7 @@ void Player::JumpScaleCluc()
 	if (!changeJumpScale)
 		return;
 	changeScaleCounter++;
-	const int EaingTime = 6;
+	const int EaingTime = 10;
 	if (changeScaleCounter <= EaingTime)
 	{
 		scale.x = Easing::EaseOutExpo(1, 0.7f, EaingTime, changeScaleCounter);
@@ -272,6 +318,43 @@ void Player::JumpScaleCluc()
 		return;
 	}
 
+}
+
+void Player::KnockBack()
+{
+	if (!knockBack)
+		return;
+	position.x += knockBackVel;
+	const float knockBackAccel = MaxNockBackVel / 60.0f;
+	knockBackVel += knockBackVel<0 ? knockBackAccel : -knockBackAccel;
+	knockBackCounter++;
+	if (knockBackCounter >= 60)
+	{
+		knockBack = false;
+		knockBackCounter = 0;
+	}
+}
+
+void Player::Damage()
+{
+	if (!damage)
+		return;
+	damageCounter++;
+
+	if (damageCounter % 20 == 0)
+	{
+		color = { 1,1,1,0 };
+	}
+	else if (damageCounter % 10 == 0)
+	{
+		color = { 1,1,1,1 };
+	}
+	if (damageCounter >= MaxDamageTime)
+	{
+		damage = false;
+		damageCounter = 0;
+		color = { 1,1,1,1 };
+	}
 }
 
 void Player::Draw()

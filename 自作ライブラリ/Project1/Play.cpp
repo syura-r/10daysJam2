@@ -22,6 +22,7 @@
 
 #include"AreaEffect.h"
 #include"Sprite3D.h"
+#include "BadGuy.h"
 Play::Play()
 {
 	next = Ending;
@@ -77,12 +78,13 @@ void Play::Initialize()
 	Player* player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
 	camera->SetFocusObject(player);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
 		objectManager->Add(mapBox);
 	}
-
+	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
+	objectManager->Add(badGuy);
 
 	camera->Initialize();
 

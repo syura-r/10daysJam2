@@ -97,6 +97,8 @@ void Game::RoadAsset()
 	case 4:
 		//FBXファイルの読み込み
 		FBXManager::LoadModelFile("player", "Box", false);
+		FBXManager::LoadModelFile("badGuy", "Box", false);
+
 
 		//WAVファイルの読み込み
 		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");

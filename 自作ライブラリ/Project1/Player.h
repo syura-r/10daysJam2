@@ -26,6 +26,8 @@ public:
 private:
 	void CheckHit();
 	void JumpScaleCluc();
+	void KnockBack();
+	void Damage();
 	//ジャンプ補正値の最小値
 	const float MinVal = 0.4f;
 	//ジャンプ補正値の最大値
@@ -54,7 +56,17 @@ private:
 	//ジャンプフラグ
 	bool jump = false;
 
-	//接地、ジャンプ前のスケール変化
+	//ダメージフラグ
+	bool damage = false;
+	//ノックバックの際に方向入力を無効にするフラグ
+	const float MaxNockBackVel = 0.06f;
+	bool knockBack = false;
+	float knockBackVel = MaxNockBackVel;
+	int knockBackCounter;
+	int damageCounter;
+	//無敵時間
+	const int MaxDamageTime = 120;
+	//着地、ジャンプ前のスケール変化
 	bool changeOnGroundScale = false;
 	//ジャンプ開始のスケール変化
 	bool changeJumpScale = false;
