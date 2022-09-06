@@ -5,7 +5,7 @@ Camera::Camera(const Vector2& windowSize)
 	float aspectRatio = (float)windowSize.x / windowSize.y;
 
 	eye = XMFLOAT3(0, 0, -10);
-	target = XMFLOAT3(0, 0, 0);
+	target = XMFLOAT3(0, -3, 0);
 	up = XMFLOAT3(0, 1, 0);
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 	matProjection = XMMatrixPerspectiveFovLH(

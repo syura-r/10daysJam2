@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Input.h"
+class Object;
 class InGameCamera :
     public Camera
 {
@@ -10,7 +11,10 @@ public:
 	void Initialize();
 	void Update();
 	void RotateYaxis(Vector2 arg_inputVec);
-
+	void SetFocusObject(Object* arg_object)
+	{
+		focusObj = arg_object;
+	}
 	void SetShake(const int arg_shakeTime, const float arg_shakePower);
 
 	bool IsShake() { return shakeFlag; }
@@ -66,7 +70,7 @@ private:
 	float shakePower = 0;
 	Vector3 shakeStartEyePos;
 	Vector3 shakeStartTargetPos;
-
+	Object* focusObj = nullptr;
 	void Shake();
 
 	int GetIntRand(int minValue, int maxValue);

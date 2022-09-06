@@ -25,16 +25,16 @@ MapBox::MapBox( const Vector3& position, const Vector3& scale, const Vector3& ro
 void MapBox::Draw()
 {
 #ifdef _DEBUG
-	if (DrawMode::GetDrawImGui())
-	{
-		float rotate[3] = {};
-		memcpy(rotate, &rotation, sizeof(float) * 3);
-		ImGui::Begin("Box");
-		ImGui::SliderFloat3("rotateXYZ", rotate, 0, 360);
-		ImGui::End();
-		memcpy(&rotation, rotate, sizeof(float) * 3);
-		Update();
-	}
+	//if (DrawMode::GetDrawImGui())
+	//{
+	//	float rotate[3] = {};
+	//	memcpy(rotate, &rotation, sizeof(float) * 3);
+	//	ImGui::Begin("Box");
+	//	ImGui::SliderFloat3("rotateXYZ", rotate, 0, 360);
+	//	ImGui::End();
+	//	memcpy(&rotation, rotate, sizeof(float) * 3);
+	//	Update();
+	//}
 #endif
 	
 	Object::Draw();

@@ -28,15 +28,19 @@ void InGameCamera::Initialize()
 	//{
 	//	SetTarget(fields[0]->GetPosition());
 	//}
-	SetPhi(DirectX::XMConvertToRadians(-90));
-	SetTheta(120);
-	SetDistance(70);
+	//SetPhi(DirectX::XMConvertToRadians(-90));
+	//SetTheta(120);
+	SetDistance(10);
 	Update();
 }
 
 void InGameCamera::Update()
 {
 	dirty = true;
+	if (focusObj != nullptr)
+	{
+		target.x = focusObj->GetPosition().x;
+	}
 
 	if (dirty || viewDirty) 
 	{

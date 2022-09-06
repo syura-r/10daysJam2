@@ -74,9 +74,16 @@ void Play::Initialize()
 	objectManager->Reset();
 
 
-	Player* player = new Player(Vector3(0, -5, -10));
+	Player* player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
-	
+	camera->SetFocusObject(player);
+	for (int i = 0; i < 10; i++)
+	{
+		MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
+		objectManager->Add(mapBox);
+	}
+
+
 	camera->Initialize();
 
 	isEnd = false;
