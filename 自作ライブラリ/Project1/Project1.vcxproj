@@ -233,6 +233,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprite3D.cpp" />
+    <ClCompile Include="StockCansBar.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeLimit.cpp" />
@@ -329,6 +330,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprite3D.h" />
+    <ClInclude Include="StockCansBar.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeLimit.h" />

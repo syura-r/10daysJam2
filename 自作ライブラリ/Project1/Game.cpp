@@ -84,6 +84,8 @@ void Game::RoadAsset()
 		Texture::LoadTexture("wind", "wind.png");
 
 		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
+		Texture::LoadTexture("can", "stockCansBar/can.png");
+
 		break; 
 	case 2:
 		//Objƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ

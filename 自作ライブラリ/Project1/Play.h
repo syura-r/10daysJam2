@@ -12,6 +12,7 @@
 #include "Sprite.h"
 #include "Pause.h"
 #include "TimeLimit.h"
+#include "StockCansBar.h"
 
 class Play :public Scene
 {
@@ -38,6 +39,7 @@ private:
 	//Pause* pause = nullptr;
 	TimeLimit* timeLimit = nullptr;
 	int gameEndCount;
+	StockCansBar* cansBar = nullptr;
 
 	std::string nowPlayingBGMName;
 	bool limit30trigger;

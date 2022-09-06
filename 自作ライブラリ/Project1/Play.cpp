@@ -51,6 +51,7 @@ Play::Play()
 
 	//pause = new Pause();
 	timeLimit = new TimeLimit();
+	cansBar = new StockCansBar();
 
 	ParticleEmitter::SetObjectManager(objectManager);
 }
@@ -61,6 +62,7 @@ Play::~Play()
 	LevelEditor::GetInstance()->Clear();
 	//PtrDelete(pause);
 	PtrDelete(timeLimit);
+	PtrDelete(cansBar);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
@@ -82,6 +84,7 @@ void Play::Initialize()
 	isEnd = false;
 	//pause->Initialize();
 	timeLimit->Initialize();
+	cansBar->Initialize(100);//ŠÊ‚Ì‰Šú”‚ð“n‚·
 	gameEndCount = 0;
 
 	//nowPlayingBGMName = "BGM_Play";
@@ -145,6 +148,7 @@ void Play::Update()
 #endif
 	
 	timeLimit->Update();
+	cansBar->Update(30);//ŠÊ‚ÌŒ»Ý”‚ð“n‚·
 	//if (timeLimit->GetLimit())
 	//{
 	//	//gameEndCount++;
@@ -171,6 +175,7 @@ void Play::Update()
 void Play::PreDraw()
 {
 	timeLimit->Draw();
+	cansBar->Draw();
 
 	objectManager->DrawReady();
 #ifdef _DEBUG
