@@ -5,8 +5,9 @@
 #include"CollisionAttribute.h"
 #include "RaycastHit.h"
 #include"CollisionManager.h"
-BadGuy::BadGuy(const Vector3& arg_pos) :StartPos(arg_pos)
+BadGuy::BadGuy(const Vector3& arg_pos) 
 {
+	StartPos = arg_pos;
 	//アニメーション用にモデルのポインタを格納
 	myModel = FBXManager::GetModel("badGuy");
 	name = typeid(*this).name();
@@ -54,35 +55,6 @@ void BadGuy::Update()
 	}
 	CheckHit();
 	Object::Update();
-}
-
-void BadGuy::Draw()
-{
-	Object::CustomDraw(true, true);
-}
-
-void BadGuy::DrawReady()
-{
-	pipelineName = "FBX";
-}
-
-void BadGuy::OnCollision(const CollisionInfo& info)
-{
-	if (info.collider->GetAttribute() == COLLISION_ATTR_ALLIES)
-	{
-		Vector3 rejectVec = info.reject;
-		rejectVec.Normalize();
-		if (rejectVec.Length() <= 0)
-			return;
-		if (abs(rejectVec.y) > abs(rejectVec.x))
-		{
-			dead = true;
-		}
-		//else
-		//{
-		//	color = { 0,1,1,1 };
-		//}
-	}
 }
 
 void BadGuy::CheckHit()

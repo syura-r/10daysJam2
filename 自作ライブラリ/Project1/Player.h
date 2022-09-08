@@ -23,6 +23,7 @@ public:
 	void Update()override;
 	void Draw() override;
 	void DrawReady() override;
+	const Vector3& GetMoveDistance() { return position - prePos; }
 private:
 	void CheckHit();
 	void JumpScaleCluc();
@@ -45,7 +46,10 @@ private:
 	//下向き加速度の最大値
 	const float fallVYMin = -0.5f;
 
+	bool a = false;
+
 	Vector3 StartPos;
+	Vector3 StartScale;
 	Vector3 prePos;
 	//落下ベクトル
 	XMVECTOR fallV;

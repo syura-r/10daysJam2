@@ -96,7 +96,7 @@ void Game::RoadAsset()
 		break;
 	case 4:
 		//FBXƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
-		FBXManager::LoadModelFile("player", "Box", false);
+		FBXManager::LoadModelFile("player", "VendingMachineTex", false);
 		FBXManager::LoadModelFile("badGuy", "Box", false);
 
 

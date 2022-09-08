@@ -22,10 +22,13 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	name = typeid(*this).name();
 	//モデルの生成
 	Create(myModel);
+	rotation = { 0,180,0 };
+	StartScale = { 0.5f,0.5f,0.5f };
+	scale = StartScale;
 	BoxCollider* boxCollider = new BoxCollider();
 	boxCollider->SetObject(this);
-	boxCollider->SetOffset({ 0,0.5f,0,0 });
-	boxCollider->SetScale(scale / 2);
+	//boxCollider->SetOffset({ 0,0.5f,0,0 });
+	boxCollider->SetScale({ scale.x,scale.y*1.5f,scale.z });
 	SetCollider(boxCollider);
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 	collider->SetMove(true);
@@ -59,6 +62,8 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	velocity = 0;
+	prePos = position;
 	//落下処理
 	if (!onGround)
 	{
@@ -67,12 +72,12 @@ void Player::Update()
 		{
 			if (Input::DownKey(DIK_D))
 			{
-				position.x += 0.1f;
+				velocity.x = 0.1f;
 				direction = { 1,0,0 };
 			}
 			if (Input::DownKey(DIK_A))
 			{
-				position.x -= 0.1f;
+				velocity.x = -0.1f;
 				direction = { -1,0,0 };
 			}
 		}
@@ -86,6 +91,7 @@ void Player::Update()
 	//ジャンプ動作
 	else if (!changeOnGroundScale && !jump)
 	{
+		a = false;
 		jump = true;
 		onGround = false;
 		val += valVel;
@@ -98,6 +104,7 @@ void Player::Update()
 
 		//ParticleEmitter::CreateShock(position);
 	}
+	position += velocity;
 	JumpScaleCluc();
 	KnockBack();
 	CheckHit();
@@ -169,7 +176,7 @@ void Player::CheckHit()
 			Object::Update();
 		}
 		//地面がないので落下
-		else {
+		else if(!a) {
 			onGround = false;
 			fallV = {};
 		}
@@ -228,22 +235,42 @@ void Player::CheckHit()
 	position.z += callback.move.m128_f32[2];
 
 	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
+	{
 		fallV.m128_f32[1] = 0;
+	}
+	else if (callback.move.m128_f32[1] > 0 && fallV.m128_f32[1] < 0)
+	{
+		onGround = true;
+		jump = false;
+		changeOnGroundScale = true;
+		a = true;
+
+	}
+	
 	Object::Update();
 
 	
 	if (damage)
 		return;
+	//クエリーコールバックの関数オブジェクト
+	PlayerQueryCallBack callback2(boxCollider);
 	//敵との交差を全検索
-	CollisionManager::GetInstance()->QueryBox(*boxCollider, &callback, COLLISION_ATTR_ENEMYS, (unsigned short)0xffffffff,collider);
-	Vector3 rejectVec2 = callback.move;
+	CollisionManager::GetInstance()->QueryBox(*boxCollider, &callback2, COLLISION_ATTR_ENEMYS, (unsigned short)0xffffffff,collider);
+	Vector3 rejectVec2 = callback2.move;
 	rejectVec2.Normalize();
 	if (rejectVec2.Length() <= 0)
 		return;
 	//上から当たった場合
 	if(rejectVec2.y>abs(rejectVec2.x))
 	{
-		color = { 0,1,1,1 };
+		jump = true;
+		onGround = false;
+		//ジャンプ時上向き初速
+		jumpVYFist = 0.5f * val * 1.2f;
+		//下向き加速
+		fallAcc = -0.02f * val;
+
+		fallV = { 0,jumpVYFist,0,0 };
 	}
 	//横から当たった場合
 	else
@@ -261,7 +288,6 @@ void Player::CheckHit()
 		//下向き加速
 		fallAcc = -0.02f * val;
 		fallV = { 0,jumpVYFist,0,0 };
-		color = { 1,1,0,1 };
 	}
 }
 
@@ -273,16 +299,16 @@ void Player::JumpScaleCluc()
 		const int EaingTime = 6;
 		if (changeScaleCounter <= EaingTime)
 		{
-			scale.x = Easing::EaseOutExpo(1, 2, EaingTime, changeScaleCounter);
-			scale.z = Easing::EaseOutExpo(1, 2, EaingTime, changeScaleCounter);
-			scale.y = Easing::EaseOutExpo(1, 0.5f, EaingTime, changeScaleCounter);
+			scale.x = Easing::EaseOutExpo(StartScale.x, StartScale.x * 2, EaingTime, changeScaleCounter);
+			scale.z = Easing::EaseOutExpo(StartScale.z, StartScale.z * 2, EaingTime, changeScaleCounter);
+			scale.y = Easing::EaseOutExpo(StartScale.y, StartScale.y * 0.5f, EaingTime, changeScaleCounter);
 
 		}
 		else
 		{
-			scale.x = Easing::EaseOutExpo(2, 1, EaingTime, changeScaleCounter - EaingTime);
-			scale.z = Easing::EaseOutExpo(2, 1, EaingTime, changeScaleCounter - EaingTime);
-			scale.y = Easing::EaseOutExpo(0.5f, 1, EaingTime, changeScaleCounter - EaingTime);
+			scale.x = Easing::EaseOutExpo(StartScale.x * 2, StartScale.x, EaingTime, changeScaleCounter - EaingTime);
+			scale.z = Easing::EaseOutExpo(StartScale.z * 2, StartScale.z, EaingTime, changeScaleCounter - EaingTime);
+			scale.y = Easing::EaseOutExpo(StartScale.y * 0.5f, StartScale.y, EaingTime, changeScaleCounter - EaingTime);
 
 		}
 		if (changeScaleCounter >= EaingTime * 2)
@@ -299,16 +325,16 @@ void Player::JumpScaleCluc()
 	const int EaingTime = 10;
 	if (changeScaleCounter <= EaingTime)
 	{
-		scale.x = Easing::EaseOutExpo(1, 0.7f, EaingTime, changeScaleCounter);
-		scale.z = Easing::EaseOutExpo(1, 0.7f, EaingTime, changeScaleCounter);
-		scale.y = Easing::EaseOutExpo(1, 1.5f, EaingTime, changeScaleCounter);
+		scale.x = Easing::EaseOutExpo(StartScale.x, StartScale.x * 0.7f, EaingTime, changeScaleCounter);
+		scale.z = Easing::EaseOutExpo(StartScale.z, StartScale.z * 0.7f, EaingTime, changeScaleCounter);
+		scale.y = Easing::EaseOutExpo(StartScale.y, StartScale.y * 1.5f, EaingTime, changeScaleCounter);
 
 	}
 	else
 	{
-		scale.x = Easing::EaseOutExpo(0.7f, 1, EaingTime, changeScaleCounter - EaingTime);
-		scale.z = Easing::EaseOutExpo(0.7f, 1, EaingTime, changeScaleCounter - EaingTime);
-		scale.y = Easing::EaseOutExpo(1.5f, 1, EaingTime, changeScaleCounter - EaingTime);
+		scale.x = Easing::EaseOutExpo(StartScale.x * 0.7f, StartScale.x, EaingTime, changeScaleCounter - EaingTime);
+		scale.z = Easing::EaseOutExpo(StartScale.z * 0.7f, StartScale.z, EaingTime, changeScaleCounter - EaingTime);
+		scale.y = Easing::EaseOutExpo(StartScale.y * 1.5f, StartScale.y, EaingTime, changeScaleCounter - EaingTime);
 
 	}
 	if (changeScaleCounter >= EaingTime * 2)

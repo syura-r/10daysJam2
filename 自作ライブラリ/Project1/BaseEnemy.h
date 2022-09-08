@@ -1,12 +1,22 @@
 #pragma once
 #include "Object.h"
 class Player;
+class FBXModel;
 class BaseEnemy :
     public Object
 {
 public:
-    BaseEnemy(Player* playerPtr);
+    void OnCollision(const CollisionInfo& info)override;
+    void Draw()override;
+    void DrawReady()override;
+    static void SetPlayerPtr(Player* arg_ptr)
+    {
+        player = arg_ptr;
+    }
 protected:
-    Player* player = nullptr;
+  static  Player* player;
+  FBXModel* myModel = nullptr;
+  Vector3 StartPos;
+  Vector3 prePos;
 };
 

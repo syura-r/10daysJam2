@@ -23,6 +23,7 @@
 #include"AreaEffect.h"
 #include"Sprite3D.h"
 #include "BadGuy.h"
+#include "Crow.h"
 Play::Play()
 {
 	next = Ending;
@@ -77,12 +78,19 @@ void Play::Initialize()
 
 	Player* player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
+	BaseEnemy::SetPlayerPtr(player);
 	camera->SetFocusObject(player);
 	for (int i = 0; i < 30; i++)
 	{
 		MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
 		objectManager->Add(mapBox);
 	}
+	for (int i = 0; i < 10; i++)
+	{
+		MapBox* mapBox = new MapBox(Vector3(-5 + i * 3, -5, 0));
+		objectManager->Add(mapBox);
+	}
+
 	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
 	objectManager->Add(badGuy);
 
@@ -144,6 +152,11 @@ void Play::Update()
 
 
 #ifdef _DEBUG
+	if (Input::TriggerKey(DIK_SPACE))
+	{
+		Crow* crow = new Crow();
+		objectManager->Add(crow);
+	}
 	if (Input::TriggerKey(DIK_E))//I—¹ˆ—
 	{
 		Audio::StopBGM(nowPlayingBGMName);
@@ -172,7 +185,7 @@ void Play::Update()
 	lightGroup->Update();
 	objectManager->Update();
 	camera->Update();
-	collisionManager->CheckAllCollisions();
+	//collisionManager->CheckAllCollisions();
 
 	ParticleManager::GetInstance()->UpdateDeadEffect();
 }

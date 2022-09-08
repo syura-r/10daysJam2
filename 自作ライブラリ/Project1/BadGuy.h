@@ -1,17 +1,13 @@
 #pragma once
-#include "Object.h"
-class FBXModel;
+#include "BaseEnemy.h"
 class BadGuy :
-    public Object
+    public BaseEnemy
 {
 public:
 	BadGuy(const Vector3& arg_pos);
 	~BadGuy();
 	void Initialize()override;
 	void Update()override;
-	void Draw() override;
-	void DrawReady() override;
-	void OnCollision(const CollisionInfo& info)override;
 private:
 	void CheckHit();
 
@@ -20,8 +16,6 @@ private:
 	//下向き加速度の最大値
 	const float fallVYMin = -0.5f;
 
-	Vector3 StartPos;
-	Vector3 prePos;
 	//落下ベクトル
 	XMVECTOR fallV;
 	//現在向いてる方向
@@ -29,7 +23,6 @@ private:
 	//接地フラグ
 	bool onGround = true;
 
-	FBXModel* myModel = nullptr;
 
 };
 
