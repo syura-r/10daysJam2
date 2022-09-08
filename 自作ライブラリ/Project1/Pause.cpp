@@ -42,6 +42,9 @@ void Pause::Initialize()
 
 	selectState = SelectState::ToGame;
 
+	inputInterval_UD = 0;
+	inputInterval_LR = 0;
+
 	float pos_y_standard = 1080.0f / (selectMax + 1);
 	toGame->Initialize("toGame", pos_y_standard);
 	flag_toGame = false;
@@ -145,11 +148,11 @@ void Pause::Update()
 		break;
 
 	case BGM:
-		pos_base = bgm->pos;
+		pos_base = { bgm->pos.x, barPositionLeft_bgm.y };
 		break;
 
 	case SE:
-		pos_base = se->pos;
+		pos_base = { se->pos.x, barPositionLeft_se.y };
 		break;
 
 	default:
@@ -194,15 +197,37 @@ void Pause::Select()
 {
 	bool isSelectMove = false;//選択を変えたか
 	int select = selectState;
-	if ((Input::TriggerPadLStickUp() || Input::TriggerKey(DIK_W)) && selectState > 0)
+	if (Input::CheckPadLStickUp() || Input::DownKey(DIK_W))
 	{
-		isSelectMove = true;
-		select--;
+		if (inputInterval_UD % inputInterval == 0)
+		{
+			//
+			if (selectState > 0)
+			{
+				isSelectMove = true;
+				select--;
+			}
+			//
+		}
+		inputInterval_UD++;
 	}
-	else if ((Input::TriggerPadLStickDown() || Input::TriggerKey(DIK_S)) && selectState < selectMax - 1)
+	else if (Input::CheckPadLStickDown() || Input::DownKey(DIK_S))
 	{
-		isSelectMove = true;
-		select++;
+		if (inputInterval_UD % inputInterval == 0)
+		{
+			//
+			if (selectState < selectMax - 1)
+			{
+				isSelectMove = true;
+				select++;
+			}
+			//
+		}
+		inputInterval_UD++;
+	}
+	else
+	{
+		inputInterval_UD = 0;
 	}
 	selectState = (SelectState)select;
 
@@ -232,23 +257,29 @@ void Pause::Decision()
 	{
 		//Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
 
-		//設定を閉じる
-		activeFlag = false;
-
 		switch (selectState)
 		{
 		case ToGame:
 			//ゲームにもどる
 			flag_toGame = true;
+			//設定を閉じる
+			activeFlag = false;
 			break;
+
 		case Restart:
 			//やり直し
 			flag_restart = true;
+			//設定を閉じる
+			activeFlag = false;
 			break;
+
 		case ToTitle:
 			//タイトルにもどる
 			flag_toTitle = true;
+			//設定を閉じる
+			activeFlag = false;
 			break;
+
 		case BGM:
 			break;
 		case SE:
@@ -270,25 +301,69 @@ void Pause::VolumeChange()
 	{
 	case BGM:
 		//音量変更
-		if ((Input::CheckPadLStickLeft() || Input::DownKey(DIK_A)) && stock_volume_bgm > 0.0f)
+		if (Input::CheckPadLStickLeft() || Input::DownKey(DIK_A))
 		{
-			stock_volume_bgm -= volumeOneScale;
+			if (inputInterval_LR % inputInterval == 0)
+			{
+				//
+				if (stock_volume_bgm > 0.0f)
+				{
+					stock_volume_bgm -= volumeOneScale;
+				}
+				//
+			}
+			inputInterval_LR++;
 		}
-		else if ((Input::CheckPadLStickRight() || Input::DownKey(DIK_D)) && volumeMax > stock_volume_bgm)
+		else if (Input::CheckPadLStickRight() || Input::DownKey(DIK_D))
 		{
-			stock_volume_bgm += volumeOneScale;
+			if (inputInterval_LR % inputInterval == 0)
+			{
+				//
+				if (volumeMax > stock_volume_bgm)
+				{
+					stock_volume_bgm += volumeOneScale;
+				}
+				//
+			}
+			inputInterval_LR++;
+		}
+		else
+		{
+			inputInterval_LR = 0;
 		}
 		break;
 
 	case SE:
 		//音量変更
-		if ((Input::CheckPadLStickLeft() || Input::DownKey(DIK_A)) && stock_volume_se > 0.0f)
+		if (Input::CheckPadLStickLeft() || Input::DownKey(DIK_A))
 		{
-			stock_volume_se -= volumeOneScale;
+			if (inputInterval_LR % inputInterval == 0)
+			{
+				//
+				if (stock_volume_se > 0.0f)
+				{
+					stock_volume_se -= volumeOneScale;
+				}
+				//
+			}
+			inputInterval_LR++;
 		}
-		else if ((Input::CheckPadLStickRight() || Input::DownKey(DIK_D)) && volumeMax > stock_volume_se)
+		else if (Input::CheckPadLStickRight() || Input::DownKey(DIK_D))
 		{
-			stock_volume_se += volumeOneScale;
+			if (inputInterval_LR % inputInterval == 0)
+			{
+				//
+				if (volumeMax > stock_volume_se)
+				{
+					stock_volume_se += volumeOneScale;
+				}
+				//
+			}
+			inputInterval_LR++;
+		}
+		else
+		{
+			inputInterval_LR = 0;
 		}
 		break;
 

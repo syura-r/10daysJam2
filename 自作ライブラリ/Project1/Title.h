@@ -39,8 +39,12 @@ private:
 	void MoveCircle_Logo();
 	//ü‰ñ‚ÌŒ»İ‚ÌŠp“x
 	float angle_target = 0.0f;
+	//ü‰ñ‹O“¹‚Ì‘È‰~‚ÌŒX‚«‹ï‡
+	const float angleGap_target = -45.0f;
 	//ü‰ñ‚Ì”¼Œa
-	const float radius_target = 15.0f;
+	float radius_target = 0.0f;
+	const float radiusMax_target = 25.0f;
+	const float radiusMin_target = 15.0f;
 	//ü‰ñ‚Ì’Ç]æ
 	Vector2 position_target = {};
 
@@ -68,4 +72,10 @@ private:
 	Sprite* quit = nullptr;
 	const Vector2 position_quit = { 1920.0f / 2.0f, 800.0f };
 	Vector2 scale_quit = {};
+
+	//Œˆ’èƒ{ƒ^ƒ“•\¦
+	Sprite* button = nullptr;
+	const Vector2 position_button = { 1920.0f - 100.0f, 1080.0f - 100.0f };
+	float alpha_button = 0.0f;
+
 };

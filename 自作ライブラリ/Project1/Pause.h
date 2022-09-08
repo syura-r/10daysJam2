@@ -21,6 +21,8 @@ public:
 private:
 	//選択肢を選ぶ処理
 	void Select();
+	int inputInterval_UD = 0;
+	const int inputInterval = 15;
 	//決定ボタンを押した後の処理
 	void Decision();
 
@@ -81,6 +83,7 @@ private:
 
 	//音量設定
 	void VolumeChange();
+	int inputInterval_LR = 0;
 
 	//音量設定BGM
 	SelectSprite* bgm = nullptr;

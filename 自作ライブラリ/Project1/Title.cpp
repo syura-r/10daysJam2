@@ -21,6 +21,7 @@ Title::Title()
 	base = new Sprite();
 	start = new Sprite();
 	quit = new Sprite();
+	button = new Sprite();
 }
 
 
@@ -30,6 +31,7 @@ Title::~Title()
 	delete base;
 	delete start;
 	delete quit;
+	delete button;
 }
 
 void Title::Initialize()
@@ -47,8 +49,9 @@ void Title::Initialize()
 	actoinStep_logo = 0;
 	easingCount_position = 0;
 
-	angle_target = 330.0f;
+	angle_target = angleGap_target;
 	const float radian_target = DirectX::XMConvertToRadians(angle_target);
+	radius_target = radiusMax_target;
 	position_target.x = cos(radian_target) * radius_target + positionOrigin_logo.x;
 	position_target.y = sin(radian_target) * radius_target + positionOrigin_logo.y;
 
@@ -59,12 +62,33 @@ void Title::Initialize()
 	selectNumber = 0;
 	easingCount_scale = easingCountLimit_scale;
 
+	alpha_button = 0.0f;
+
 	Input::Update();
 }
 
 void Title::Update()
 {
-	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
+	//ÉçÉSÇÃçsìÆ
+	if (actoinStep_logo == 0)
+	{
+		MoveStraight_Logo();
+	}
+	else
+	{
+		MoveCircle_Logo();
+
+		//
+		if (alpha_button < 1.0f)
+		{
+			const float limit_alpha = 120.0f;
+			const float speed_alpha = 1.0f / limit_alpha;
+			alpha_button += speed_alpha;
+		}
+	}
+
+	if ((Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)) &&
+		actoinStep_logo > 0)
 	{
 		if (selectNumber <= 0)
 		{
@@ -81,19 +105,6 @@ void Title::Update()
 
 	Select();
 	AlphaChange_Base();
-
-	//ÉçÉSÇÃçsìÆ
-	switch (actoinStep_logo)
-	{
-	case 0:
-		MoveStraight_Logo();
-		break;
-	case 1:
-		MoveCircle_Logo();
-		break;
-	default:
-		break;
-	}
 
 	//
 	camera->Update();
@@ -114,6 +125,8 @@ void Title::PostDraw()
 	quit->DrawSprite("quit", position_quit, 0.0f, scale_quit);
 
 	base->DrawSprite("white1x1", position_base, 0.0f, { 256.0f, 64.0f }, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
+
+	button->DrawSprite("button_a", position_button, 0.0f, { 1,1 }, { 1,1,1,alpha_button }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 }
 
 void Title::MoveStraight_Logo()
@@ -133,12 +146,26 @@ void Title::MoveStraight_Logo()
 void Title::MoveCircle_Logo()
 {
 	//position_targetÇé¸âÒÇ≥ÇπÇÈ
-	const float speed_rot = 1.0f;
-	angle_target += speed_rot;
+	const float speed_angle = 1.0f;
+	angle_target += speed_angle;
 	if (angle_target >= 360.0f)
 	{
 		angle_target = 0.0f;
 	}
+
+	//äpìxÇ…âûÇ∂ÇƒÅAîºåaÇïœÇ¶ÇÈ
+	const float speed_radius = (radiusMax_target - radiusMin_target) / (360.0f / speed_angle);
+	if (angle_target >= 0.0f - angleGap_target && angle_target < 90.0f - angleGap_target ||
+		(angle_target >= 180.0f - angleGap_target && angle_target < 270.0f - angleGap_target))
+	{
+		radius_target -= speed_radius;
+	}
+	if ((angle_target >= 90.0f - angleGap_target && angle_target < 180.0f - angleGap_target) ||
+		(angle_target >= 270.0f - angleGap_target && angle_target < 360.0f - angleGap_target))
+	{
+		radius_target += speed_radius;
+	}
+
 
 	const float radian_target = DirectX::XMConvertToRadians(angle_target);
 	position_target.x = cos(radian_target) * radius_target + positionOrigin_logo.x;
