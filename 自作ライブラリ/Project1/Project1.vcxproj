@@ -226,6 +226,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenCamera.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
@@ -236,7 +237,7 @@
     <ClCompile Include="StockCansBar.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TimeLimit.cpp" />
+    <ClCompile Include="InGameTimer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleText.cpp" />
@@ -321,6 +322,7 @@
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="QueryCallback.h" />
     <ClInclude Include="RaycastHit.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScreenCamera.h" />
@@ -333,7 +335,7 @@
     <ClInclude Include="StockCansBar.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="TimeLimit.h" />
+    <ClInclude Include="InGameTimer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleText.h" />

@@ -1,21 +1,20 @@
 #pragma once
 #include "Timer.h"
+#include "Sprite.h"
 #include "NumberSprite.h"
-#include "Vector.h"
-#include<unordered_map>
 
-class TimeLimit
+class InGameTimer
 {
 public:
-	TimeLimit();
-	~TimeLimit();
+	InGameTimer();
+	~InGameTimer();
 
 	void Initialize();
 	void Update();
 	void Draw();
 
 	bool GetLimit() { return timer->IsTime(); }
-	int GetNowTime() { return timer->GetTime(); }
+	int GetRealTime() { return timer->GetRealTime(); }
 
 private:
 	float seconds = 0.0f;
@@ -25,7 +24,5 @@ private:
 	Sprite* stopwatch_sprite = nullptr;
 	//ïb
 	NumberSprite* seconds_sprite = nullptr;
-	//åÖêî
-	const int timerDigits = 3;
 };
 

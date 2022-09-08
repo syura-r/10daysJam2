@@ -22,9 +22,10 @@
 
 #include"AreaEffect.h"
 #include"Sprite3D.h"
+
 Play::Play()
 {
-	next = Ending;
+	next = Title;
 	camera = std::make_unique<InGameCamera>();
 	Object3D::SetCamera(camera.get());
 	Sprite3D::SetCamera(camera.get());
@@ -50,7 +51,8 @@ Play::Play()
 	limit10Time = gameTime - 10;
 
 	pause = new Pause();
-	timeLimit = new TimeLimit();
+	result = new Result();
+	inGameTimer = new InGameTimer();
 	cansBar = new StockCansBar();
 
 	ParticleEmitter::SetObjectManager(objectManager);
@@ -61,14 +63,15 @@ Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
 	PtrDelete(pause);
-	PtrDelete(timeLimit);
+	PtrDelete(result);
+	PtrDelete(inGameTimer);
 	PtrDelete(cansBar);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
 void Play::Initialize()
 {
-	next = Ending;
+	next = Title;
 
 	Object3D::SetCamera(camera.get());
 	Object3D::SetLightGroup(lightGroup.get());
@@ -84,7 +87,8 @@ void Play::Initialize()
 	isEnd = false;
 	isAllEnd = false;
 	pause->Initialize();
-	timeLimit->Initialize();
+	result->Initialize();
+	inGameTimer->Initialize();
 	cansBar->Initialize(100);//缶の初期数を渡す
 	gameEndCount = 0;
 
@@ -106,6 +110,28 @@ void Play::Initialize()
 
 void Play::Update()
 {
+	result->Update();
+	if (result->GetIsToNextScene())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Audio::AllStopSE();
+		next = Title;
+		ShutDown();
+		return;
+	}
+	if (result->GetActivePause())
+	{
+		return;
+	}
+#ifdef _DEBUG
+	//リザルト開始
+	if (Input::TriggerKey(DIK_R))
+	{
+		result->IsActive(100, 50);//缶の数とジャンプの回数
+		return;
+	}
+#endif
+
 
 	pause->Update();
 	//ゲームにもどる
@@ -148,7 +174,7 @@ void Play::Update()
 	}
 #endif
 	
-	timeLimit->Update();
+	inGameTimer->Update();
 	cansBar->Update(30);//缶の現在数を渡す
 	//if (timeLimit->GetLimit())
 	//{
@@ -175,7 +201,7 @@ void Play::Update()
 
 void Play::PreDraw()
 {
-	timeLimit->Draw();
+	inGameTimer->Draw();
 	cansBar->Draw();
 
 	objectManager->DrawReady();
@@ -205,6 +231,8 @@ void Play::PostDraw()
 	{
 		DirectXLib::GetInstance()->DepthClear();
 	}
+
 	pause->Draw();
+	result->Draw();
 }
 

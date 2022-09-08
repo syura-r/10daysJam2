@@ -1,36 +1,28 @@
-#include "TimeLimit.h"
+#include "InGameTimer.h"
 #include "Vector.h"
-#include "Easing.h"
 
-TimeLimit::TimeLimit()
+InGameTimer::InGameTimer()
 {
-	int limitFrame = 1;
-	for (int i = 0; i < timerDigits; i++)
-	{
-		limitFrame *= 10;
-	}
-	limitFrame--;
-	limitFrame *= 60;
-	timer = new Timer(limitFrame);
+	timer = new Timer(TimerPerformance::Up);
 
 	stopwatch_sprite = new Sprite();
 	seconds_sprite = new NumberSprite(seconds);
 }
 
-TimeLimit::~TimeLimit()
+InGameTimer::~InGameTimer()
 {
 	delete timer;
 	delete stopwatch_sprite;
 	delete seconds_sprite;
 }
 
-void TimeLimit::Initialize()
+void InGameTimer::Initialize()
 {
 	timer->Initialize();
 	seconds = 0.0f;
 }
 
-void TimeLimit::Update()
+void InGameTimer::Update()
 {
 	//経過時間（秒）
 	seconds = timer->GetRealTime(TimerPerformance::Up);
@@ -38,7 +30,7 @@ void TimeLimit::Update()
 	timer->Update();
 }
 
-void TimeLimit::Draw()
+void InGameTimer::Draw()
 {
 	//画像サイズ（数字1つ分）
 	const Vector2 numberTexSize = { 47.0f, 86.0f };
@@ -56,5 +48,5 @@ void TimeLimit::Draw()
 	//アイコンの大きさ分ずらす
 	position.x += (stopwatchTexSizeX * stopwatchScale) + (numberTexSize.x / 2.0f);
 	//数字描画
-	seconds_sprite->Draw(timerDigits, "number", position, { 1,1 }, { 1,1,1,1 }, { 0.0f,0.5f }, "NoAlphaToCoverageSprite");
+	seconds_sprite->Draw(std::to_string((int)seconds).size(), "number", position, { 1,1 }, { 1,1,1,1 }, { 0.0f,0.5f }, "NoAlphaToCoverageSprite");
 }

@@ -3,16 +3,22 @@
 
 float Timer::fps = 60.0f;
 
-Timer::Timer()
-	:Timer(600)
-{
-}
+//Timer::Timer()
+//	:Timer(600)
+//{
+//}
+//
+//Timer::Timer(const unsigned int arg_limit)
+//	:nowCount(0),
+//	 limitCount(arg_limit)
+//{
+//	Initialize();
+//}
 
-Timer::Timer(const unsigned int arg_limit)
-	:nowCount(0),
-	 limitCount(arg_limit)
+Timer::Timer(const TimerPerformance arg_performance, const unsigned int arg_limit)
+	:performance(arg_performance),
+	limitCount(arg_limit)
 {
-	Initialize();
 }
 
 Timer::~Timer()
@@ -26,7 +32,7 @@ void Timer::Initialize()
 
 void Timer::Update()
 {
-	if (IsTime())
+	if (performance == TimerPerformance::Down && IsTime())
 	{
 		return;
 	}

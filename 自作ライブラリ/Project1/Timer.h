@@ -10,8 +10,9 @@ enum class TimerPerformance
 class Timer
 {
 public:
-	Timer();
-	Timer(const unsigned int arg_limit);
+	//Timer();
+	//Timer(const unsigned int arg_limit);
+	Timer(const TimerPerformance  arg_performance, const unsigned int arg_limit = 600);
 	~Timer();
 
 	void Initialize();
@@ -32,7 +33,9 @@ public:
 	static void SetFPS(const float arg_fps);
 
 private:
-	unsigned int nowCount;
+	unsigned int nowCount = 0;
 	unsigned int limitCount;
 	static float fps;
+
+	TimerPerformance performance;
 };

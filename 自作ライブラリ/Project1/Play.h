@@ -1,17 +1,18 @@
 #pragma once
 #include "Scene.h"
-#include"LightGroup.h"
-#include"CollisionManager.h"
+#include "LightGroup.h"
+#include "CollisionManager.h"
 #include "ComputeShade.h"
 #include "DebugCamera.h"
 #include "InGameCamera.h"
-#include"Grass.h"
+#include "Grass.h"
 #include "NumberSprite.h"
 #include "ObjectManager.h"
 #include "Player.h"
 #include "Sprite.h"
 #include "Pause.h"
-#include "TimeLimit.h"
+#include "Result.h"
+#include "InGameTimer.h"
 #include "StockCansBar.h"
 
 class Play :public Scene
@@ -37,7 +38,8 @@ private:
 	std::unique_ptr<InGameCamera> camera;
 	
 	Pause* pause = nullptr;
-	TimeLimit* timeLimit = nullptr;
+	Result* result = nullptr;
+	InGameTimer* inGameTimer = nullptr;
 	int gameEndCount;
 	StockCansBar* cansBar = nullptr;
 

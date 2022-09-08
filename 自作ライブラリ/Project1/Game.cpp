@@ -97,6 +97,8 @@ void Game::RoadAsset()
 		Texture::LoadTexture("start", "title/start.png");
 		Texture::LoadTexture("quit", "title/quit.png");
 
+		Texture::LoadTexture("button_a", "button_a.png");
+
 		break; 
 	case 2:
 		//Objƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
@@ -205,7 +207,7 @@ void Game::LoadFinish()
 	sceneManeger->Initialize();
 	sceneManeger->Add(Scene::SCENE::Title, new Title());
 	sceneManeger->Add(Scene::SCENE::Play, new Play());
-	sceneManeger->Add(Scene::SCENE::Ending, new Ending());
+	//sceneManeger->Add(Scene::SCENE::Ending, new Ending());
 
 	sceneManeger->Change(Scene::SCENE::Title);
 
