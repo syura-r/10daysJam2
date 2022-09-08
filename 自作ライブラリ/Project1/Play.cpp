@@ -82,6 +82,7 @@ void Play::Initialize()
 	camera->Initialize();
 
 	isEnd = false;
+	isAllEnd = false;
 	pause->Initialize();
 	timeLimit->Initialize();
 	cansBar->Initialize(100);//ŠÊ‚Ì‰Šú”‚ğ“n‚·

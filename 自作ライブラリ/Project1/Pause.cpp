@@ -196,13 +196,11 @@ void Pause::Select()
 	int select = selectState;
 	if ((Input::TriggerPadLStickUp() || Input::TriggerKey(DIK_W)) && selectState > 0)
 	{
-		//Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
 		isSelectMove = true;
 		select--;
 	}
 	else if ((Input::TriggerPadLStickDown() || Input::TriggerKey(DIK_S)) && selectState < selectMax - 1)
 	{
-		//Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
 		isSelectMove = true;
 		select++;
 	}
@@ -214,6 +212,7 @@ void Pause::Select()
 		//透明度リセット
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
+		//Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
 	}
 
 

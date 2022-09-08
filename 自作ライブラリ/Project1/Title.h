@@ -1,15 +1,10 @@
 #pragma once
 #include "Scene.h"
-#include"CreateFigure.h"
-#include"Texture.h"
-#include"Alpha.h"
-#include "Object.h"
-#include "TitleText.h"
-#include "Sprite3D.h"
 #include "Object3D.h"
 #include "DebugCamera.h"
 #include "InGameCamera.h"
 #include"LightGroup.h"
+#include"Sprite.h"
 
 class Title :
 	public Scene
@@ -23,20 +18,54 @@ public:
 	void PostDraw()override;
 
 private:
-	//ランダム
-	float GetRandom(float arg_min, float arg_max);
-
-	//遷移関連
-	//カメラ前進
-	bool ZoomIn();
-	int easingTimer_zoom;
-
 	std::unique_ptr<InGameCamera> camera;
-	float cameraDistance;
-	const float cameraDistance_init = 23.0f;
 	std::unique_ptr<LightGroup> lightGroup;
 
+	Sprite* logo = nullptr;
+	Vector2 position_logo = {};
+	//周回などの中心点
+	const Vector2 positionOrigin_logo = { 1920.0f / 2.0f, 400.0f };
+	//ロゴの行動段階
+	int actoinStep_logo = 0;
 
-	//シーン遷移開始
-	bool isSceneChange = false;
+	//ロゴのフレームイン時
+	void MoveStraight_Logo();
+	//ロゴの初期位置
+	const Vector2 positionFirst_logo = { 1920.0f - 256.0f, -128.0f };
+	int easingCount_position = 0;
+	const int easingCountLimit_position = 60;
+
+	//ロゴの周回時
+	void MoveCircle_Logo();
+	//周回の現在の角度
+	float angle_target = 0.0f;
+	//周回の半径
+	const float radius_target = 15.0f;
+	//周回の追従先
+	Vector2 position_target = {};
+
+	//項目選択
+	void Select();
+	int selectNumber = 0;
+	const Vector2 scale_big = { 1.0f, 1.0f };
+	const Vector2 scale_small = { 0.8f, 0.8f };
+	int easingCount_scale = 0;
+	const int easingCountLimit_scale = 10;
+
+	//
+	void AlphaChange_Base();
+	Sprite* base = nullptr;
+	Vector2 position_base = {};
+	float alpha_base = 1.0f;
+	bool isUP_alphaChange = false;
+
+	//
+	Sprite* start = nullptr;
+	const Vector2 position_start = { 1920.0f /2.0f, 700.0f };
+	Vector2 scale_start = {};
+
+	//
+	Sprite* quit = nullptr;
+	const Vector2 position_quit = { 1920.0f / 2.0f, 800.0f };
+	Vector2 scale_quit = {};
 };

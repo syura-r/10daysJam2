@@ -85,12 +85,17 @@ void Game::RoadAsset()
 
 		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
 		Texture::LoadTexture("can", "stockCansBar/can.png");
+
 		Texture::LoadTexture("circle", "pause/circle.png");
 		Texture::LoadTexture("toGame", "pause/toGame.png");
 		Texture::LoadTexture("restart", "pause/restart.png");
 		Texture::LoadTexture("toTitle", "pause/toTitle.png");
 		Texture::LoadTexture("bgm", "pause/bgm.png");
 		Texture::LoadTexture("se", "pause/se.png");
+
+		Texture::LoadTexture("logo", "title/logo.png");
+		Texture::LoadTexture("start", "title/start.png");
+		Texture::LoadTexture("quit", "title/quit.png");
 
 		break; 
 	case 2:
@@ -282,6 +287,11 @@ void Game::Run()
 
 		else if (!nowLoading)
 		{
+			if (sceneManeger->GetIsAllEnd())
+			{
+				break;
+			}
+
 			Input::Update();
 			Alpha::Update();
 			if (Input::TriggerKey(DIK_1))
