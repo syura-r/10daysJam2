@@ -84,7 +84,7 @@ void Pause::Update()
 			Audio::AllResumeSE();
 		}
 
-		//Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
 		if (!activeFlag)
 		{
 			fadeFlag = true;
@@ -237,7 +237,7 @@ void Pause::Select()
 		//透明度リセット
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		//Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
 	}
 
 
@@ -255,7 +255,7 @@ void Pause::Decision()
 {
 	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
 	{
-		//Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
 
 		switch (selectState)
 		{
@@ -297,6 +297,10 @@ void Pause::VolumeChange()
 	const float volumeOneScale = 0.1f;
 	float stock_volume_bgm = Audio::volume_bgm;
 	float stock_volume_se = Audio::volume_se;
+
+	//変更があったのか
+	bool isChangeVolume = false;
+
 	switch (selectState)
 	{
 	case BGM:
@@ -309,6 +313,7 @@ void Pause::VolumeChange()
 				if (stock_volume_bgm > 0.0f)
 				{
 					stock_volume_bgm -= volumeOneScale;
+					isChangeVolume = true;
 				}
 				//
 			}
@@ -322,6 +327,7 @@ void Pause::VolumeChange()
 				if (volumeMax > stock_volume_bgm)
 				{
 					stock_volume_bgm += volumeOneScale;
+					isChangeVolume = true;
 				}
 				//
 			}
@@ -343,6 +349,7 @@ void Pause::VolumeChange()
 				if (stock_volume_se > 0.0f)
 				{
 					stock_volume_se -= volumeOneScale;
+					isChangeVolume = true;
 				}
 				//
 			}
@@ -356,6 +363,7 @@ void Pause::VolumeChange()
 				if (volumeMax > stock_volume_se)
 				{
 					stock_volume_se += volumeOneScale;
+					isChangeVolume = true;
 				}
 				//
 			}
@@ -370,6 +378,13 @@ void Pause::VolumeChange()
 	default:
 		break;
 	}
+
+	//音
+	if (isChangeVolume)
+	{
+		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+	}
+
 	//丸の位置変更
 	circlePosition_bgm.x = barPositionLeft_bgm.x + (stock_volume_bgm * (bar_scale.x / volumeMax));
 	circlePosition_se.x = barPositionLeft_se.x + (stock_volume_se * (bar_scale.x / volumeMax));

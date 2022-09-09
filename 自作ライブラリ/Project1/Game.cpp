@@ -116,6 +116,8 @@ void Game::RoadAsset()
 
 		//WAVÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
 		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");
+		Audio::LoadFile("SE_Select", "SE/Allscene_SE_Select.wav");
+		Audio::LoadFile("SE_Decision", "SE/Allscene_SE_Decision.wav");
 
 		break;
 	case 5:

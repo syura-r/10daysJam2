@@ -1,6 +1,6 @@
 #include "Title.h"
 #include "Easing.h"
-//#include "Audio.h"
+#include "Audio.h"
 
 Title::Title()
 {
@@ -90,6 +90,8 @@ void Title::Update()
 	if ((Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)) &&
 		actoinStep_logo > 0)
 	{
+		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+
 		if (selectNumber <= 0)
 		{
 			//PlayƒV[ƒ“‚Ö
@@ -200,7 +202,7 @@ void Title::Select()
 	{
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		//Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
 		easingCount_scale = 0;
 	}
 

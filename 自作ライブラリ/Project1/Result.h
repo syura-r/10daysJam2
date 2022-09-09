@@ -28,20 +28,31 @@ private:
 	//ゲーム画面を暗く
 	Sprite* sp_back = nullptr;
 
-	//缶の数とジャンプの回数
-	Sprite* canCountSp = nullptr;
-	Sprite* jumpCountSp = nullptr;
-	NumberSprite* canCountNumSp = nullptr;
-	NumberSprite* jumpCountNumSp = nullptr;
-	float canCount = 0.0f;
-	float jumpCount = 0.0f;
-	Vector2 position_can = {};
-	Vector2 position_jump = {};
+	//残った缶の数とジャンプの回数などを表示するモノ
+	struct CountDisplayer
+	{
+		CountDisplayer();
+		~CountDisplayer();
 
-	//横から出てくる
-	void SlideIn();
-	const float positionX_slideIn_start = 1920.0f + 128.0f;
-	const float positionX_slideIn_end = 1920.0f - 320.0f;
+		void Initialize(const float arg_position_y);
+		void Update();
+		void Draw();
+
+		Sprite* sprite = nullptr;
+		NumberSprite* numberSprite = nullptr;
+		//表示する数値
+		float count = 0.0f;
+		//ベースのスプライトの座標
+		Vector2 position_sp = {};
+
+		//
+		void SlideIn(const float limitTime, const float nowTime);
+		const float position_slideIn_start_x = 1920.0f + 256.0f;
+		const float position_slideIn_end_x = 1920.0f - 256.0f;
+	};
+
+	CountDisplayer* countDisplyer_can = nullptr;
+	CountDisplayer* countDisplyer_jump = nullptr;
 
 
 	//表示の段階

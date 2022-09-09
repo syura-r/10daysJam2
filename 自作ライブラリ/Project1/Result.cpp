@@ -1,15 +1,14 @@
 #include "Result.h"
 #include "Input.h"
 #include "Easing.h"
+#include "Audio.h"
 
 Result::Result()
 {
 	sp_back = new Sprite();
 
-	canCountSp = new Sprite();
-	jumpCountSp = new Sprite();
-	canCountNumSp = new NumberSprite(canCount);
-	jumpCountNumSp = new NumberSprite(jumpCount);
+	countDisplyer_can = new CountDisplayer();
+	countDisplyer_jump = new CountDisplayer();
 
 	timer_display = new Timer(TimerPerformance::Up);
 
@@ -19,10 +18,8 @@ Result::Result()
 Result::~Result()
 {
 	delete sp_back;
-	delete canCountSp;
-	delete jumpCountSp;
-	delete canCountNumSp;
-	delete jumpCountNumSp;
+	delete countDisplyer_can;
+	delete countDisplyer_jump;
 	delete timer_display;
 	delete button;
 }
@@ -35,11 +32,8 @@ void Result::Initialize()
 	timer_display->Initialize();
 	timer_display->SetLimit(timerLimit_display, true);
 
-	canCount = 0.0f;
-	jumpCount = 0.0f;
-
-	position_can = { positionX_slideIn_start, 500.0f };
-	position_jump = { positionX_slideIn_start, 700.0f };
+	countDisplyer_can->Initialize(500.0f);
+	countDisplyer_jump->Initialize(700.0f);
 
 	isSceneChangeStandby = false;
 	isToNextScene = false;
@@ -53,7 +47,14 @@ void Result::Update()
 		return;
 
 	//
-	SlideIn();
+	if (step_display == 0)
+	{
+		countDisplyer_can->SlideIn(timerLimit_display, timer_display->GetTime());
+	}
+	else if (step_display == 1)
+	{
+		countDisplyer_jump->SlideIn(timerLimit_display, timer_display->GetTime());
+	}
 
 	timer_display->Update();
 	//ŽŸ‚Ì•\Ž¦’iŠK‚Ö
@@ -81,6 +82,7 @@ void Result::Update()
 	if (isSceneChangeStandby &&
 		(Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)))
 	{
+		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
 		isToNextScene = true;
 	}
 }
@@ -93,13 +95,11 @@ void Result::Draw()
 	//’iŠK‚É•ª‚¯‚Ä‡‚É•\Ž¦
 	if (step_display >= 0)
 	{
-		canCountNumSp->Draw(std::to_string((int)canCount).size(), "number", position_can, { 1.5f,1.5f });
-		canCountSp->DrawSprite("white1x1", position_can, 0.0f, { 512.0f, 128.0f }, { 1,1,1,1 }, { 0.7f,0.5f });
+		countDisplyer_can->Draw();
 	}
 	if (step_display >= 1)
 	{
-		jumpCountNumSp->Draw(std::to_string((int)jumpCount).size(), "number", position_jump, { 1.5f,1.5f });
-		jumpCountSp->DrawSprite("white1x1", position_jump, 0.0f, { 512.0f, 128.0f }, { 1,1,1,1 }, { 0.7f,0.5f });
+		countDisplyer_jump->Draw();
 	}
 
 	//•”wŒi
@@ -120,18 +120,42 @@ void Result::IsActive(const float arg_canCount, const float arg_jumpCount)
 
 void Result::SetScores(const float arg_canCount, const float arg_jumpCount)
 {
-	canCount = arg_canCount;
-	jumpCount = arg_jumpCount;
+	countDisplyer_can->count = arg_canCount;
+	countDisplyer_jump->count = arg_jumpCount;
 }
 
-void Result::SlideIn()
+
+Result::CountDisplayer::CountDisplayer()
 {
-	if (step_display == 0)
-	{
-		position_can.x = Easing::EaseInCubic(positionX_slideIn_start, positionX_slideIn_end, timerLimit_display, timer_display->GetTime());
-	}
-	else if (step_display == 1)
-	{
-		position_jump.x = Easing::EaseInCubic(positionX_slideIn_start, positionX_slideIn_end, timerLimit_display, timer_display->GetTime());
-	}
+	sprite = new Sprite();
+	numberSprite = new NumberSprite(count);
+}
+
+Result::CountDisplayer::~CountDisplayer()
+{
+	delete sprite;
+	delete numberSprite;
+}
+
+void Result::CountDisplayer::Initialize(const float arg_position_y)
+{
+	count = 0.0f;
+	position_sp = { position_slideIn_start_x,arg_position_y };
+}
+
+void Result::CountDisplayer::Update()
+{
+}
+
+void Result::CountDisplayer::Draw()
+{
+	const Vector2 position_numSp = { position_sp.x, position_sp.y };
+	numberSprite->Draw(std::to_string((int)count).size(), "number", position_numSp, { 1.5f,1.5f });
+
+	sprite->DrawSprite("white1x1", position_sp, 0.0f, { 512.0f, 128.0f });
+}
+
+void Result::CountDisplayer::SlideIn(const float limitTime, const float nowTime)
+{
+	position_sp.x = Easing::EaseInCubic(position_slideIn_start_x, position_slideIn_end_x, limitTime, nowTime);
 }
