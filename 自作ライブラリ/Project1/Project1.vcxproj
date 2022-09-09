@@ -204,6 +204,7 @@
     <ClCompile Include="LightCamera.cpp" />
     <ClCompile Include="LightGroup.cpp" />
     <ClCompile Include="MapBox.cpp" />
+    <ClCompile Include="MapLoader.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="LightCamera.h" />
     <ClInclude Include="LightGroup.h" />
     <ClInclude Include="MapBox.h" />
+    <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Mesh.h" />

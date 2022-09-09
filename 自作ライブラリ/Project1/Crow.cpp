@@ -5,18 +5,23 @@
 #include"CollisionAttribute.h"
 Crow::Crow()
 {
-	StartPos = { player->GetPosition().x + 12 ,-1,0 };
-	scale = { 1,0.5f,0.5f };
+	if(Object3D::GetCamera()->GetTarget().x > 4)
+	StartPos = { player->GetPosition().x + 12 ,1,0 };
+	else
+	{
+		StartPos = { 15 ,1,0 };
+	}
+	scale = 0.3f;
 	color = { 1,0,0,1 };
 	//アニメーション用にモデルのポインタを格納
-	myModel = FBXManager::GetModel("badGuy");
+	myModel = FBXManager::GetModel("crow");
 	name = typeid(*this).name();
 	//モデルの生成
 	Create(myModel);
 	BoxCollider* boxCollider = new BoxCollider();
 	boxCollider->SetObject(this);
-	boxCollider->SetOffset({ 0,0.25f,0,0 });
-	boxCollider->SetScale(scale / 2);
+	//boxCollider->SetOffset({ 0,0.25f,0,0 });
+	boxCollider->SetScale({scale.x*2.5f,scale.y,scale.z*2});
 	SetCollider(boxCollider);
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider->SetMove(true);
@@ -117,7 +122,7 @@ void Crow::Update()
 	{
 		rotation.z = Easing::EaseInOutSine(90, 0, 20 / mmoveVel, moveCounter - 450 / mmoveVel);
 	}
-	if (moveCounter <= 460 / mmoveVel)
+	if (moveCounter <= 460 / mmoveVel && Object3D::GetCamera()->GetTarget().x > 4)
 		position.x += player->GetMoveDistance().x;
 	Object::Update();
 }

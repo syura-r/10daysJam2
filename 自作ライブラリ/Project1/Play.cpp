@@ -24,6 +24,7 @@
 #include"Sprite3D.h"
 #include "BadGuy.h"
 #include "Crow.h"
+#include "MapLoader.h"
 Play::Play()
 {
 	next = Ending;
@@ -80,20 +81,24 @@ void Play::Initialize()
 	objectManager->Add(player);	
 	BaseEnemy::SetPlayerPtr(player);
 	camera->SetFocusObject(player);
-	for (int i = 0; i < 30; i++)
-	{
-		MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
-		objectManager->Add(mapBox);
-	}
-	for (int i = 0; i < 10; i++)
-	{
-		MapBox* mapBox = new MapBox(Vector3(-5 + i * 3, -5, 0));
-		objectManager->Add(mapBox);
-	}
-
-	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
-	objectManager->Add(badGuy);
-
+	//for (int i = 0; i < 30; i++)
+	//{
+	//	MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
+	//	objectManager->Add(mapBox);
+	//}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	MapBox* mapBox = new MapBox(Vector3(-2 + i * 3, -5, 0));
+	//	objectManager->Add(mapBox);
+	//}
+	//for (int i = 0; i < 15; i++)
+	//{
+	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
+	//	objectManager->Add(mapBox);
+	//}
+	//BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
+	//objectManager->Add(badGuy);
+	MapLoader::LoadMap("1-1");
 	camera->Initialize();
 
 	isEnd = false;
@@ -179,13 +184,11 @@ void Play::Update()
 	//}
 
 
-
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
 	lightGroup->SetDirLightDir(0, { lightDir[0],lightDir[1],lightDir[2],1 });
 	lightGroup->Update();
 	objectManager->Update();
 	camera->Update();
-	//collisionManager->CheckAllCollisions();
 
 	ParticleManager::GetInstance()->UpdateDeadEffect();
 }

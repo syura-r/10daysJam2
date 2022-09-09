@@ -5,6 +5,7 @@
 #include"CollisionAttribute.h"
 #include "RaycastHit.h"
 #include"CollisionManager.h"
+#include"Player.h"
 BadGuy::BadGuy(const Vector3& arg_pos) 
 {
 	StartPos = arg_pos;
@@ -23,6 +24,7 @@ BadGuy::BadGuy(const Vector3& arg_pos)
 	color = { 1,0,0,1 };
 	name = typeid(*this).name();
 	Initialize();
+	Object::Update();
 
 }
 
@@ -38,11 +40,14 @@ void BadGuy::Initialize()
 	rotation = 0;
 	prePos = position;
 	direction = { 1,0,0 };
+	velocity.x = -0.02f;
 }
 
 void BadGuy::Update()
 {
-	position.x -= 0.02f;
+	if (Vector3(player->GetPosition() - position).Length() > 15)
+		return;
+	position.x += velocity.x;
 		//落下処理
 	if (!onGround)
 	{
@@ -53,6 +58,8 @@ void BadGuy::Update()
 		position.y += fallV.m128_f32[1];
 		position.z += fallV.m128_f32[2];
 	}
+	if (position.y < -10)
+		dead = true;
 	CheckHit();
 	Object::Update();
 }
@@ -65,36 +72,36 @@ void BadGuy::CheckHit()
 
 	//コライダー更新
 	Object::Update();
-	Ray overDirectionRay;
-	overDirectionRay.start = prePos.ConvertXMVECTOR() + boxCollider->GetOffset() + Vector3(0, boxCollider->GetScale().y - 0.01f, 0).ConvertXMVECTOR();
-	overDirectionRay.dir = direction.ConvertXMVECTOR();
-	RaycastHit overDirectionRayCastHit;
-	if (CollisionManager::GetInstance()->Raycast(overDirectionRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
-		&overDirectionRayCastHit, 5))
-	{
-		float preToPosLength = Vector3(position - prePos).Length();
-		if (preToPosLength > overDirectionRayCastHit.distance)
-		{
-			Vector3 rejectPos = overDirectionRayCastHit.inter - direction * boxCollider->GetScale().z;
-			rejectPos.y = position.y;
-			position = rejectPos;
-		}
-	}
-	Ray underDirectionRay;
-	underDirectionRay.start = prePos.ConvertXMVECTOR() + boxCollider->GetOffset() - Vector3(0, boxCollider->GetScale().y - 0.01f, 0).ConvertXMVECTOR();
-	underDirectionRay.dir = direction.ConvertXMVECTOR();
-	RaycastHit underDirectionRayCastHit;
-	if (CollisionManager::GetInstance()->Raycast(underDirectionRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
-		&underDirectionRayCastHit, 5))
-	{
-		float preToPosLength = Vector3(position - prePos).Length();
-		if (preToPosLength > underDirectionRayCastHit.distance)
-		{
-			Vector3 rejectPos = underDirectionRayCastHit.inter - direction * boxCollider->GetScale().z;
-			rejectPos.y = position.y;
-			position = rejectPos;
-		}
-	}
+	//Ray overDirectionRay;
+	//overDirectionRay.start = prePos.ConvertXMVECTOR() + boxCollider->GetOffset() + Vector3(0, boxCollider->GetScale().y - 0.01f, 0).ConvertXMVECTOR();
+	//overDirectionRay.dir = direction.ConvertXMVECTOR();
+	//RaycastHit overDirectionRayCastHit;
+	//if (CollisionManager::GetInstance()->Raycast(overDirectionRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
+	//	&overDirectionRayCastHit, 5))
+	//{
+	//	float preToPosLength = Vector3(position - prePos).Length();
+	//	if (preToPosLength > overDirectionRayCastHit.distance)
+	//	{
+	//		Vector3 rejectPos = overDirectionRayCastHit.inter - direction * boxCollider->GetScale().z;
+	//		rejectPos.y = position.y;
+	//		position = rejectPos;
+	//	}
+	//}
+	//Ray underDirectionRay;
+	//underDirectionRay.start = prePos.ConvertXMVECTOR() + boxCollider->GetOffset() - Vector3(0, boxCollider->GetScale().y - 0.01f, 0).ConvertXMVECTOR();
+	//underDirectionRay.dir = direction.ConvertXMVECTOR();
+	//RaycastHit underDirectionRayCastHit;
+	//if (CollisionManager::GetInstance()->Raycast(underDirectionRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
+	//	&underDirectionRayCastHit, 5))
+	//{
+	//	float preToPosLength = Vector3(position - prePos).Length();
+	//	if (preToPosLength > underDirectionRayCastHit.distance)
+	//	{
+	//		Vector3 rejectPos = underDirectionRayCastHit.inter - direction * boxCollider->GetScale().z;
+	//		rejectPos.y = position.y;
+	//		position = rejectPos;
+	//	}
+	//}
 
 	//コライダー更新
 	Object::Update();
@@ -179,5 +186,8 @@ void BadGuy::CheckHit()
 
 	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
 		fallV.m128_f32[1] = 0;
+	if (abs(callback.move.m128_f32[0]) > 0.01f)
+		velocity *= -1;
+
 
 }

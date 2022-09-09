@@ -357,6 +357,9 @@
     <ClCompile Include="Crow.cpp">
       <Filter>ソース ファイル\GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="MapLoader.cpp">
+      <Filter>ソース ファイル\Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -634,6 +637,9 @@
     </ClInclude>
     <ClInclude Include="Crow.h">
       <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="MapLoader.h">
+      <Filter>ヘッダー ファイル\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

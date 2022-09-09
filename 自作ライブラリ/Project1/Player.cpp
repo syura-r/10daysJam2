@@ -23,12 +23,12 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	//ƒ‚ƒfƒ‹‚Ì¶¬
 	Create(myModel);
 	rotation = { 0,180,0 };
-	StartScale = { 0.5f,0.5f,0.5f };
+	StartScale = 0.5f;
 	scale = StartScale;
 	BoxCollider* boxCollider = new BoxCollider();
 	boxCollider->SetObject(this);
 	//boxCollider->SetOffset({ 0,0.5f,0,0 });
-	boxCollider->SetScale({ scale.x,scale.y*1.5f,scale.z });
+	boxCollider->SetScale({ scale.x,scale.y*1.5f,scale.z*0.5f });
 	SetCollider(boxCollider);
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 	collider->SetMove(true);
@@ -44,9 +44,7 @@ Player::~Player()
 void Player::Initialize()
 {	
 	onGround = true;
-	//scale = { 0.3f };
 	position = StartPos;
-	rotation = 0;
 	prePos = position;
 	direction = { 1,0,0 };
 	jump = false;
@@ -234,7 +232,7 @@ void Player::CheckHit()
 	position.y += callback.move.m128_f32[1];
 	position.z += callback.move.m128_f32[2];
 
-	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
+	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0 && callback.move.m128_f32[0] == 0)
 	{
 		fallV.m128_f32[1] = 0;
 	}

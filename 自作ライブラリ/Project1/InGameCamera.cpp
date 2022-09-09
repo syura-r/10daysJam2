@@ -40,6 +40,8 @@ void InGameCamera::Update()
 	if (focusObj != nullptr)
 	{
 		target.x = focusObj->GetPosition().x;
+		if (target.x < 4)
+			target.x = 4;
 	}
 
 	if (dirty || viewDirty) 

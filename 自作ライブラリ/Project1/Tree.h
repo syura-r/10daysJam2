@@ -24,8 +24,8 @@ public://メンバ関数
 	//コンストラクタ
 	TreeObject()
 	{
-		pSpace = nullptr;
-		pObject = nullptr;
+		pSpace = NULL;
+		pObject = NULL;
 	}
 	//デストラクタ
 	virtual ~TreeObject(){}
@@ -43,17 +43,17 @@ public://メンバ関数
 
 		// 逸脱処理
 		// 前後のオブジェクトを結びつける
-		if (spPre.GetPtr() != nullptr)
+		if (spPre.GetPtr() != NULL)
 		{
 			spPre->spNext = spNext;
-			spPre.SetPtr(nullptr);
+			spPre.SetPtr(NULL);
 		}
-		if (spNext.GetPtr() != nullptr)
+		if (spNext.GetPtr() != NULL)
 		{
 			spNext->spPre = spPre;
-			spNext.SetPtr(nullptr);
+			spNext.SetPtr(NULL);
 		}
-		pSpace = nullptr;
+		pSpace = NULL;
 		return true;
 	}
 
@@ -91,7 +91,7 @@ public:
 	CLiner8TreeManager()
 	{
 		m_uiDim = 0;
-		ppCellAry = nullptr;
+		ppCellAry = NULL;
 		m_W.x = m_W.y = m_W.z = 1.0f;
 		m_RgnMin.x = m_RgnMin.y = m_RgnMin.z = 0.0f;
 		m_RgnMax.x = m_RgnMax.y = m_RgnMax.z = 1.0f;
@@ -105,7 +105,7 @@ public:
 	{
 		DWORD i;
 		for (i = 0; i < m_dwCellNum; i++) {
-			if (ppCellAry[i] != nullptr)
+			if (ppCellAry[i] != NULL)
 				delete ppCellAry[i];
 		}
 		delete[] ppCellAry;
@@ -161,7 +161,7 @@ public:
 		ColVect.clear();
 
 		// ルート空間の存在をチェック
-		if (ppCellAry[0] == nullptr)
+		if (ppCellAry[0] == NULL)
 			return 0;	// 空間が存在していない
 
 		// ルート空間を処理
@@ -178,7 +178,7 @@ public:
 		ColVect.clear();
 		auto Elem = GetMortonNumber(min,max);
 		// ルート空間の存在をチェック
-		if (ppCellAry[Elem] == nullptr)
+		if (ppCellAry[Elem] == NULL)
 			return 0;	// 空間が存在していない
 
 		// ルート空間を処理
@@ -187,7 +187,7 @@ public:
 		if (Elem == 0)
 			return (DWORD)ColVect.size();
 		Elem = (Elem - 1) >> 3;
-		if (ppCellAry[Elem] == nullptr)
+		if (ppCellAry[Elem] == NULL)
 			return (DWORD)ColVect.size();
 
 		GetBackCollisionList(Elem, ColVect);
@@ -203,10 +203,10 @@ protected:
 		std::list<T*>::iterator it;
 		// ① 空間内のオブジェクト同士の衝突リスト作成
 		SmartPtr<TreeObject<T> > spOFT1 = ppCellAry[Elem]->GetFirstObj();
-		while (spOFT1.GetPtr() != nullptr)
+		while (spOFT1.GetPtr() != NULL)
 		{
 			SmartPtr<TreeObject<T> > spOFT2 = spOFT1->spNext;
-			while (spOFT2 != nullptr) {
+			while (spOFT2 != NULL) {
 				// 衝突リスト作成
 				ColVect.push_back(spOFT1->pObject);
 				ColVect.push_back(spOFT2->pObject);
@@ -257,6 +257,8 @@ protected:
 		while (spOFT1.GetPtr() != NULL)
 		{
 			ColVect.push_back(spOFT1->pObject);
+			if (spOFT1->spNext.GetPtr() != NULL && spOFT1.GetPtr() == spOFT1->spNext.GetPtr())
+				break;
 			spOFT1 = spOFT1->spNext;
 		}
 
@@ -281,6 +283,8 @@ protected:
 		while (spOFT1.GetPtr() != NULL)
 		{
 			ColVect.push_back(spOFT1->pObject);
+			if (spOFT1->spNext.GetPtr() != NULL && spOFT1.GetPtr() == spOFT1->spNext.GetPtr())
+				break;
 			spOFT1 = spOFT1->spNext;
 		}
 
@@ -385,23 +389,23 @@ public:
 	//デストラクタ
 	virtual ~TreeSpace()
 	{
-		if (smartPtrLatest.GetPtr() != nullptr) ResetLink(smartPtrLatest);
+		if (smartPtrLatest.GetPtr() != NULL) ResetLink(smartPtrLatest);
 	}
 
 	// リンクを全てリセットする
 	void ResetLink(SmartPtr<TreeObject<T> >& spTO)
 	{
-		if (spTO->spNext.GetPtr() != nullptr)
+		if (spTO->spNext.GetPtr() != NULL)
 			ResetLink(spTO->spNext);
-		spTO.SetPtr(nullptr);		// スマートポインタリセット		
+		spTO.SetPtr(NULL);		// スマートポインタリセット		
 	}
 
 	//オブジェクトをプッシュ
 	bool Push(SmartPtr<TreeObject<T> >& spTO)
 	{
-		if (spTO.GetPtr() == nullptr) return false;	// 無効オブジェクトは登録しない
+		if (spTO.GetPtr() == NULL) return false;	// 無効オブジェクトは登録しない
 		if (spTO->pSpace == this) return false;	// 2重登録チェック
-		if (smartPtrLatest.GetPtr() == nullptr) {
+		if (smartPtrLatest.GetPtr() == NULL) {
 			smartPtrLatest = spTO;	// 空間に新規登録
 		}
 		else
@@ -425,7 +429,7 @@ public:
 	{
 		if (smartPtrLatest.GetPtr() == pRemoveObj) {
 			// 次のオブジェクトに挿げ替え
-			if (smartPtrLatest.GetPtr() != nullptr)
+			if (smartPtrLatest.GetPtr() != NULL)
 				smartPtrLatest = smartPtrLatest->GetNextObj();
 		}
 		return true;

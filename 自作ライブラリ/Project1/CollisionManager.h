@@ -18,28 +18,33 @@ public://静的メンバ関数
 public://メンバ関数
 	void AddCollider(BaseCollider* collider);
 
+	//inline void RemoveCollider(BaseCollider* collider)
+	//{
+	//	//auto end_it = spSOFTAry.end();
+	//	for (auto it = spSOFTAry.begin(); it != spSOFTAry.end();)
+	//	{
+	//		if ((*it)->pObject == collider)
+	//		{
+	//			(*it)->Remove();
+	//			it = spSOFTAry.erase(it);
+	//		}
+	//		else
+	//			++it;
+	//	}
+
+	//	colliders.at(collider->GetObject3D()).remove(collider);
+	//}
 	inline void RemoveCollider(BaseCollider* collider)
 	{
-		//auto end_it = spSOFTAry.end();
-		for (auto it = spSOFTAry.begin(); it != spSOFTAry.end();)
-		{
-			if ((*it)->pObject == collider)
-			{
-				(*it)->Remove();
-				it = spSOFTAry.erase(it);
-			}
-			else
-				++it;
-		}
+		colliders.remove(collider);
+	}
 
-		colliders.at(collider->GetObject3D()).remove(collider);
-	}
-	const std::forward_list<BaseCollider*>* GetColliders(Object* objPtr)
-	{
-		if (colliders.count(objPtr) == 0)
-			return nullptr;
-		return &colliders[objPtr];
-	}
+	//const std::forward_list<BaseCollider*>* GetColliders(Object* objPtr)
+	//{
+	//	if (colliders.count(objPtr) == 0)
+	//		return nullptr;
+	//	return &colliders[objPtr];
+	//}
 	void CheckAllCollisions();
 	bool CheckHitBox(const Box& box, unsigned short attribute = (unsigned short)0xffffffff);
 	/// <summary>
@@ -65,10 +70,11 @@ private:
 	CollisionManager(const CollisionManager&) = default;
 	~CollisionManager() = default;
 	CollisionManager& operator=(const CollisionManager&) = default;
-	std::unordered_map<Object*,std::forward_list<BaseCollider*>> colliders;
-	Tree::CLiner8TreeManager<BaseCollider> L8Tree;
-	std::vector<BaseCollider*> ColVect;	// 衝突対象リスト
-	std::vector < SmartPtr<Tree::TreeObject<BaseCollider>>> spSOFTAry;
+	//std::unordered_map<Object*,std::forward_list<BaseCollider*>> colliders;
+	//Tree::CLiner8TreeManager<BaseCollider> L8Tree;
+	//std::vector<BaseCollider*> ColVect;	// 衝突対象リスト
+	//std::vector < SmartPtr<Tree::TreeObject<BaseCollider>>> spSOFTAry;
+	std::forward_list<BaseCollider*> colliders;
 
 
 	bool viewCollider;

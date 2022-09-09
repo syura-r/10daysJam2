@@ -54,7 +54,6 @@ void ObjectManager::Update()
 {
 	AddObjectsAtOnce();
 	RemoveDeadObjects();
-
 	for (auto& it : objects)
 	{
 		for (auto& itr : it.second)

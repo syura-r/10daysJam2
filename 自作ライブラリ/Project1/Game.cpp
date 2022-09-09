@@ -98,6 +98,8 @@ void Game::RoadAsset()
 		//FBXファイルの読み込み
 		FBXManager::LoadModelFile("player", "VendingMachineTex", false);
 		FBXManager::LoadModelFile("badGuy", "Box", false);
+		FBXManager::LoadModelFile("crow", "crow", false);
+
 
 
 		//WAVファイルの読み込み
@@ -182,7 +184,7 @@ void Game::LoadFinish()
 	//DirectInputオブジェクトの生成
 	Input::Initialize(win->GetHwnd());
 
-	CollisionManager::GetInstance()->Initialize(Vector3{ -370.0f,-310.0f,-370.0f }+100, Vector3{ 370.0f,350.0f,370.0f }+100);
+	CollisionManager::GetInstance()->Initialize(Vector3{ -10.0f,-15.0f,-30.0f }, Vector3{ 300.0f,10.0f,30.0f });
 	
 
 	lightCamera = std::make_unique<LightCamera>();

@@ -17,30 +17,32 @@ CollisionManager * CollisionManager::GetInstance()
 
 void CollisionManager::AddCollider(BaseCollider* collider)
 {
-	colliders[collider->GetObject3D()].push_front(collider);
-	Tree::TreeObject<BaseCollider>* p = new Tree::TreeObject<BaseCollider>;
-	p->pObject = collider;
-	SmartPtr<Tree::TreeObject<BaseCollider>> s;
-	s.SetPtr(p);
-	const Vector3 min = collider->GetMin();
-	const Vector3 max = collider->GetMax();
-	spSOFTAry.push_back(s);
-	L8Tree.Regist(min, max, s);
+	colliders.push_front(collider);
+
+	//colliders[collider->GetObject3D()].push_front(collider);
+	//Tree::TreeObject<BaseCollider>* p = new Tree::TreeObject<BaseCollider>;
+	//p->pObject = collider;
+	//SmartPtr<Tree::TreeObject<BaseCollider>> s;
+	//s.SetPtr(p);
+	//const Vector3 min = collider->GetMin();
+	//const Vector3 max = collider->GetMax();
+	//spSOFTAry.push_back(s);
+	//L8Tree.Regist(min, max, s);
 }
 
 void CollisionManager::CheckAllCollisions()
 {
-	auto end_it = spSOFTAry.end();
-	for(auto it = spSOFTAry.begin();it != end_it;++it)
-	{
-		if((*it)->pObject->move)
-		{
-			(*it)->Remove();
-			const Vector3 min = (*it)->pObject->GetMin();
-			const Vector3 max = (*it)->pObject->GetMax();
-			L8Tree.Regist(min, max, *it);
-		}
-	}
+	//auto end_it = spSOFTAry.end();
+	//for(auto it = spSOFTAry.begin();it != end_it;++it)
+	//{
+	//	//if((*it)->pObject->move)
+	//	//{
+	//		(*it)->Remove();
+	//		const Vector3 min = (*it)->pObject->GetMin();
+	//		const Vector3 max = (*it)->pObject->GetMax();
+	//		L8Tree.Regist(min, max, *it);
+	//	//}
+	//}
 	
 	//const int collisionCount = L8Tree.GetAllCollisionList(ColVect);
 	//long c = 0;
@@ -282,35 +284,35 @@ void CollisionManager::CheckAllCollisions()
 
 bool CollisionManager::CheckHitBox(const Box& box, unsigned short attribute)
 {
-	DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect, box.minPosition, box.maxPosition);
-	DWORD c;
-	for (c = 0; c < collisionCount; c++) 
-	{
-		BaseCollider* col = ColVect[c];
-		if (col->attribute != attribute)
-			continue;
+	//DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect, box.minPosition, box.maxPosition);
+	//DWORD c;
+	//for (c = 0; c < collisionCount; c++) 
+	//{
+	//	BaseCollider* col = ColVect[c];
+	//	if (col->attribute != attribute)
+	//		continue;
 
-		//ボックス
-		if (col->GetShapeType() == COLLISIONSHAPE_BOX)
-		{
-			Box* boxB = dynamic_cast<Box*>(col);
+	//	//ボックス
+	//	if (col->GetShapeType() == COLLISIONSHAPE_BOX)
+	//	{
+	//		Box* boxB = dynamic_cast<Box*>(col);
 
-			if (Collision::CheckOBBOBB(box, *boxB))
-			{
-				return true;
-			}
-		}
-	}
+	//		if (Collision::CheckOBBOBB(box, *boxB))
+	//		{
+	//			return true;
+	//		}
+	//	}
+	//}
 	return false;
 }
 
 void CollisionManager::Initialize(const Vector3& minLine,const Vector3& maxLine)
 {
-	if (!L8Tree.Initialize(
-		6,
-		minLine,
-		maxLine))
-		assert(0);
+	//if (!L8Tree.Initialize(
+	//	6,
+	//	minLine,
+	//	maxLine))
+	//	assert(0);
 	CreateConstBuff();
 	CreateVBV();
 	viewCollider = false;
@@ -324,23 +326,25 @@ bool CollisionManager::Raycast(const Ray & ray, BaseCollider* collider, RaycastH
 bool CollisionManager::Raycast(const Ray & ray, BaseCollider* collider, unsigned short attribute, RaycastHit * hitinfo, float maxDistance)
 {
 	bool result = false;
-	//走査用のイテレータ
-	//std::vector<BaseCollider*>::iterator it;
+	std::forward_list<BaseCollider*>::iterator it;
 	//今までで最も近いコライダーを記録する為のイテレータ
-	///std::vector<BaseCollider*>::iterator it_hit;
-	BaseCollider* hitCol;
+	std::forward_list<BaseCollider*>::iterator it_hit;
 	//今までで最も近いコライダーの距離を記録する変数
 	float distance = maxDistance;
 	//今までで最も近いコライダーとの交点を記録する変数
 	XMVECTOR inter;
+	BaseCollider* hitCol;
 
-	DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect, collider->GetMin(), collider->GetMax());
-	DWORD c;
-	for (c = 0; c < collisionCount; c++) {
-		BaseCollider* colA = ColVect[c];
-		//属性が合わなければスキップ
+	//全てのコライダーと総当たりチェック
+	it = colliders.begin();
+	auto endItr = colliders.end();
+	for (; it != endItr; ++it)
+	{
+		BaseCollider* colA = *it;
+
 		if (!(colA->attribute & attribute))
 			continue;
+		if (Vector3(ray.start - colA->object->GetPosition()).Length() > 10)continue;
 
 		//球の場合
 		if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE)
@@ -407,16 +411,19 @@ void CollisionManager::QuerySphere(const Sphere & sphere, QueryCallback * callba
 {
 	assert(callback);
 
-	std::vector<BaseCollider*>::iterator it;
+	std::forward_list<BaseCollider*>::iterator it;
+	//今までで最も近いコライダーを記録する為のイテレータ
+	std::forward_list<BaseCollider*>::iterator it_hit;
+	//今までで最も近いコライダーの距離を記録する変数
+	//全てのコライダーと総当たりチェック
+	it = colliders.begin();
+	auto endItr = colliders.end();
+	for (; it != endItr; ++it)
+	{
+		BaseCollider* col = *it;
+		//if (!(col->attribute & attribute1) && !(col->attribute & attribute2))
+		//	continue;
 
-	DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect,collider->GetMin(),collider->GetMax());
-	DWORD c;
-	for (c = 0; c < collisionCount; c++) {
-		BaseCollider* col = ColVect[c];
-		//属性が合わなければスキップ
-		if (!(col->attribute & attribute))
-			continue;
-		
 		//球
 		if (col->GetShapeType() == COLLISIONSHAPE_SPHERE)
 		{
@@ -473,13 +480,20 @@ void CollisionManager::QuerySphere(const Sphere & sphere, QueryCallback * callba
 void CollisionManager::QueryBox(const Box& box, QueryCallback* callback, unsigned short attribute1, unsigned short attribute2, BaseCollider* collider)
 {
 	assert(callback);
-
-	DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect, box.minPosition, box.maxPosition);
-	DWORD c;
-	for (c = 0; c < collisionCount; c++) {
-		BaseCollider* col = ColVect[c];
+	std::forward_list<BaseCollider*>::iterator it;
+	//今までで最も近いコライダーを記録する為のイテレータ
+	std::forward_list<BaseCollider*>::iterator it_hit;
+	//今までで最も近いコライダーの距離を記録する変数
+	//全てのコライダーと総当たりチェック
+	it = colliders.begin();
+	auto endItr = colliders.end();
+	for (; it != endItr; ++it)
+	{
+		BaseCollider* col = *it;
 		if (col->attribute != attribute1 && col->attribute != attribute2)
 			continue;
+
+		if (Vector3(box.center - col->object->GetPosition()).Length() > 10)continue;
 
 		//球
 		if (col->GetShapeType() == COLLISIONSHAPE_SPHERE)
@@ -706,9 +720,9 @@ void CollisionManager::SendBoxBuffers(UINT& num)
 	BoxVBData* vertMap = nullptr;
 	auto result = boxVertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		for (auto& it : colliders)
-		{
-			for (auto& colIt : it.second)
+		//for (auto& it : colliders)
+		//{
+			for (auto& colIt : colliders)
 			{
 				if (colIt->GetShapeType() != COLLISIONSHAPE_BOX)
 					continue;
@@ -744,7 +758,7 @@ void CollisionManager::SendBoxBuffers(UINT& num)
 		}
 		boxVertBuff->Unmap(0, nullptr);
 		
-	}
+	//}
 	num = vertCount;
 }
 
@@ -755,9 +769,9 @@ void CollisionManager::SendSphereBuffers(UINT& num)
 	SphereVBData* vertMap = nullptr;
 	auto result = sphereVertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		for (auto& it : colliders)
-		{
-			for (auto& colIt : it.second)
+		//for (auto& it : colliders)
+		//{
+			for (auto& colIt : colliders)
 			{
 				if (colIt->GetShapeType() != COLLISIONSHAPE_SPHERE)
 					continue;
@@ -772,7 +786,7 @@ void CollisionManager::SendSphereBuffers(UINT& num)
 			}
 		}
 		sphereVertBuff->Unmap(0, nullptr);
-	}
+	//}
 	num = vertCount;
 }
 

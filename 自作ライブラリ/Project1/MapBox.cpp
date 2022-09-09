@@ -18,7 +18,7 @@ MapBox::MapBox( const Vector3& position, const Vector3& scale, const Vector3& ro
 	BoxCollider* collider = new BoxCollider;
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 	collider->SetScale(scale/2);
-	collider->SetMove(true);
+	collider->SetMove(false);
 	SetCollider(collider);
 }
 
