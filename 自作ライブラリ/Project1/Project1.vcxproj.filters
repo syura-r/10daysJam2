@@ -348,6 +348,9 @@
     <ClCompile Include="Result.cpp">
       <Filter>ソース ファイル\GameText</Filter>
     </ClCompile>
+    <ClCompile Include="GameEndSelect.cpp">
+      <Filter>ソース ファイル\GameText</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -621,6 +624,9 @@
       <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">
+      <Filter>ヘッダー ファイル\GameText</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEndSelect.h">
       <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
   </ItemGroup>

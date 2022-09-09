@@ -194,6 +194,7 @@
     <ClCompile Include="Create3DObject.cpp" />
     <ClCompile Include="CreateFigure.cpp" />
     <ClCompile Include="ComputeShade.cpp" />
+    <ClCompile Include="GameEndSelect.cpp" />
     <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GSShaderTestObj.cpp" />
     <ClCompile Include="InGameCamera.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Create3DObject.h" />
     <ClInclude Include="CreateFigure.h" />
     <ClInclude Include="ComputeShade.h" />
+    <ClInclude Include="GameEndSelect.h" />
     <ClInclude Include="GameSettingParam.h" />
     <ClInclude Include="Grass.h" />
     <ClInclude Include="GSShaderTestObj.h" />

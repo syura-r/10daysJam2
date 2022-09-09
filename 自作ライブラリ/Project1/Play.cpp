@@ -50,6 +50,7 @@ Play::Play()
 	result = new Result();
 	inGameTimer = new InGameTimer();
 	cansBar = new StockCansBar();
+	gameEndSelect = new GameEndSelect();
 
 	ParticleEmitter::SetObjectManager(objectManager);
 }
@@ -62,6 +63,7 @@ Play::~Play()
 	PtrDelete(result);
 	PtrDelete(inGameTimer);
 	PtrDelete(cansBar);
+	PtrDelete(gameEndSelect);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
@@ -87,6 +89,7 @@ void Play::Initialize()
 	result->Initialize();
 	inGameTimer->Initialize();
 	cansBar->Initialize(100);//缶の初期数を渡す
+	gameEndSelect->Initialize();
 
 	//nowPlayingBGMName = "BGM_Play";
 	//Audio::StopBGM(nowPlayingBGMName);
@@ -102,12 +105,10 @@ void Play::Initialize()
 void Play::Update()
 {
 	result->Update();
-	if (result->GetIsToNextScene())
+	//リザルトを閉じる
+	if (result->GetIsCloseResult() && !gameEndSelect->GetIsActive())
 	{
-		Audio::StopBGM(nowPlayingBGMName);
-		Audio::AllStopSE();
-		next = Title;
-		ShutDown();
+		gameEndSelect->IsActive();
 		return;
 	}
 	if (result->GetActivePause())
@@ -123,6 +124,27 @@ void Play::Update()
 	}
 #endif
 
+	gameEndSelect->Update();
+	//やり直す
+	if (gameEndSelect->GetRestart())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Initialize();
+		return;
+	}
+	//タイトルにもどる
+	if (gameEndSelect->GetToTitle())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Audio::AllStopSE();
+		next = Title;
+		ShutDown();
+		return;
+	}
+	if (gameEndSelect->GetIsActive())
+	{
+		return;
+	}
 
 	pause->Update();
 	//ゲームにもどる
@@ -215,5 +237,6 @@ void Play::PostDraw()
 
 	pause->Draw();
 	result->Draw();
+	gameEndSelect->Draw();
 }
 

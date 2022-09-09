@@ -55,10 +55,10 @@ private:
 	bool isUP_alphaChange = false;
 
 	//選択肢1つに必要な変数
-	struct SelectSprite
+	struct SelectSprite_inPause
 	{
-		SelectSprite();
-		~SelectSprite();
+		SelectSprite_inPause();
+		~SelectSprite_inPause();
 		void Initialize(const std::string& texName, const float posY);
 		void Update();
 		void Draw();
@@ -70,15 +70,15 @@ private:
 
 
 	//ゲームにもどる
-	SelectSprite* toGame = nullptr;
+	SelectSprite_inPause* toGame = nullptr;
 	bool flag_toGame = false;
 
 	//やり直す
-	SelectSprite* restart = nullptr;
+	SelectSprite_inPause* restart = nullptr;
 	bool flag_restart = false;
 
 	//タイトルにもどる
-	SelectSprite* toTitle = nullptr;
+	SelectSprite_inPause* toTitle = nullptr;
 	bool flag_toTitle = false;
 
 	//音量設定
@@ -86,7 +86,7 @@ private:
 	int inputInterval_LR = 0;
 
 	//音量設定BGM
-	SelectSprite* bgm = nullptr;
+	SelectSprite_inPause* bgm = nullptr;
 	Sprite* bar_bgm;
 	Vector2 barPositionLeft_bgm;
 	const Vector2 bar_scale = { 256.0f,5.0f };
@@ -94,7 +94,7 @@ private:
 	Vector2 circlePosition_bgm;
 
 	//音量設定SE
-	SelectSprite* se = nullptr;
+	SelectSprite_inPause* se = nullptr;
 	Sprite* bar_se;
 	Vector2 barPositionLeft_se;
 	Sprite* circle_se;
