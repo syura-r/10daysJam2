@@ -34,23 +34,14 @@ private:
 	float lightDir[3] = { 0.0f,-1.00f,0.2f };
 	bool targetSphere = false;
 	CollisionManager* collisionManager = nullptr;
-	ObjectManager* objectManager = nullptr;	
+	ObjectManager* objectManager = nullptr;
 	std::unique_ptr<InGameCamera> camera;
 	
 	Pause* pause = nullptr;
 	Result* result = nullptr;
 	InGameTimer* inGameTimer = nullptr;
-	int gameEndCount;
 	StockCansBar* cansBar = nullptr;
 
 	std::string nowPlayingBGMName;
-	bool limit30trigger;
-
-	int countDownTime;
-	bool finishSoundTrigger;
-
-	int gameTime;
-	int limit30Time;
-	int limit10Time;
 };
 

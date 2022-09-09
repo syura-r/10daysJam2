@@ -1,14 +1,14 @@
 #include "Play.h"
 #include <fstream>
 #include <sstream>
-#include"Object3D.h"
-#include"Audio.h"
-#include"ParticleEmitter.h"
-#include"ParticleManager.h"
+#include "Object3D.h"
+#include "Audio.h"
+#include "ParticleEmitter.h"
+#include "ParticleManager.h"
 #include "DrawMode.h"
-#include"imgui.h"
-#include"TouchAbleObject.h"
-#include"FBXManager.h"
+#include "imgui.h"
+#include "TouchAbleObject.h"
+#include "FBXManager.h"
 #include "Input.h"
 #include "MapBox.h"
 #include "Easing.h"
@@ -20,8 +20,8 @@
 #include "ScreenCamera.h"
 #include "InGameCamera.h"
 
-#include"AreaEffect.h"
-#include"Sprite3D.h"
+#include "AreaEffect.h"
+#include "Sprite3D.h"
 
 Play::Play()
 {
@@ -45,10 +45,6 @@ Play::Play()
 	objectManager = ObjectManager::GetInstance();
 
 	objectManager->AddObjectsAtOnce();
-
-	gameTime = 120;
-	limit30Time = gameTime - 30;
-	limit10Time = gameTime - 10;
 
 	pause = new Pause();
 	result = new Result();
@@ -80,17 +76,17 @@ void Play::Initialize()
 
 
 	Player* player = new Player(Vector3(0, -5, -10));
-	objectManager->Add(player);	
+	objectManager->Add(player);
 	
 	camera->Initialize();
 
 	isEnd = false;
 	isAllEnd = false;
+
 	pause->Initialize();
 	result->Initialize();
 	inGameTimer->Initialize();
 	cansBar->Initialize(100);//缶の初期数を渡す
-	gameEndCount = 0;
 
 	//nowPlayingBGMName = "BGM_Play";
 	//Audio::StopBGM(nowPlayingBGMName);
@@ -99,11 +95,6 @@ void Play::Initialize()
 
 	Input::Update();
 	Update();
-
-	limit30trigger = false;
-
-	countDownTime = 0;
-	finishSoundTrigger = false;
 
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
@@ -127,7 +118,7 @@ void Play::Update()
 	//リザルト開始
 	if (Input::TriggerKey(DIK_R))
 	{
-		result->IsActive(100, 50);//缶の数とジャンプの回数
+		result->IsActive(80, 50);//缶の数とジャンプの回数
 		return;
 	}
 #endif
@@ -175,17 +166,7 @@ void Play::Update()
 #endif
 	
 	inGameTimer->Update();
-	cansBar->Update(30);//缶の現在数を渡す
-	//if (timeLimit->GetLimit())
-	//{
-	//	//gameEndCount++;
-	//	if (!finishSoundTrigger)
-	//	{
-	//		finishSoundTrigger = true;
-	//	}
-	//	gameEndCount++;
-	//	return;
-	//}
+	cansBar->Update(80);//缶の現在数を渡す
 
 
 
