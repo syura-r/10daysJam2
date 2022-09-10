@@ -179,3 +179,28 @@ float Easing::EaseInOutBack(const float & start, const float & end, const float 
 	return Lerp(start, end, (t < 0.5? (powf(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
 		: (powf(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2));
 }
+
+float Easing::EaseOutBounce(const float& start, const float& end, const float& count, const float& time)
+{
+	float t = time;
+	t /= count;
+	const float n1 = 7.5625f;
+	const float d1 = 2.75f;
+
+	float lerpTime = 0.0f;
+
+	if (t < 1 / d1) {
+		lerpTime = n1 * t * t;
+	}
+	else if (t < 2 / d1) {
+		lerpTime = n1 * (t -= 1.5 / d1) * t + 0.75;
+	}
+	else if (t < 2.5 / d1) {
+		lerpTime = n1 * (t -= 2.25 / d1) * t + 0.9375;
+	}
+	else {
+		lerpTime = n1 * (t -= 2.625 / d1) * t + 0.984375;
+	}
+
+	return Lerp(start, end, lerpTime);
+}

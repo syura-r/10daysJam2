@@ -38,5 +38,6 @@ public:
 	static float EaseOutBack(const float & start, const float & end, const float& MaxTime, const float& nowCount);
 	static float EaseInOutBack(const float & start, const float & end, const float& MaxTime, const float& nowCount);
 
+	static float EaseOutBounce(const float& start, const float& end, const float& MaxTime, const float& nowCount);
 };
 

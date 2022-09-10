@@ -21,6 +21,9 @@ public:
 	void Change(Scene::SCENE next);
 	void PreDraw();
 	void PostDraw();
+
+	bool GetIsAllEnd() { return currentScene->GetIsAllEnd(); }
+
 private:
 
 	SceneManager() = default;

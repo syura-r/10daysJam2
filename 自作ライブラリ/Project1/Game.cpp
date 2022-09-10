@@ -83,6 +83,22 @@ void Game::RoadAsset()
 		Texture::LoadTexture("number", "number.png");
 		Texture::LoadTexture("wind", "wind.png");
 
+		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
+		Texture::LoadTexture("can", "stockCansBar/can.png");
+
+		Texture::LoadTexture("circle", "pause/circle.png");
+		Texture::LoadTexture("toGame", "pause/toGame.png");
+		Texture::LoadTexture("restart", "pause/restart.png");
+		Texture::LoadTexture("toTitle", "pause/toTitle.png");
+		Texture::LoadTexture("bgm", "pause/bgm.png");
+		Texture::LoadTexture("se", "pause/se.png");
+
+		Texture::LoadTexture("logo", "title/logo.png");
+		Texture::LoadTexture("start", "title/start.png");
+		Texture::LoadTexture("quit", "title/quit.png");
+
+		Texture::LoadTexture("button_a", "button_a.png");
+
 		break; 
 	case 2:
 		//Objモデルの読み込み
@@ -104,6 +120,8 @@ void Game::RoadAsset()
 
 		//WAVファイルの読み込み
 		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");
+		Audio::LoadFile("SE_Select", "SE/Allscene_SE_Select.wav");
+		Audio::LoadFile("SE_Decision", "SE/Allscene_SE_Decision.wav");
 
 		break;
 	case 5:
@@ -195,7 +213,7 @@ void Game::LoadFinish()
 	sceneManeger->Initialize();
 	sceneManeger->Add(Scene::SCENE::Title, new Title());
 	sceneManeger->Add(Scene::SCENE::Play, new Play());
-	sceneManeger->Add(Scene::SCENE::Ending, new Ending());
+	//sceneManeger->Add(Scene::SCENE::Ending, new Ending());
 
 	sceneManeger->Change(Scene::SCENE::Title);
 
@@ -277,6 +295,11 @@ void Game::Run()
 
 		else if (!nowLoading)
 		{
+			if (sceneManeger->GetIsAllEnd())
+			{
+				break;
+			}
+
 			Input::Update();
 			Alpha::Update();
 			if (Input::TriggerKey(DIK_1))

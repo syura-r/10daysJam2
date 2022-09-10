@@ -324,7 +324,7 @@
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル\Tool</Filter>
     </ClCompile>
-    <ClCompile Include="TimeLimit.cpp">
+    <ClCompile Include="InGameTimer.cpp">
       <Filter>ソース ファイル\GameText</Filter>
     </ClCompile>
     <ClCompile Include="Pause.cpp">
@@ -362,6 +362,12 @@
     </ClCompile>
     <ClCompile Include="HitStop.cpp">
       <Filter>ソース ファイル\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="StockCansBar.cpp">
+      <Filter>ソース ファイル\GameText</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>ソース ファイル\GameText</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,7 +614,7 @@
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\Tool</Filter>
     </ClInclude>
-    <ClInclude Include="TimeLimit.h">
+    <ClInclude Include="InGameTimer.h">
       <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
     <ClInclude Include="Pause.h">
@@ -646,6 +652,12 @@
     </ClInclude>
     <ClInclude Include="HitStop.h">
       <Filter>ヘッダー ファイル\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="StockCansBar.h">
+      <Filter>ヘッダー ファイル\GameText</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

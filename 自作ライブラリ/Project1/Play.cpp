@@ -1,14 +1,14 @@
 #include "Play.h"
 #include <fstream>
 #include <sstream>
-#include"Object3D.h"
-#include"Audio.h"
-#include"ParticleEmitter.h"
-#include"ParticleManager.h"
+#include "Object3D.h"
+#include "Audio.h"
+#include "ParticleEmitter.h"
+#include "ParticleManager.h"
 #include "DrawMode.h"
-#include"imgui.h"
-#include"TouchAbleObject.h"
-#include"FBXManager.h"
+#include "imgui.h"
+#include "TouchAbleObject.h"
+#include "FBXManager.h"
 #include "Input.h"
 #include "MapBox.h"
 #include "Easing.h"
@@ -28,7 +28,7 @@
 #include "HitStop.h"
 Play::Play()
 {
-	next = Ending;
+	next = Title;
 	camera = std::make_unique<InGameCamera>();
 	Object3D::SetCamera(camera.get());
 	Sprite3D::SetCamera(camera.get());
@@ -49,12 +49,10 @@ Play::Play()
 
 	objectManager->AddObjectsAtOnce();
 
-	gameTime = 120;
-	limit30Time = gameTime - 30;
-	limit10Time = gameTime - 10;
-
-	//pause = new Pause();
-	//timeLimit = new TimeLimit(gameTime * 60);//制限時間の設定はここ
+	pause = new Pause();
+	result = new Result();
+	inGameTimer = new InGameTimer();
+	cansBar = new StockCansBar();
 
 	ParticleEmitter::SetObjectManager(objectManager);
 }
@@ -63,14 +61,16 @@ Play::Play()
 Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
-	//PtrDelete(pause);
-	//PtrDelete(timeLimit);
+	PtrDelete(pause);
+	PtrDelete(result);
+	PtrDelete(inGameTimer);
+	PtrDelete(cansBar);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
 void Play::Initialize()
 {
-	next = Ending;
+	next = Title;
 
 	Object3D::SetCamera(camera.get());
 	Object3D::SetLightGroup(lightGroup.get());
@@ -103,9 +103,12 @@ void Play::Initialize()
 	camera->Initialize();
 
 	isEnd = false;
-	//pause->Initialize();
-	//timeLimit->Initialize();
-	gameEndCount = 0;
+	isAllEnd = false;
+
+	pause->Initialize();
+	result->Initialize();
+	inGameTimer->Initialize();
+	cansBar->Initialize(100);//缶の初期数を渡す
 
 	//nowPlayingBGMName = "BGM_Play";
 	//Audio::StopBGM(nowPlayingBGMName);
@@ -115,46 +118,63 @@ void Play::Initialize()
 	Input::Update();
 	Update();
 
-	limit30trigger = false;
-
-	countDownTime = 0;
-	finishSoundTrigger = false;
-
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
 void Play::Update()
 {
+	result->Update();
+	if (result->GetIsToNextScene())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Audio::AllStopSE();
+		next = Title;
+		ShutDown();
+		return;
+	}
+	if (result->GetActivePause())
+	{
+		return;
+	}
+#ifdef _DEBUG
+	//リザルト開始
+	if (Input::TriggerKey(DIK_R))
+	{
+		result->IsActive(80, 50);//缶の数とジャンプの回数
+		return;
+	}
+#endif
 
-	//pause->Update();
+
+	pause->Update();
 	//ゲームにもどる
-	//if (pause->GetToGame())
-	//{
-	//	return;
-	//}
-	////やり直す
-	//if (pause->GetRestart())
-	//{
-	//	Audio::StopBGM(nowPlayingBGMName);
-	//	Initialize();
-	//	return;
-	//}
+	if (pause->GetToGame())
+	{
+		return;
+	}
+	//やり直す
+	if (pause->GetRestart())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Initialize();
+		return;
+	}
 	//タイトルにもどる
-	//if (pause->GetToTitle())
-	//{
-	//	Audio::StopBGM(nowPlayingBGMName);
-	//	Audio::AllStopSE();
-	//	next = Title;
-	//	ShutDown();
-	//	return;
-	//}
-	////ポーズ画面を開いているとき
-	//if (pause->GetActivePause())
-	//{
-	//	//BGMの音量変更
-	//	Audio::VolumeChangeBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
-	//	return;
-	//}
+	if (pause->GetToTitle())
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		Audio::AllStopSE();
+		next = Title;
+		ShutDown();
+		return;
+	}
+	//ポーズ画面を開いているとき
+	if (pause->GetActivePause())
+	{
+		//BGMの音量変更
+		Audio::VolumeChangeBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
+		return;
+	}
 
 
 #ifdef _DEBUG
@@ -172,17 +192,8 @@ void Play::Update()
 	}
 #endif
 	
-	//timeLimit->Update();
-	//if (timeLimit->GetLimit())
-	//{
-	//	//gameEndCount++;
-	//	if (!finishSoundTrigger)
-	//	{
-	//		finishSoundTrigger = true;
-	//	}
-	//	gameEndCount++;
-	//	return;
-	//}
+	inGameTimer->Update();
+	cansBar->Update(80);//缶の現在数を渡す
 
 
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
@@ -198,7 +209,8 @@ void Play::Update()
 
 void Play::PreDraw()
 {
-	//timeLimit->Draw();
+	inGameTimer->Draw();
+	cansBar->Draw();
 
 	objectManager->DrawReady();
 #ifdef _DEBUG
@@ -227,6 +239,8 @@ void Play::PostDraw()
 	{
 		DirectXLib::GetInstance()->DepthClear();
 	}
-	//pause->Draw();
+
+	pause->Draw();
+	result->Draw();
 }
 
