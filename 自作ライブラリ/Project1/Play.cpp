@@ -25,6 +25,7 @@
 #include "BadGuy.h"
 #include "Crow.h"
 #include "MapLoader.h"
+#include "HitStop.h"
 Play::Play()
 {
 	next = Ending;
@@ -187,7 +188,9 @@ void Play::Update()
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
 	lightGroup->SetDirLightDir(0, { lightDir[0],lightDir[1],lightDir[2],1 });
 	lightGroup->Update();
-	objectManager->Update();
+
+	if (!HitStop::Stop())
+		objectManager->Update();
 	camera->Update();
 
 	ParticleManager::GetInstance()->UpdateDeadEffect();

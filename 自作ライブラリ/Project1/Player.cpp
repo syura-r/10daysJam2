@@ -14,7 +14,7 @@
 #include "Audio.h"
 #include "ParticleEmitter.h"
 #include "AreaEffect.h"
-
+#include"HitStop.h"
 Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 {
 	//アニメーション用にモデルのポインタを格納
@@ -55,6 +55,8 @@ void Player::Initialize()
 	changeOnGroundScale = false;
 	changeJumpScale = false;
 	changeScaleCounter = 0;
+	jumpCombo = false;
+	comboCount = 0;
 
 }
 
@@ -62,6 +64,7 @@ void Player::Update()
 {
 	velocity = 0;
 	prePos = position;
+	downKeyFrame = false;
 	//落下処理
 	if (!onGround)
 	{
@@ -72,12 +75,16 @@ void Player::Update()
 			{
 				velocity.x = 0.1f;
 				direction = { 1,0,0 };
+				downKeyFrame = true;
 			}
 			if (Input::DownKey(DIK_A))
 			{
 				velocity.x = -0.1f;
 				direction = { -1,0,0 };
+				downKeyFrame = true;
 			}
+			if (jumpCombo)
+				velocity *= 1.0f + 0.2 * jumpCombo;
 		}
 		//加速
 		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
@@ -89,6 +96,8 @@ void Player::Update()
 	//ジャンプ動作
 	else if (!changeOnGroundScale && !jump)
 	{
+		jumpCombo = false;
+		comboCount = 0;
 		a = false;
 		jump = true;
 		onGround = false;
@@ -236,7 +245,7 @@ void Player::CheckHit()
 	{
 		fallV.m128_f32[1] = 0;
 	}
-	else if (callback.move.m128_f32[1] > 0 && fallV.m128_f32[1] < 0)
+	else if (callback.move.m128_f32[1] > 0 && fallV.m128_f32[1] < 0 &&!downKeyFrame)
 	{
 		onGround = true;
 		jump = false;
@@ -261,10 +270,14 @@ void Player::CheckHit()
 	//上から当たった場合
 	if(rejectVec2.y>abs(rejectVec2.x))
 	{
+		HitStop::SetStopTime(5);
+		
 		jump = true;
 		onGround = false;
+		jumpCombo = true;
+		comboCount++;
 		//ジャンプ時上向き初速
-		jumpVYFist = 0.5f * val * 1.2f;
+		jumpVYFist = 0.5f * val * (1.0f + 0.2f * comboCount);
 		//下向き加速
 		fallAcc = -0.02f * val;
 
@@ -273,6 +286,7 @@ void Player::CheckHit()
 	//横から当たった場合
 	else
 	{
+		val += valVel * 10;
 		damage = true;
 		knockBack = true;
 		if (rejectVec2.x > 0)

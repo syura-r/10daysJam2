@@ -47,6 +47,11 @@ private:
 	const float fallVYMin = -0.5f;
 
 	bool a = false;
+	bool downKeyFrame = false;
+
+	bool jumpCombo;
+
+	int comboCount;
 
 	Vector3 StartPos;
 	Vector3 StartScale;

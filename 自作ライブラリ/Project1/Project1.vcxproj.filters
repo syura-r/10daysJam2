@@ -360,6 +360,9 @@
     <ClCompile Include="MapLoader.cpp">
       <Filter>ソース ファイル\Tool</Filter>
     </ClCompile>
+    <ClCompile Include="HitStop.cpp">
+      <Filter>ソース ファイル\Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -639,6 +642,9 @@
       <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="MapLoader.h">
+      <Filter>ヘッダー ファイル\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="HitStop.h">
       <Filter>ヘッダー ファイル\Tool</Filter>
     </ClInclude>
   </ItemGroup>
