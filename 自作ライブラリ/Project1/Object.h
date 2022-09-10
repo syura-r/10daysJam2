@@ -63,7 +63,10 @@ public:
 	inline const void Dead() { dead = true; }
 	inline const char* GetName()const { return name; }
 	void SetBillboardType(const BILLBOARD_TYPE billboardType) { this->billboardType = billboardType; }
-	
+	inline const Vector3& GetMoveDistance() {
+		Vector3 dist = position - prePos;
+		return dist; }
+
 protected:
 	std::unique_ptr<Object3D> object;
 	Vector3 position = { 0,0,0 };
@@ -72,6 +75,8 @@ protected:
 	Vector3 velocity = { 0,0,0 };
 	Vector3 aceel = { 0,0,0 };
 	XMFLOAT4 color = { 1,1,1,1 };
+	Vector3 prePos = { 0,0,0 };
+
 	std::string pipelineName = "BasicObj";
 	//Ž€–Sƒtƒ‰ƒO
 	bool dead = false;

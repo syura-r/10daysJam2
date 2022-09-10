@@ -26,6 +26,7 @@
 #include "Crow.h"
 #include "MapLoader.h"
 #include "HitStop.h"
+#include "BreakBlock.h"
 Play::Play()
 {
 	next = Title;
@@ -87,11 +88,11 @@ void Play::Initialize()
 	//	MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
 	//	objectManager->Add(mapBox);
 	//}
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	MapBox* mapBox = new MapBox(Vector3(-2 + i * 3, -5, 0));
-	//	objectManager->Add(mapBox);
-	//}
+	for (int i = 0; i < 10; i++)
+	{
+		BreakBlock* mapBox = new BreakBlock(Vector3(-2 + i * 3, -3, 0));
+		objectManager->Add(mapBox);
+	}
 	//for (int i = 0; i < 15; i++)
 	//{
 	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
@@ -178,7 +179,7 @@ void Play::Update()
 
 
 #ifdef _DEBUG
-	if (Input::TriggerKey(DIK_SPACE))
+	if (Input::TriggerKey(DIK_RETURN))
 	{
 		Crow* crow = new Crow();
 		objectManager->Add(crow);

@@ -57,7 +57,8 @@ void Player::Initialize()
 	changeScaleCounter = 0;
 	jumpCombo = false;
 	comboCount = 0;
-
+	goal = false;
+	pushJumpVal = 1.0f;
 }
 
 void Player::Update()
@@ -103,12 +104,12 @@ void Player::Update()
 		onGround = false;
 		val += valVel;
 		//ジャンプ時上向き初速
-		jumpVYFist = 0.5f * val;
+		jumpVYFist = 0.5f * val * pushJumpVal;
 		//下向き加速
 		fallAcc = -0.02f * val;
 
 		fallV = { 0,jumpVYFist,0,0 };
-
+		pushJumpVal = 1.0f;
 		//ParticleEmitter::CreateShock(position);
 	}
 	position += velocity;
@@ -233,7 +234,7 @@ void Player::CheckHit()
 	PlayerQueryCallBack callback(boxCollider);
 	//callback.OnQueryHit(info);
 	//地形との交差を全検索
-	CollisionManager::GetInstance()->QueryBox(*boxCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	CollisionManager::GetInstance()->QueryBox(*boxCollider, &callback, COLLISION_ATTR_LANDSHAPE, (unsigned short)0xffffffff, collider);
 	Vector3 rejectVec = callback.move;
 	rejectVec.Normalize();
 	//交差による排斥文を動かす
@@ -256,7 +257,11 @@ void Player::CheckHit()
 	
 	Object::Update();
 
-	
+	if (CollisionManager::GetInstance()->CheckHitBox(*boxCollider, COLLISION_ATTR_GOAL))
+	{
+		goal = true;
+	}
+
 	if (damage)
 		return;
 	//クエリーコールバックの関数オブジェクト
@@ -308,7 +313,7 @@ void Player::JumpScaleCluc()
 	if (changeOnGroundScale)
 	{
 		changeScaleCounter++;
-		const int EaingTime = 6;
+		const int EaingTime = 12;
 		if (changeScaleCounter <= EaingTime)
 		{
 			scale.x = Easing::EaseOutExpo(StartScale.x, StartScale.x * 2, EaingTime, changeScaleCounter);
@@ -330,6 +335,11 @@ void Player::JumpScaleCluc()
 			changeScaleCounter = 0;
 			return;
 		}
+		if (Input::DownKey(DIK_SPACE))
+		{
+			pushJumpVal += 1.0f / (EaingTime * 2);
+		}
+
 	}
 	if (!changeJumpScale)
 		return;

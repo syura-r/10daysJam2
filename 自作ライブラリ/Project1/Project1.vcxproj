@@ -177,6 +177,7 @@
     <ClCompile Include="BadGuy.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="BreakBlock.cpp" />
     <ClCompile Include="ColliderEditor.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Create3DObject.cpp" />
     <ClCompile Include="CreateFigure.cpp" />
     <ClCompile Include="ComputeShade.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GSShaderTestObj.cpp" />
     <ClCompile Include="HitStop.cpp" />
@@ -267,6 +269,7 @@
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BreakBlock.h" />
     <ClInclude Include="CircleShadow.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionAttribute.h" />
@@ -292,6 +295,7 @@
     <ClInclude Include="CreateFigure.h" />
     <ClInclude Include="ComputeShade.h" />
     <ClInclude Include="GameSettingParam.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="Grass.h" />
     <ClInclude Include="GSShaderTestObj.h" />
     <ClInclude Include="HitStop.h" />

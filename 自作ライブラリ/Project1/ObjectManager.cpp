@@ -90,7 +90,8 @@ void ObjectManager::AddObjectsAtOnce()
 	{
 		for (auto itr = vecObjects.second.begin(); itr != vecObjects.second.end(); itr++)
 		{
-			if (!(*itr)->IsDead())
+			auto flag = (*itr)->IsDead();
+			if (!flag)
 			{
 				AddExecute(*itr, vecObjects.first);
 			}

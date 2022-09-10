@@ -23,16 +23,17 @@ public:
 	void Update()override;
 	void Draw() override;
 	void DrawReady() override;
-	const Vector3& GetMoveDistance() { return position - prePos; }
+	bool GetGoal() { return goal; }
+
 private:
 	void CheckHit();
 	void JumpScaleCluc();
 	void KnockBack();
 	void Damage();
 	//ジャンプ補正値の最小値
-	const float MinVal = 0.4f;
+	const float MinVal = 0.2f;
 	//ジャンプ補正値の最大値
-	const float MaxVal = 0.8f;
+	const float MaxVal = 0.4f;
 	//何回ジャンプしたら最大になるのか
 	const int MaxJumpCount = 100;
 	//ジャンプ補正値の上昇値
@@ -46,6 +47,9 @@ private:
 	//下向き加速度の最大値
 	const float fallVYMin = -0.5f;
 
+	//入力でのジャンプ補正値
+	float pushJumpVal = 1.0f;
+
 	bool a = false;
 	bool downKeyFrame = false;
 
@@ -53,9 +57,10 @@ private:
 
 	int comboCount;
 
+	bool goal;
+
 	Vector3 StartPos;
 	Vector3 StartScale;
-	Vector3 prePos;
 	//落下ベクトル
 	XMVECTOR fallV;
 	//現在向いてる方向

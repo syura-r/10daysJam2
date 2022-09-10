@@ -284,25 +284,26 @@ void CollisionManager::CheckAllCollisions()
 
 bool CollisionManager::CheckHitBox(const Box& box, unsigned short attribute)
 {
-	//DWORD collisionCount = L8Tree.GetTargetCollisionList(ColVect, box.minPosition, box.maxPosition);
-	//DWORD c;
-	//for (c = 0; c < collisionCount; c++) 
-	//{
-	//	BaseCollider* col = ColVect[c];
-	//	if (col->attribute != attribute)
-	//		continue;
+	std::forward_list<BaseCollider*>::iterator it;
+	it = colliders.begin();
+	auto endItr = colliders.end();
+	for (; it != endItr; ++it)
+	{
+		BaseCollider* col = *it;
+		if (col->attribute != attribute)
+			continue;
 
-	//	//ボックス
-	//	if (col->GetShapeType() == COLLISIONSHAPE_BOX)
-	//	{
-	//		Box* boxB = dynamic_cast<Box*>(col);
+		//ボックス
+		if (col->GetShapeType() == COLLISIONSHAPE_BOX)
+		{
+			Box* boxB = dynamic_cast<Box*>(col);
 
-	//		if (Collision::CheckOBBOBB(box, *boxB))
-	//		{
-	//			return true;
-	//		}
-	//	}
-	//}
+			if (Collision::CheckOBBOBB(box, *boxB))
+			{
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
