@@ -88,11 +88,11 @@ void Play::Initialize()
 	//	MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
 	//	objectManager->Add(mapBox);
 	//}
-	for (int i = 0; i < 10; i++)
-	{
-		BreakBlock* mapBox = new BreakBlock(Vector3(-2 + i * 3, -3, 0));
-		objectManager->Add(mapBox);
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	BreakBlock* mapBox = new BreakBlock(Vector3(-2 + i * 3, -3, 0));
+	//	objectManager->Add(mapBox);
+	//}
 	//for (int i = 0; i < 15; i++)
 	//{
 	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
@@ -100,7 +100,7 @@ void Play::Initialize()
 	//}
 	//BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
 	//objectManager->Add(badGuy);
-	MapLoader::LoadMap("1-1");
+	MapLoader::LoadMap("1-2");
 	camera->Initialize();
 
 	isEnd = false;

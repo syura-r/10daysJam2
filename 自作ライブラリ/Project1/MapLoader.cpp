@@ -14,7 +14,7 @@ void MapLoader::LoadMap(const std::string& mapName)
 		return;
 	std::string line;
 	std::vector<std::vector<int>>map;
-	map.resize(16);
+	map.resize(29);
 	ObjectManager* objectManager = ObjectManager::GetInstance();
 	int i = 0;
 	while (getline(file, line))
@@ -36,7 +36,7 @@ void MapLoader::LoadMap(const std::string& mapName)
 	{
 		for (int x = 0; x < map[y].size(); x++)
 		{
-			Vector3 CreatePos = { -6.0f + x,8.0f - y,0 };
+			Vector3 CreatePos = { -6.0f + x, 20.0f - y,0 };
 			switch (map[y][x])
 			{
 			case 1:
