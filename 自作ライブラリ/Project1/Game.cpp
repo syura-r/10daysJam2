@@ -93,7 +93,6 @@ void Game::RoadAsset()
 		Texture::LoadTexture("bgm", "pause/bgm.png");
 		Texture::LoadTexture("se", "pause/se.png");
 
-		Texture::LoadTexture("logo", "title/logo.png");
 		Texture::LoadTexture("start", "title/start.png");
 		Texture::LoadTexture("quit", "title/quit.png");
 
@@ -105,7 +104,10 @@ void Game::RoadAsset()
 		OBJLoader::LoadModelFile("box", "box.obj", false);
 		OBJLoader::LoadModelFile("sphere", "sphere.obj", true);
 		OBJLoader::LoadModelFile("obBox", "bottomOriginBox.obj", false);
-		OBJLoader::LoadModelFile("plate", "plate.obj", false);		
+		OBJLoader::LoadModelFile("plate", "plate.obj", false);
+
+		OBJLoader::LoadModelFile("can_title", "can_title.obj", false);
+		OBJLoader::LoadModelFile("cover_title", "cover_title.obj", false);
 		break;
 	case 3:
 		//ObjÉÇÉfÉãÇÃì«Ç›çûÇ›

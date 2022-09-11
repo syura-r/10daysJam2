@@ -1,4 +1,5 @@
 #include "Title.h"
+#include "OBJLoader.h"
 #include "Easing.h"
 #include "Audio.h"
 
@@ -6,7 +7,7 @@ Title::Title()
 {
 	next = Play;
 
-	camera = std::make_unique<InGameCamera>();
+	camera = std::make_unique<DebugCamera>();
 	Object3D::SetCamera(camera.get());
 
 	//ÉâÉCÉgê∂ê¨
@@ -17,7 +18,11 @@ Title::Title()
 	lightGroup->SetDirLightActive(0, true);
 	lightGroup->SetDirLightColor(0, { 1,1,1 });
 
-	logo = new Sprite();
+
+	cans[0] = new CanInTitle(-4.5f, 10.0f, -2.5f, 90.0f, 90.0f);
+	cans[1] = new CanInTitle(3.7f, 10.0f, -2.8f, 90.0f, 97.0f);
+	cover = Object3D::Create(OBJLoader::GetModel("cover_title"), position_cover, scale_cover, rotation_cover, color_cover);
+
 	base = new Sprite();
 	start = new Sprite();
 	quit = new Sprite();
@@ -27,7 +32,11 @@ Title::Title()
 
 Title::~Title()
 {
-	delete logo;
+	for (int i = 0; i < cansNum; i++)
+	{
+		delete cans[i];
+	}
+	delete cover;
 	delete base;
 	delete start;
 	delete quit;
@@ -42,18 +51,15 @@ void Title::Initialize()
 	Object3D::SetCamera(camera.get());
 	Object3D::SetLightGroup(lightGroup.get());
 
-	position_logo = { positionOrigin_logo.x, positionOrigin_logo.y };
+	for (int i = 0; i < cansNum; i++)
+	{
+		cans[i]->Initialize();
+	}
+
+	position_start = { position_x_bottom, 800.0f };
+	position_quit = { position_x_bottom, 950.0f };
 	scale_start = scale_small;
 	scale_quit = scale_small;
-
-	actoinStep_logo = 0;
-	easingCount_position = 0;
-
-	angle_target = angleGap_target;
-	const float radian_target = DirectX::XMConvertToRadians(angle_target);
-	radius_target = radiusMax_target;
-	position_target.x = cos(radian_target) * radius_target + positionOrigin_logo.x;
-	position_target.y = sin(radian_target) * radius_target + positionOrigin_logo.y;
 
 	position_base = position_start;
 	alpha_base = 1.0f;
@@ -69,26 +75,23 @@ void Title::Initialize()
 
 void Title::Update()
 {
-	//ÉçÉSÇÃçsìÆ
-	if (actoinStep_logo == 0)
+	bool isCanMoveEnd = true;
+	for (int i = 0; i < cansNum; i++)
 	{
-		MoveStraight_Logo();
-	}
-	else
-	{
-		MoveCircle_Logo();
+		cans[i]->Update();
 
-		//
-		if (alpha_button < 1.0f)
-		{
-			const float limit_alpha = 120.0f;
-			const float speed_alpha = 1.0f / limit_alpha;
-			alpha_button += speed_alpha;
-		}
+		isCanMoveEnd = cans[i]->GetIsMoveEnd() && isCanMoveEnd;
+	}
+
+	if (alpha_button < 1.0f)
+	{
+		const float limit_alpha = 120.0f;
+		const float speed_alpha = 1.0f / limit_alpha;
+		alpha_button += speed_alpha;
 	}
 
 	if ((Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)) &&
-		actoinStep_logo > 0)
+		isCanMoveEnd)
 	{
 		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
 
@@ -109,6 +112,8 @@ void Title::Update()
 	AlphaChange_Base();
 
 	//
+	cover->Update();
+
 	camera->Update();
 	lightGroup->SetAmbientColor({ 1,1,1 });
 	lightGroup->SetDirLightDir(0, { 0.0f,-1.0f,0.5f,1 });
@@ -117,66 +122,24 @@ void Title::Update()
 
 void Title::PreDraw()
 {
-	//PipelineState::SetPipeline("BasicObj");
+	PipelineState::SetPipeline("BasicObj");
+	for (int i = 0; i < cansNum; i++)
+	{
+		cans[i]->Draw();
+	}
+	cover->Draw();
 }
 
 void Title::PostDraw()
 {
-	logo->DrawSprite("logo", position_logo);
 	start->DrawSprite("start", position_start, 0.0f, scale_start);
 	quit->DrawSprite("quit", position_quit, 0.0f, scale_quit);
 
-	base->DrawSprite("white1x1", position_base, 0.0f, { 256.0f, 64.0f }, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
-
-	button->DrawSprite("button_a", position_button, 0.0f, { 1,1 }, { 1,1,1,alpha_button }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
-}
-
-void Title::MoveStraight_Logo()
-{
-	if (easingCount_position > easingCountLimit_position)
-	{
-		actoinStep_logo++;
-		return;
-	}
-
-	position_logo.x = Easing::EaseOutBounce(positionFirst_logo.x, positionOrigin_logo.x, easingCountLimit_position, easingCount_position);
-	position_logo.y = Easing::EaseOutBounce(positionFirst_logo.y, positionOrigin_logo.y, easingCountLimit_position, easingCount_position);
-
-	easingCount_position++;
-}
-
-void Title::MoveCircle_Logo()
-{
-	//position_targetÇé¸âÒÇ≥ÇπÇÈ
-	const float speed_angle = 1.0f;
-	angle_target += speed_angle;
-	if (angle_target >= 360.0f)
-	{
-		angle_target = 0.0f;
-	}
-
-	//äpìxÇ…âûÇ∂ÇƒÅAîºåaÇïœÇ¶ÇÈ
-	const float speed_radius = (radiusMax_target - radiusMin_target) / (360.0f / speed_angle);
-	if (angle_target >= 0.0f - angleGap_target && angle_target < 90.0f - angleGap_target ||
-		(angle_target >= 180.0f - angleGap_target && angle_target < 270.0f - angleGap_target))
-	{
-		radius_target -= speed_radius;
-	}
-	if ((angle_target >= 90.0f - angleGap_target && angle_target < 180.0f - angleGap_target) ||
-		(angle_target >= 270.0f - angleGap_target && angle_target < 360.0f - angleGap_target))
-	{
-		radius_target += speed_radius;
-	}
+	const Vector2 size_base = { 256.0f * scale_big.x, 64.0f * scale_big.y };
+	base->DrawSprite("white1x1", position_base, 0.0f, size_base, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 
 
-	const float radian_target = DirectX::XMConvertToRadians(angle_target);
-	position_target.x = cos(radian_target) * radius_target + positionOrigin_logo.x;
-	position_target.y = sin(radian_target) * radius_target + positionOrigin_logo.y;
-
-	//position_logoÇ…position_targetÇí«è]Ç≥ÇπÇÈ
-	const float speed_homing = 0.5f;
-	Vector2 velocity = position_target - position_logo;
-	position_logo += velocity.Normalize(velocity) * speed_homing;
+	//button->DrawSprite("button_a", position_button, 0.0f, { 1,1 }, { 1,1,1,alpha_button }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 }
 
 void Title::Select()
@@ -209,6 +172,9 @@ void Title::Select()
 	//ägèkÇ∆à⁄ìÆ
 	if (selectNumber <= 0)
 	{
+		position_start.x = Easing::EaseInCubic(position_x_bottom, position_x_top, easingCountLimit_scale, easingCount_scale);
+		position_quit.x = Easing::EaseInCubic(position_x_top, position_x_bottom, easingCountLimit_scale, easingCount_scale);
+
 		scale_start.x = Easing::EaseInCubic(scale_small.x, scale_big.x, easingCountLimit_scale, easingCount_scale);
 		scale_start.y = Easing::EaseInCubic(scale_small.y, scale_big.y, easingCountLimit_scale, easingCount_scale);
 
@@ -217,8 +183,11 @@ void Title::Select()
 
 		position_base = position_start;
 	}
-	else if(selectNumber >= 1)
+	else if (selectNumber >= 1)
 	{
+		position_start.x = Easing::EaseInCubic(position_x_top, position_x_bottom, easingCountLimit_scale, easingCount_scale);
+		position_quit.x = Easing::EaseInCubic(position_x_bottom, position_x_top, easingCountLimit_scale, easingCount_scale);
+
 		scale_start.x = Easing::EaseInCubic(scale_big.x, scale_small.x, easingCountLimit_scale, easingCount_scale);
 		scale_start.y = Easing::EaseInCubic(scale_big.y, scale_small.y, easingCountLimit_scale, easingCount_scale);
 
