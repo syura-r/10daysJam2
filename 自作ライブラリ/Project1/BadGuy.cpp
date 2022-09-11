@@ -12,12 +12,13 @@ BadGuy::BadGuy(const Vector3& arg_pos)
 	//アニメーション用にモデルのポインタを格納
 	myModel = FBXManager::GetModel("badGuy");
 	name = typeid(*this).name();
+	scale = 0.3f;
 	//モデルの生成
 	Create(myModel);
 	BoxCollider* boxCollider = new BoxCollider();
 	boxCollider->SetObject(this);
-	boxCollider->SetOffset({ 0,0.5f,0,0 });
-	boxCollider->SetScale(scale / 2);
+	boxCollider->SetOffset({ 0,0.60f,0,0 });
+	boxCollider->SetScale(scale* Vector3{0.6f,2.25f,0.6f});
 	SetCollider(boxCollider);
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider->SetMove(true);
@@ -37,7 +38,7 @@ void BadGuy::Initialize()
 	onGround = true;
 	//scale = { 0.3f };
 	position = StartPos;
-	rotation = 0;
+	rotation.y = -90;
 	prePos = position;
 	direction = { 1,0,0 };
 	velocity.x = -0.02f;
@@ -187,7 +188,8 @@ void BadGuy::CheckHit()
 	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
 		fallV.m128_f32[1] = 0;
 	if (abs(callback.move.m128_f32[0]) > 0.01f)
+	{
 		velocity *= -1;
-
-
+		rotation.y *= -1;
+	}
 }

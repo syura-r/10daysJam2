@@ -59,6 +59,7 @@ private:
 
 	bool goal;
 
+
 	Vector3 StartPos;
 	Vector3 StartScale;
 	//—Ž‰ºƒxƒNƒgƒ‹

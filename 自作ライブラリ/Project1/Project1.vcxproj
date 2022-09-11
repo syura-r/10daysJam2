@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Alpha.cpp" />
+    <ClCompile Include="Apartment.cpp" />
     <ClCompile Include="AreaEffect.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="BadGuy.cpp" />
@@ -251,6 +252,7 @@
     <ClCompile Include="TouchAbleObject.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="Veranda.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alpha.h" />
+    <ClInclude Include="Apartment.h" />
     <ClInclude Include="AreaEffect.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="BadGuy.h" />
@@ -356,6 +359,7 @@
     <ClInclude Include="TouchAbleObject.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="Veranda.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="XAudio2VoiceCallback.h" />
   </ItemGroup>

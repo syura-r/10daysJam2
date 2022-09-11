@@ -255,6 +255,150 @@ void ParticleEmitter::FeverEffect(const Vector3& arg_position)
 
     particleManager->Add(particle, "FeverPlayerEffect");
 }
+void ParticleEmitter::CreateShock(const Vector3& pos, const Vector3& arg_rotation)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        Particle* particle = new Particle();
+        Vector3 position = pos;
+        Vector3 rotation = arg_rotation;
+
+        particle->vsParam.frame = 0;
+        particle->parameter.num_frame = 10 + 5 * i;
+        //particle->parameter.num_frame = 60;
+
+        Vector3 velocity = { 0,0,0 };
+        particle->parameter.accel = { 0,0,0 };
+
+        //particle->parameter.accel = { (std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f };
+
+        particle->parameter.s_rotation = rotation;
+        particle->parameter.e_rotation = rotation;
+
+
+        float scale = 1.0f;
+        particle->parameter.s_scale = 1.0f;
+        particle->parameter.e_scale = 3.0f;
+        //üŒ`•âŠÔ
+        particle->vsParam.scaleVel = (particle->parameter.e_scale - particle->parameter.s_scale) / particle->parameter.num_frame;
+
+        Vector3 color = { (std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f) };
+        //Vector3 color = { 1,1,1 };
+
+        particle->parameter.s_color = { 1,1,1 };
+        //particle->parameter.e_color = { (std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f) };
+        particle->parameter.e_color = { 0,0,0 };
+
+
+        particle->vsParam.isDead = false;
+
+        float alpha = 1.0f;
+
+        particle->vsParam.position = position;
+        particle->vsParam.rotation = rotation;
+        particle->vsParam.velocity = velocity;
+        particle->vsParam.scale = scale;
+        particle->vsParam.color = { color.x,color.y,color.z,alpha };
+        particle->vsParam.billboardActive = 0;
+        particleManager->Add(particle, "shock");
+    }
+}
+void ParticleEmitter::CreateGetEffect(const Vector3& pos)
+{
+    for (int i = 0; i < 30; i++)
+    {
+        Particle* particle = new Particle();
+        Vector3 position = pos;
+        Vector3 rotation = { 0,0,0 };
+
+        particle->vsParam.frame = 0;
+        particle->parameter.num_frame = 35;
+        //particle->parameter.num_frame = 60;
+
+        Vector3 velocity = { (std::rand() % 100 - 50) * 0.0005f,std::rand() % 100 * -0.001f,(std::rand() % 100 - 50) * 0.0005f };
+        particle->parameter.accel = { 0,0.005f,0 };
+
+        //particle->parameter.accel = { (std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f };
+
+        particle->parameter.s_rotation = { 0,0,std::rand() % 200 * 0.01f * (float)XM_PI };
+        particle->parameter.e_rotation = { 0,0,std::rand() % 200 * 0.01f * (float)XM_PI };
+
+
+        float scale = std::rand() % 100 * 0.01f;
+        particle->parameter.s_scale = scale;
+        particle->parameter.e_scale = 0.0f;
+        //üŒ`•âŠÔ
+        particle->vsParam.scaleVel = (particle->parameter.e_scale - particle->parameter.s_scale) / particle->parameter.num_frame;
+
+        Vector3 color = { 0,1,0 };
+        //Vector3 color = { 1,1,1 };
+
+        particle->parameter.s_color = { 0,1,0 };
+        //particle->parameter.e_color = { (std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f) };
+        particle->parameter.e_color = { 0,0,0 };
+
+
+        particle->vsParam.isDead = false;
+
+        float alpha = 1.0f;
+
+        particle->vsParam.position = position;
+        particle->vsParam.rotation = rotation;
+        particle->vsParam.velocity = velocity;
+        particle->vsParam.scale = scale;
+        particle->vsParam.color = { color.x,color.y,color.z,alpha };
+        particle->vsParam.billboardActive = 1;
+        particleManager->Add(particle, "starEffect");
+    }
+}
+void ParticleEmitter::CreateJumpDust(const Vector3& pos)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        Particle* particle = new Particle();
+        Vector3 position = pos + Vector3{ (std::rand() % 100 - 50) * 0.003f,0,(std::rand() % 100 - 50) * 0.003f };
+        Vector3 rotation = { 0,0,0 };
+
+        particle->vsParam.frame = 0;
+        particle->parameter.num_frame = 50;
+        //particle->parameter.num_frame = 60;
+
+        Vector3 velocity = { (std::rand() % 100 - 50) * 0.001f, -0.02f,(std::rand() % 100 - 50) * 0.001f };
+        particle->parameter.accel = { 0,0.002f,0 };
+
+        //particle->parameter.accel = { (std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f,(std::rand() % 100 - 50) * 0.01f };
+
+        particle->parameter.s_rotation = { 0,0,0 };
+        particle->parameter.e_rotation = { 0,0,0 };
+
+
+        float scale = 0.25f;
+        particle->parameter.s_scale = scale;
+        particle->parameter.e_scale = scale * 12;
+        //üŒ`•âŠÔ
+        particle->vsParam.scaleVel = (particle->parameter.e_scale - particle->parameter.s_scale) / particle->parameter.num_frame;
+
+        Vector3 color = 0.1f;
+        //Vector3 color = { 1,1,1 };
+
+        particle->parameter.s_color = color;
+        //particle->parameter.e_color = { (std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f),(std::rand() % 100 * 0.01f) };
+        particle->parameter.e_color = { 0,0,0 };
+
+
+        particle->vsParam.isDead = false;
+
+        float alpha = 0.01f;
+
+        particle->vsParam.position = position;
+        particle->vsParam.rotation = rotation;
+        particle->vsParam.velocity = velocity;
+        particle->vsParam.scale = scale;
+        particle->vsParam.color = { color.x,color.y,color.z,alpha };
+        particle->vsParam.billboardActive = 1;
+        particleManager->Add(particle, "particle");
+    }
+}
 
 
 void ParticleEmitter::DeadEffect(const Vector3& arg_position, const DirectX::XMFLOAT4& arg_color)

@@ -16,7 +16,7 @@ public:
 	inline static const bool GetOnSSAO() { return onSSAO; }
 
 
-private:
+public:
 	//Pad視点感度
 	static int padSensitive;
 	//視点操作反転用(1か-1,-1で反転)

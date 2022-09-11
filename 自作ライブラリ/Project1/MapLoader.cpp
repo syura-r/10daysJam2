@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "MapBox.h"
 #include "BadGuy.h"
+#include "Veranda.h"
 void MapLoader::LoadMap(const std::string& mapName)
 {
 	std::string filepath = "Resources/Map/" +mapName + ".txt";
@@ -41,8 +42,8 @@ void MapLoader::LoadMap(const std::string& mapName)
 			{
 			case 1:
 			{
-				MapBox* mapBox = new MapBox(CreatePos);
-				objectManager->Add(mapBox);
+				Veranda* veranda = new Veranda(CreatePos, {0.05f,0.1f,0.1f}, { 0,0,0 });
+				objectManager->Add(veranda);
 				break;
 			}
 			case 2:
@@ -51,6 +52,13 @@ void MapLoader::LoadMap(const std::string& mapName)
 				objectManager->Add(badGuy);
 				break;
 			}
+			case 3:
+			{
+				MapBox* mapBox = new MapBox(CreatePos);
+				objectManager->Add(mapBox);
+				break;
+			}
+
 			default:
 				break;
 			}

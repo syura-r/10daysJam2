@@ -27,6 +27,7 @@
 #include "MapLoader.h"
 #include "HitStop.h"
 #include "BreakBlock.h"
+#include"Apartment.h"
 Play::Play()
 {
 	next = Title;
@@ -78,6 +79,11 @@ void Play::Initialize()
 
 	objectManager->Reset();
 
+	for (int i = 0; i < 4; i++)
+{
+		Apartment* obj = new Apartment({ 8.0f, -8.0f + 7.0f * i, 1.0f });
+		objectManager->Add(obj);
+	}
 
 	Player* player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
@@ -98,8 +104,8 @@ void Play::Initialize()
 	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
 	//	objectManager->Add(mapBox);
 	//}
-	//BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
-	//objectManager->Add(badGuy);
+	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
+	objectManager->Add(badGuy);
 	MapLoader::LoadMap("1-2");
 	camera->Initialize();
 
@@ -210,8 +216,6 @@ void Play::Update()
 
 void Play::PreDraw()
 {
-	inGameTimer->Draw();
-	cansBar->Draw();
 
 	objectManager->DrawReady();
 #ifdef _DEBUG
@@ -234,6 +238,8 @@ void Play::PostDraw()
 {
 	//if (migrate)
 	//	return;
+	inGameTimer->Draw();
+	cansBar->Draw();
 
 	objectManager->PostDraw();
 	if (!Object3D::GetDrawShadow())

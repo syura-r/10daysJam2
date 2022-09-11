@@ -30,6 +30,11 @@ public:
 
     static void DeadEffect(const Vector3& arg_position, const DirectX::XMFLOAT4& arg_color);
 
+
+    static void CreateShock(const Vector3& pos, const Vector3& arg_rotation = { XM_PI * 0.5f,0,0 });
+    static void CreateGetEffect(const Vector3& pos);
+    static void CreateJumpDust(const Vector3& pos);
+
 private:
     static float GetRandom(float arg_min, float arg_max);
 };

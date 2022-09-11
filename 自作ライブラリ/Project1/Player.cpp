@@ -110,7 +110,7 @@ void Player::Update()
 
 		fallV = { 0,jumpVYFist,0,0 };
 		pushJumpVal = 1.0f;
-		//ParticleEmitter::CreateShock(position);
+		ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
 	}
 	position += velocity;
 	JumpScaleCluc();
@@ -202,9 +202,7 @@ void Player::CheckHit()
 			//çsóÒçXêVÇ»Ç«
 			Object::Update();
 			changeOnGroundScale = true;
-
-			//if (fallV.m128_f32[1] <= fallVYMin + 0.3f)
-			//	ParticleEmitter::CreateJumpDust(position);
+				ParticleEmitter::CreateJumpDust(position + Vector3{0, -0.5f, 0});
 
 		}
 	}

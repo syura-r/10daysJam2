@@ -39,7 +39,7 @@ int SettingParam::jumpButton = XINPUT_GAMEPAD_A;
 int SettingParam::airSlideButton = XINPUT_GAMEPAD_B;
 int SettingParam::runButton = XINPUT_GAMEPAD_LEFT_SHOULDER;
 int SettingParam::resetButton = XINPUT_GAMEPAD_RIGHT_SHOULDER;
-bool SettingParam::viewCollision = true;
+bool SettingParam::viewCollision = false;
 
 bool SettingParam::onSSAO = false;
 
@@ -113,8 +113,11 @@ void Game::RoadAsset()
 	case 4:
 		//FBXƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
 		FBXManager::LoadModelFile("player", "VendingMachineTex", false);
-		FBXManager::LoadModelFile("badGuy", "Box", false);
+		FBXManager::LoadModelFile("badGuy", "Tinpira", false);
 		FBXManager::LoadModelFile("crow", "crow", false);
+		FBXManager::LoadModelFile("Veranda", "Veranda", false);
+		FBXManager::LoadModelFile("Apartment", "Apartment", false);
+
 
 
 
@@ -302,18 +305,18 @@ void Game::Run()
 
 			Input::Update();
 			Alpha::Update();
-			if (Input::TriggerKey(DIK_1))
-			{
-				DrawMode::SetMode(DrawMode::None);
-			}
-			//else if (Input::TriggerKey(DIK_2))
-			//{
-			//	DrawMode::SetMode(DrawMode::Bloom);
-			//}
-			if(Input::TriggerKey(DIK_3))
+#ifdef _DEBUG
+			if (Input::TriggerKey(DIK_3))
 			{
 				DrawMode::SetDrawImGui(1 - DrawMode::GetDrawImGui());
 			}
+			if (Input::TriggerKey(DIK_4))
+			{
+				SettingParam::viewCollision = 1 - SettingParam::viewCollision;
+			}
+
+#endif // DEBUG
+
 			//lightCamera->SetDistance(distance);
 			//lightCamera->SetLightDir({ dir[0],dir[1],dir[2] });
 			lightCamera->Update();

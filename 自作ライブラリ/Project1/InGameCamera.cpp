@@ -42,6 +42,8 @@ void InGameCamera::Update()
 		target = focusObj->GetPosition();
 		if (target.x < 4)
 			target.x = 4;
+		else if (target.x > 11)
+			target.x = 11;
 		if (target.y < -3)
 			target.y = -3;
 	}
