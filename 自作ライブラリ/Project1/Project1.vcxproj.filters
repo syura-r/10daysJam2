@@ -381,6 +381,12 @@
     <ClCompile Include="Veranda.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="GameEndSelect.cpp">
+      <Filter>ソース ファイル\GameText</Filter>
+    </ClCompile>
+    <ClCompile Include="CanInTitle.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -682,6 +688,12 @@
     </ClInclude>
     <ClInclude Include="Veranda.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEndSelect.h">
+      <Filter>ヘッダー ファイル\GameText</Filter>
+    </ClInclude>
+    <ClInclude Include="CanInTitle.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

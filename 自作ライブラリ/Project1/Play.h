@@ -14,6 +14,7 @@
 #include "Result.h"
 #include "InGameTimer.h"
 #include "StockCansBar.h"
+#include "GameEndSelect.h"
 
 class Play :public Scene
 {
@@ -41,6 +42,7 @@ private:
 	Result* result = nullptr;
 	InGameTimer* inGameTimer = nullptr;
 	StockCansBar* cansBar = nullptr;
+	GameEndSelect* gameEndSelect = nullptr;
 
 	std::string nowPlayingBGMName;
 };

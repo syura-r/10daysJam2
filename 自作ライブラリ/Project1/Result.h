@@ -17,7 +17,7 @@ public:
 	bool GetActivePause() { return activeFlag; }
 	void IsActive(const float arg_canCount, const float arg_jumpCount);
 
-	bool GetIsToNextScene() { return isToNextScene; }
+	bool GetIsCloseResult() { return isCloseResult; }
 
 private:
 	//起動時に各数値を受け取る
@@ -64,10 +64,10 @@ private:
 	const int timerLimit_display = 20;
 
 
-	//シーン切り替え可能か
-	bool isSceneChangeStandby = false;
-	//シーン切り替えする
-	bool isToNextScene = false;
+	//リザルトを閉じれる状態か
+	bool isCloseResult_standby = false;
+	//リザルトを閉じた
+	bool isCloseResult = false;
 
 
 	//決定ボタン表示

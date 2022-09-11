@@ -9,13 +9,13 @@ Pause::Pause()
 {
 	sp_back = new Sprite();
 	sp_base = new Sprite();
-	toGame = new SelectSprite();
-	restart = new SelectSprite();
-	toTitle = new SelectSprite();
-	bgm = new SelectSprite();
+	toGame = new SelectSprite_inPause();
+	restart = new SelectSprite_inPause();
+	toTitle = new SelectSprite_inPause();
+	bgm = new SelectSprite_inPause();
 	bar_bgm = new Sprite();
 	circle_bgm = new Sprite();
-	se = new SelectSprite();
+	se = new SelectSprite_inPause();
 	bar_se = new Sprite();
 	circle_se = new Sprite();
 }
@@ -394,27 +394,27 @@ void Pause::VolumeChange()
 	Audio::volume_se = stock_volume_se;
 }
 
-Pause::SelectSprite::SelectSprite()
+Pause::SelectSprite_inPause::SelectSprite_inPause()
 {
 	sprite = new Sprite();
 }
 
-Pause::SelectSprite::~SelectSprite()
+Pause::SelectSprite_inPause::~SelectSprite_inPause()
 {
 	delete sprite;
 }
 
-void Pause::SelectSprite::Initialize(const std::string& texName, const float posY)
+void Pause::SelectSprite_inPause::Initialize(const std::string& texName, const float posY)
 {
 	this->texName = texName;
 	pos = { 1920.0f / 2.0f, posY };
 }
 
-void Pause::SelectSprite::Update()
+void Pause::SelectSprite_inPause::Update()
 {
 }
 
-void Pause::SelectSprite::Draw()
+void Pause::SelectSprite_inPause::Draw()
 {
 	sprite->DrawSprite(texName, pos);
 }

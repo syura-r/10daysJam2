@@ -3,8 +3,9 @@
 #include "Object3D.h"
 #include "DebugCamera.h"
 #include "InGameCamera.h"
-#include"LightGroup.h"
-#include"Sprite.h"
+#include "LightGroup.h"
+#include "Sprite.h"
+#include "CanInTitle.h"
 
 class Title :
 	public Scene
@@ -18,41 +19,27 @@ public:
 	void PostDraw()override;
 
 private:
-	std::unique_ptr<InGameCamera> camera;
+	std::unique_ptr<DebugCamera> camera;
 	std::unique_ptr<LightGroup> lightGroup;
 
-	Sprite* logo = nullptr;
-	Vector2 position_logo = {};
-	//ü‰ñ‚È‚Ç‚Ì’†S“_
-	const Vector2 positionOrigin_logo = { 1920.0f / 2.0f, 400.0f };
-	//ƒƒS‚Ìs“®’iŠK
-	int actoinStep_logo = 0;
+	//ƒ^ƒCƒgƒ‹ƒƒS‚ÌŠÊ
+	static const int cansNum = 2;
+	CanInTitle* cans[cansNum];
 
-	//ƒƒS‚ÌƒtƒŒ[ƒ€ƒCƒ“
-	void MoveStraight_Logo();
-	//ƒƒS‚Ì‰ŠúˆÊ’u
-	const Vector2 positionFirst_logo = { 1920.0f - 256.0f, -128.0f };
-	int easingCount_position = 0;
-	const int easingCountLimit_position = 60;
-
-	//ƒƒS‚Ìü‰ñ
-	void MoveCircle_Logo();
-	//ü‰ñ‚ÌŒ»İ‚ÌŠp“x
-	float angle_target = 0.0f;
-	//ü‰ñ‹O“¹‚Ì‘È‰~‚ÌŒX‚«‹ï‡
-	const float angleGap_target = -45.0f;
-	//ü‰ñ‚Ì”¼Œa
-	float radius_target = 0.0f;
-	const float radiusMax_target = 25.0f;
-	const float radiusMin_target = 15.0f;
-	//ü‰ñ‚Ì’Ç]æ
-	Vector2 position_target = {};
+	//
+	Object3D* cover = nullptr;
+	Vector3 position_cover = { 0,0,-3 };
+	Vector3 scale_cover = { 17.5f,13.5f,13.5f };
+	Vector3 rotation_cover = { 0,0,0 };
+	XMFLOAT4 color_cover = { 1,1,1,1 };
 
 	//€–Ú‘I‘ğ
 	void Select();
 	int selectNumber = 0;
-	const Vector2 scale_big = { 1.0f, 1.0f };
-	const Vector2 scale_small = { 0.8f, 0.8f };
+	const Vector2 scale_big = { 1.5f, 1.5f };
+	const Vector2 scale_small = { 1.0f, 1.0f };
+	const float position_x_top = 1620.0f;
+	const float position_x_bottom = 1670.0f;
 	int easingCount_scale = 0;
 	const int easingCountLimit_scale = 10;
 
@@ -65,17 +52,17 @@ private:
 
 	//
 	Sprite* start = nullptr;
-	const Vector2 position_start = { 1920.0f /2.0f, 700.0f };
+	Vector2 position_start = {};
 	Vector2 scale_start = {};
 
 	//
 	Sprite* quit = nullptr;
-	const Vector2 position_quit = { 1920.0f / 2.0f, 800.0f };
+	Vector2 position_quit = {};
 	Vector2 scale_quit = {};
 
 	//Œˆ’èƒ{ƒ^ƒ“•\¦
 	Sprite* button = nullptr;
-	const Vector2 position_button = { 1920.0f - 100.0f, 1080.0f - 100.0f };
+	const Vector2 position_button = { 1920.0f - 100.0f, 1080.0f - 70.0f };
 	float alpha_button = 0.0f;
 
 };

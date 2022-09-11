@@ -35,8 +35,8 @@ void Result::Initialize()
 	countDisplyer_can->Initialize(500.0f);
 	countDisplyer_jump->Initialize(700.0f);
 
-	isSceneChangeStandby = false;
-	isToNextScene = false;
+	isCloseResult_standby = false;
+	isCloseResult = false;
 
 	alpha_button = 0.0f;
 }
@@ -68,7 +68,7 @@ void Result::Update()
 	}
 	else
 	{
-		isSceneChangeStandby = true;
+		isCloseResult_standby = true;
 		//
 		if (alpha_button < 1.0f)
 		{
@@ -79,11 +79,12 @@ void Result::Update()
 	}
 
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
-	if (isSceneChangeStandby &&
+	if (isCloseResult_standby &&
 		(Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)))
 	{
 		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
-		isToNextScene = true;
+		isCloseResult = true;
+		activeFlag = false;
 	}
 }
 
