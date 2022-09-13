@@ -49,7 +49,7 @@ void Title::Initialize()
 	isAllEnd = false;
 
 	camera->Initialize();
-	camera->SetMatrixView({ 0,-1.5f,10 }, { 0,-1.5f,0 }, { 0,1,0 });
+	camera->SetMatrixView({ 0,-1.5f,9.5f }, { 0,-1.5f,0 }, { 0,1,0 });
 	camera->SetDistance(9.5f);
 	Object3D::SetCamera(camera.get());
 	Object3D::SetLightGroup(lightGroup.get());

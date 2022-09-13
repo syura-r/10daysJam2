@@ -37,6 +37,10 @@ void StockCansBar::Update(const float arg_nowCansCount)
 		array_subSizeChange.push_back({ sub,0 });
 	}
 	nowCansCount = arg_nowCansCount;
+	if (nowCansCount < 0.0f)
+	{
+		nowCansCount = 0.0f;
+	}
 
 
 	//差分を縮めるまでのタイマー

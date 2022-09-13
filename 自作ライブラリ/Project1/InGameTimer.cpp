@@ -24,9 +24,14 @@ void InGameTimer::Initialize()
 
 void InGameTimer::Update()
 {
+	//ŒÀŠE
+	const float limit = 999.0f;
+	if (seconds >= limit)
+		return;
+
+
 	//Œo‰ßŽžŠÔi•bj
 	seconds = timer->GetRealTime(TimerPerformance::Up);
-
 	timer->Update();
 }
 
