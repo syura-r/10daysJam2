@@ -37,7 +37,7 @@ void MapLoader::LoadMap(const std::string& mapName)
 	{
 		for (int x = 0; x < map[y].size(); x++)
 		{
-			Vector3 CreatePos = { -6.0f + x, 20.0f - y,0 };
+			Vector3 CreatePos = { -6.0f + x, 7.0f - y,0 };
 			switch (map[y][x])
 			{
 			case 1:
@@ -46,12 +46,12 @@ void MapLoader::LoadMap(const std::string& mapName)
 				objectManager->Add(veranda);
 				break;
 			}
-			case 2:
-			{
-				BadGuy* badGuy = new BadGuy(CreatePos);
-				objectManager->Add(badGuy);
-				break;
-			}
+			//case 2:
+			//{
+			//	BadGuy* badGuy = new BadGuy(CreatePos);
+			//	objectManager->Add(badGuy);
+			//	break;
+			//}
 			case 3:
 			{
 				MapBox* mapBox = new MapBox(CreatePos);

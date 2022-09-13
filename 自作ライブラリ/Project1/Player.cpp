@@ -15,6 +15,13 @@
 #include "ParticleEmitter.h"
 #include "AreaEffect.h"
 #include"HitStop.h"
+#include"StockCansBar.h"
+#include "PtrDelete.h"
+#include "FallCan.h"
+#include "ShotCan.h"
+#include "Sprite3D.h"
+
+
 Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 {
 	//アニメーション用にモデルのポインタを格納
@@ -22,7 +29,7 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	name = typeid(*this).name();
 	//モデルの生成
 	Create(myModel);
-	rotation = { 0,180,0 };
+	rotation = { 0,180 -45,0 };
 	StartScale = 0.5f;
 	scale = StartScale;
 	BoxCollider* boxCollider = new BoxCollider();
@@ -34,20 +41,24 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	collider->SetMove(true);
 
 	name = typeid(*this).name();
+	cansBar = new StockCansBar();
 	Initialize();
+	auxiliaryLines = new Sprite3D();
 }
 
 Player::~Player()
 {			
+	PtrDelete(cansBar);
+	PtrDelete(auxiliaryLines);
 }
 
 void Player::Initialize()
 {	
-	onGround = true;
+	onGround = false;
 	position = StartPos;
 	prePos = position;
 	direction = { 1,0,0 };
-	jump = false;
+	jump = true;
 	damage = false;
 	knockBack = false;
 	knockBackCounter = 0;
@@ -59,6 +70,19 @@ void Player::Initialize()
 	comboCount = 0;
 	goal = false;
 	pushJumpVal = 1.0f;
+	cansBar->Initialize(MaxJumpCount);//缶の初期数を渡す
+	restJump = MaxJumpCount;
+	rotVel = 0;
+	fallV = {};
+	fallAcc = -0.02f * val;
+	nowRot = 0;
+	stumble = false;
+	stumbleCounter = 0;
+	shotDir = {1,0,0};
+	stumbleVelX = 0.3f;
+	shotVel = 0;
+	shotMoveFlag = false;
+	cannotMoveRot = false;
 }
 
 void Player::Update()
@@ -67,25 +91,31 @@ void Player::Update()
 	prePos = position;
 	downKeyFrame = false;
 	//落下処理
-	if (!onGround)
+	if (!onGround )
 	{
+		//rotation.x +=3.0f;
 		//ノックバック時は移動できない
-		if (!knockBack)
+		if (!knockBack && !stumble)
 		{
-			if (Input::DownKey(DIK_D))
+			if (Input::DownKey(DIK_D) || Input::CheckPadLStickRight())
 			{
 				velocity.x = 0.1f;
 				direction = { 1,0,0 };
 				downKeyFrame = true;
 			}
-			if (Input::DownKey(DIK_A))
+			if (Input::DownKey(DIK_A) || Input::CheckPadLStickLeft())
 			{
 				velocity.x = -0.1f;
 				direction = { -1,0,0 };
 				downKeyFrame = true;
 			}
+			if ((Input::TriggerKey(DIK_SPACE) || Input::TriggerPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) )&& !cannotMoveRot)
+			{
+				Shot();
+			}
 			if (jumpCombo)
 				velocity *= 1.0f + 0.2 * jumpCombo;
+			RotCluc();
 		}
 		//加速
 		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
@@ -102,6 +132,7 @@ void Player::Update()
 		a = false;
 		jump = true;
 		onGround = false;
+		restJump--;
 		val += valVel;
 		//ジャンプ時上向き初速
 		jumpVYFist = 0.5f * val * pushJumpVal;
@@ -110,14 +141,39 @@ void Player::Update()
 
 		fallV = { 0,jumpVYFist,0,0 };
 		pushJumpVal = 1.0f;
+
+		//rotVel = -360.0f / abs(jumpVYFist / fallAcc * 2.0f);
+
 		ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
+		ObjectManager::GetInstance()->Add(new FallCan(position - Vector3{ 0,-0.2f,0.5f }));
 	}
+	//if(jump&& fallV.m128_f32[1] > 0)
+	//	myModel->PlayAnimation("jump", false, 1, false);
+	//if (jump && fallV.m128_f32[1] < 0)
+	//	myModel->PlayAnimation("onGraund", false, 1, false);
+
+	//else
+	//{
+	//	myModel->PlayAnimation("stand", true, 1, true);
+	//}
 	position += velocity;
+	ShotMove();
 	JumpScaleCluc();
 	KnockBack();
+	StumbleCluc();
 	CheckHit();
 	Damage();
 	Object::Update();
+	cansBar->Update(restJump);//缶の現在数を渡す
+	Object::WorldUpdate(Vector3{ 0,0,rotVel });
+
+	//object->WorldUpdate(Vector3{ 0,0,-rotVel }, NONE);
+	nowRot += rotVel;
+
+	if (nowRot < -360)
+		nowRot += 360;
+	else if (nowRot > 0)
+		nowRot -= 360;
 }
 void Player::CheckHit()
 {
@@ -184,9 +240,10 @@ void Player::CheckHit()
 			Object::Update();
 		}
 		//地面がないので落下
-		else if(!a) {
+		else if(!a && stumble) {
 			onGround = false;
-			fallV = {};
+			fallV.m128_f32[1] = 0;
+			fallAcc = -0.0001f;
 		}
 	}
 	//落下状態
@@ -195,15 +252,51 @@ void Player::CheckHit()
 		if (CollisionManager::GetInstance()->Raycast(downRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
 			&downRayCastHit, boxCollider->GetScale().y * 2.0f))
 		{
-			//着地
-			onGround = true;
-			jump = false;
-			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
-			//行列更新など
-			Object::Update();
-			changeOnGroundScale = true;
-				ParticleEmitter::CreateJumpDust(position + Vector3{0, -0.5f, 0});
+			if (!stumble)
+			{
+				int gapRad = (int)nowRot % 360;
+				if (gapRad < -340 || gapRad>-20 || (gapRad < -160 && gapRad>-200))
+				{
+					if (gapRad < -340)
+					{
+						rotVel = -360 - nowRot;
+					}
+					else if (gapRad > -20)
+					{
+						rotVel = -nowRot;
+					}
+					else 
+					{
+						rotVel = -180 - nowRot;
+					}
+					//着地
+					onGround = true;
+					jump = false;
+					position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
+					//行列更新など
+					Object::Update();
+					changeOnGroundScale = true;
+					ParticleEmitter::CreateJumpDust(position + Vector3{ 0, -0.5f, 0 });
+					myModel->PlayAnimation("stand", true, 1, false);
+					if (!stumble && cannotMoveRot)
+						cannotMoveRot = false;
+				}
+				else
+				{
+					stumble = true;
+					rotVel = -nowRot / 20.0f;
+					stumble = false;
+					stumbleCounter = 0;
+					//ジャンプ時上向き初速
+					jumpVYFist = 0.05f;
+					//下向き加速
+					fallAcc = -jumpVYFist / 10;
 
+					fallV = { 0,jumpVYFist,0,0 };
+
+					cannotMoveRot = true;
+				}
+			}
 		}
 	}
 	class PlayerQueryCallBack :public QueryCallback
@@ -246,11 +339,49 @@ void Player::CheckHit()
 	}
 	else if (callback.move.m128_f32[1] > 0 && fallV.m128_f32[1] < 0 &&!downKeyFrame)
 	{
-		onGround = true;
-		jump = false;
-		changeOnGroundScale = true;
-		a = true;
+		if (!stumble)
+		{
 
+			int gapRad = (int)nowRot % 360;
+			if (gapRad < -340 || gapRad>-20 || (gapRad < -160 && gapRad>-200))
+			{
+				if (gapRad < -340)
+				{
+					rotVel = -360 - nowRot;
+				}
+				else if (gapRad > -20)
+				{
+					rotVel = -nowRot;
+				}
+				else
+				{
+					rotVel = -180 - nowRot;
+				}
+				onGround = true;
+				jump = false;
+				changeOnGroundScale = true;
+				a = true;
+				position.y += 0.05f;
+				ParticleEmitter::CreateJumpDust(position + Vector3{ 0, -0.5f, 0 });
+				if (!stumble && cannotMoveRot)
+					cannotMoveRot = false;
+			}
+			else
+			{
+				stumble = true;
+				rotVel = -nowRot/ 20.0f;
+				stumble = false;
+				stumbleCounter = 0;
+				//ジャンプ時上向き初速
+				jumpVYFist = 0.05f;
+				//下向き加速
+				fallAcc = -jumpVYFist / 10;
+
+				fallV = { 0,jumpVYFist,0,0 };
+
+				cannotMoveRot = true;
+			}
+		}
 	}
 	
 	Object::Update();
@@ -273,8 +404,7 @@ void Player::CheckHit()
 	//上から当たった場合
 	if(rejectVec2.y>abs(rejectVec2.x))
 	{
-		HitStop::SetStopTime(5);
-		
+		HitStop::SetStopTime(5);		
 		jump = true;
 		onGround = false;
 		jumpCombo = true;
@@ -283,12 +413,12 @@ void Player::CheckHit()
 		jumpVYFist = 0.5f * val * (1.0f + 0.2f * comboCount);
 		//下向き加速
 		fallAcc = -0.02f * val;
-
 		fallV = { 0,jumpVYFist,0,0 };
 	}
 	//横から当たった場合
 	else
 	{
+		restJump -= 10;
 		val += valVel * 10;
 		damage = true;
 		knockBack = true;
@@ -303,6 +433,10 @@ void Player::CheckHit()
 		//下向き加速
 		fallAcc = -0.02f * val;
 		fallV = { 0,jumpVYFist,0,0 };
+		for (int i = 0; i < 10; i++)
+		{
+			ObjectManager::GetInstance()->Add(new FallCan(position));
+		}
 	}
 }
 
@@ -310,6 +444,7 @@ void Player::JumpScaleCluc()
 {
 	if (changeOnGroundScale)
 	{
+		rotVel = 0;
 		changeScaleCounter++;
 		const int EaingTime = 12;
 		if (changeScaleCounter <= EaingTime)
@@ -403,6 +538,137 @@ void Player::Damage()
 	}
 }
 
+void Player::StumbleCluc()
+{
+	if (!stumble)return;
+	if (stumbleCounter < 10)
+	{
+		//nowRot += rotVel;
+	}
+	else if (stumbleCounter < 40)
+	{
+		rotVel = 0;
+		stumbleVelX += stumbleAccelX;
+		position.x += stumbleVelX;
+	}
+	else if (stumbleCounter < 60)
+	{
+		int counter = stumbleCounter - 39;
+		const int EaingTime = 10;
+		if (counter <= EaingTime)
+		{
+			scale.z = Easing::EaseOutExpo(StartScale.z, StartScale.z * 2, EaingTime, counter);
+			scale.y = Easing::EaseOutExpo(StartScale.y, StartScale.y * 2, EaingTime, counter);
+			scale.x = Easing::EaseOutExpo(StartScale.x, StartScale.x * 0.5f, EaingTime, counter);
+
+		}
+		else
+		{
+			scale.z = Easing::EaseOutExpo(StartScale.z * 2, StartScale.z, EaingTime, counter - EaingTime);
+			scale.y = Easing::EaseOutExpo(StartScale.y * 2, StartScale.y, EaingTime, counter - EaingTime);
+			scale.x = Easing::EaseOutExpo(StartScale.x * 0.5f, StartScale.x, EaingTime, counter - EaingTime);
+
+		}
+
+	}
+	if (stumbleCounter >= 60)
+	{
+		if (nowRot > -180)
+		{
+			rotVel = 90.0f / 20.0f;
+		}
+		else
+		{
+			rotVel = 270.0f / 20.0f;
+		}
+		stumble = false;
+		stumbleCounter = 0;
+		//ジャンプ時上向き初速
+		jumpVYFist = 0.05f;
+		//下向き加速
+		fallAcc = -jumpVYFist/10;
+
+		fallV = { 0,jumpVYFist,0,0 };
+
+	}
+	stumbleCounter++;
+
+}
+
+void Player::Shot()
+{
+	val += valVel;
+	restJump--;
+	//反動処理
+	auto matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(nowRot));
+	shotDir = XMVector3TransformNormal({ 1,0,0 }, matRot);
+	shotDir.Normalize();
+	const Vector3 shotReactionVel = -shotDir * shotReactionVal;
+	shotVel.x += shotReactionVel.x;
+	fallV.m128_f32[1] = shotReactionVel.y;
+	fallAcc = -0.02f * MinVal * 1.3f;
+
+	//発射処理
+	ObjectManager::GetInstance()->Add(new ShotCan(position, shotDir));
+	shotMoveFlag = true;
+}
+
+void Player::ShotMove()
+{
+	if (!shotMoveFlag) return;
+	position.x += shotVel.x;
+	if (shotVel.x > 0)
+		shotVel.x -= 0.005f;
+	else
+		shotVel.x += 0.005f;
+	if (shotVel.x < 0.01f && shotVel.x > -0.01f)
+	{
+		shotVel.x = 0;
+		shotMoveFlag = false;
+	}
+}
+
+void Player::RotCluc()
+{
+	if (cannotMoveRot)return;
+	auto dir = Input::GetRStickDirection();
+	rotVel = dir.x * 5.0f;
+
+	if (Input::DownKey(DIK_RIGHT))
+	{
+		rotVel = 5.0f;
+	}
+	if (Input::DownKey(DIK_LEFT))
+	{
+		rotVel = -5.0f;
+	}
+
+	//if (Input::CheckPadRStickRight())
+	//{
+	//	rotVel = -4.0f;
+
+	//}
+	//if (Input::CheckPadRStickLeft())
+	//{
+	//	rotVel = 4.0f;
+	//}
+	//auto inputRot = Input::GetRStickDirection();
+	//Vector2 inputDir = Vector2::Normalize({ inputRot.x,inputRot.y });
+	//if (Vector2::Length(inputDir) <= 0)
+	//{
+	//	inputDir = { 1,0 };
+	//}
+	//auto matRot = XMMatrixIdentity();
+	//matRot *= XMMatrixRotationZ(XMConvertToRadians(nowRot));
+	//Vector3 nowDir = XMVector3TransformNormal({ 1,0,0 }, matRot);
+	//nowDir.Normalize();
+	//Vector2 nowDirVec2 = { nowDir.x,nowDir.y };
+	//float alpha = XMConvertToDegrees(acosf(Vector2::Dot(inputDir, nowDirVec2)));
+	//rotVel = alpha;
+}
+
+
 void Player::Draw()
 {
 	Object::CustomDraw(true,true);
@@ -427,13 +693,8 @@ void Player::DrawReady()
 
 #endif
 
-	if (Object3D::GetDrawShadow())
-	{
-		pipelineName = "FBXShadowMap";
-	}
-	else
-	{
+	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, {0.3f,0.3f}, { 0,0.5f }, true);
 		pipelineName = "FBX";
-	}
+		cansBar->Draw();
 }
 

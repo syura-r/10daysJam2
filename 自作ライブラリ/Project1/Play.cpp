@@ -28,6 +28,8 @@
 #include "HitStop.h"
 #include "BreakBlock.h"
 #include"Apartment.h"
+#include "EndChara.h"
+#include "Boss.h"
 Play::Play()
 {
 	next = Title;
@@ -54,7 +56,6 @@ Play::Play()
 	pause = new Pause();
 	result = new Result();
 	inGameTimer = new InGameTimer();
-	cansBar = new StockCansBar();
 	gameEndSelect = new GameEndSelect();
 
 	ParticleEmitter::SetObjectManager(objectManager);
@@ -67,7 +68,6 @@ Play::~Play()
 	PtrDelete(pause);
 	PtrDelete(result);
 	PtrDelete(inGameTimer);
-	PtrDelete(cansBar);
 	PtrDelete(gameEndSelect);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
@@ -81,14 +81,24 @@ void Play::Initialize()
 
 	objectManager->Reset();
 
-	for (int i = 0; i < 4; i++)
-{
-		Apartment* obj = new Apartment({ 8.0f, -8.0f + 7.0f * i, 1.0f });
-		objectManager->Add(obj);
-	}
+//	for (int i = 0; i < 10; i++)
+//{
+//		Apartment* obj = new Apartment({ 8.0f + 16 * i, -8.0f, 1.0f });
+//		objectManager->Add(obj);
+//	}
+//	for (int i = 0; i < 10; i++)
+//	{
+//		Apartment* obj = new Apartment({ 8.0f +16 * i, -1.0f, 1.0f });
+//		objectManager->Add(obj);
+//	}
+	//EndChara* chara = new EndChara();
+	//objectManager->Add(chara);
 
 	Player* player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
+	Boss* boss = new Boss();
+	objectManager->Add(boss);
+
 	BaseEnemy::SetPlayerPtr(player);
 	camera->SetFocusObject(player);
 	//for (int i = 0; i < 30; i++)
@@ -108,7 +118,7 @@ void Play::Initialize()
 	//}
 	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
 	objectManager->Add(badGuy);
-	MapLoader::LoadMap("1-2");
+	MapLoader::LoadMap("1-1");
 	camera->Initialize();
 
 	isEnd = false;
@@ -117,7 +127,6 @@ void Play::Initialize()
 	pause->Initialize();
 	result->Initialize();
 	inGameTimer->Initialize();
-	cansBar->Initialize(100);//ŠÊ‚Ì‰Šú”‚ð“n‚·
 	gameEndSelect->Initialize();
 
 	//nowPlayingBGMName = "BGM_Play";
@@ -222,7 +231,6 @@ void Play::Update()
 #endif
 	
 	inGameTimer->Update();
-	cansBar->Update(80);//ŠÊ‚ÌŒ»Ý”‚ð“n‚·
 
 
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
@@ -261,7 +269,6 @@ void Play::PostDraw()
 	//if (migrate)
 	//	return;
 	inGameTimer->Draw();
-	cansBar->Draw();
 
 	objectManager->PostDraw();
 	if (!Object3D::GetDrawShadow())

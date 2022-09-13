@@ -22,6 +22,8 @@ public:
 	}
 
 	virtual void Update() = 0;
+	virtual void WorldUpdate(const Vector3& rot) { Update(); }
+
 
 	virtual inline const Vector3& GetMin() = 0;
 	virtual inline const Vector3& GetMax() = 0;

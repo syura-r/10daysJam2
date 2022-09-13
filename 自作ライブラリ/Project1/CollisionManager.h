@@ -46,7 +46,7 @@ public://ƒƒ“ƒoŠÖ”
 	//	return &colliders[objPtr];
 	//}
 	void CheckAllCollisions();
-	bool CheckHitBox(const Box& box, unsigned short attribute = (unsigned short)0xffffffff);
+	bool CheckHitBox(const Box& box, unsigned short attribute = (unsigned short)0xffffffff,BaseCollider* collider = nullptr);
 	/// <summary>
 	/// 8•ª–Ø‚Ì—Ìˆæ‚ğŒˆ’è‚·‚é
 	/// </summary>

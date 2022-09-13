@@ -32,6 +32,8 @@ public:
 
 
     static void CreateShock(const Vector3& pos, const Vector3& arg_rotation = { XM_PI * 0.5f,0,0 });
+    static void CreateBossAppearShock(const Vector3& pos);
+
     static void CreateGetEffect(const Vector3& pos);
     static void CreateJumpDust(const Vector3& pos);
 

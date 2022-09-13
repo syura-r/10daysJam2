@@ -41,7 +41,6 @@ private:
 	Pause* pause = nullptr;
 	Result* result = nullptr;
 	InGameTimer* inGameTimer = nullptr;
-	StockCansBar* cansBar = nullptr;
 	GameEndSelect* gameEndSelect = nullptr;
 
 	std::string nowPlayingBGMName;

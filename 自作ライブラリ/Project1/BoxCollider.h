@@ -9,9 +9,12 @@ public:
 		offset(offset),scale(scale)
 	{
 		shapeType = COLLISIONSHAPE_BOX;
+		appendRot = XMMatrixIdentity();
 	}
 
 	void Update()override;
+	void WorldUpdate(const Vector3& rot)override;
+
 	inline const Vector3& GetMax() override
 	{
 		return maxPosition;
@@ -50,9 +53,15 @@ private:
 	void ClucCenter(const XMMATRIX& matRot);
 	void ClucMinMaxPoint(const XMMATRIX& colMatRot, const XMMATRIX& matRot);
 	void ClucDirect(const XMMATRIX& colMatRot, const XMMATRIX& matRot);
+	void ClucWorldCenter(const XMMATRIX& matRot);
+	void ClucWorldMinMaxPoint(const XMMATRIX& colMatRot, const XMMATRIX& matRot);
+	void ClucWorldDirect(const XMMATRIX& colMatRot, const XMMATRIX& matRot);
+
 	XMVECTOR offset;
 	Vector3 scale;
 	Vector3 colliderRot = {};
 	Vector3 objCenter;
+	XMMATRIX appendRot = XMMatrixIdentity();
+
 };
 

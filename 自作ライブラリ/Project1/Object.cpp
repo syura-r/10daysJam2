@@ -35,6 +35,15 @@ void Object::Update()
 		collider->Update();
 }
 
+void Object::WorldUpdate(const Vector3& rot)
+{
+	object->WorldUpdate(rot,billboardType);
+
+	if (collider)
+		collider->Update();
+
+}
+
 void Object::DrawReady()
 {
 	if (Object3D::GetDrawShadow())

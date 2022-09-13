@@ -13,7 +13,8 @@ class StandardEnemy;
 class EnergyItem;
 class PanelItem;
 class PanelCutLocus;
-
+class StockCansBar;
+class Sprite3D;
 class Player : public Object
 {
 public:
@@ -30,10 +31,14 @@ private:
 	void JumpScaleCluc();
 	void KnockBack();
 	void Damage();
+	void StumbleCluc();
+	void Shot();
+	void ShotMove();
+	void RotCluc();
 	//ジャンプ補正値の最小値
-	const float MinVal = 0.2f;
+	const float MinVal = 0.4f;
 	//ジャンプ補正値の最大値
-	const float MaxVal = 0.4f;
+	const float MaxVal = 0.8f;
 	//何回ジャンプしたら最大になるのか
 	const int MaxJumpCount = 100;
 	//ジャンプ補正値の上昇値
@@ -47,6 +52,26 @@ private:
 	//下向き加速度の最大値
 	const float fallVYMin = -0.5f;
 
+	//残りのジャンプできる回数
+	int restJump = MaxJumpCount;
+
+	//回転速度
+	float rotVel;
+	//現在の回転角度
+	float nowRot;
+	//転んだ状態か
+	bool stumble;
+	//転んでから起き上がるまでのカウンター
+	int stumbleCounter;
+	float stumbleVelX;
+	float stumbleAccelX;
+
+	//発射角度
+	Vector3 shotDir;
+	bool shotMoveFlag;
+	Vector3 shotVel;
+	const float shotReactionVal = 0.3f;
+
 	//入力でのジャンプ補正値
 	float pushJumpVal = 1.0f;
 
@@ -59,6 +84,7 @@ private:
 
 	bool goal;
 
+	bool cannotMoveRot;
 
 	Vector3 StartPos;
 	Vector3 StartScale;
@@ -87,5 +113,10 @@ private:
 	bool changeJumpScale = false;
 	int changeScaleCounter = 0;
 	FBXModel* myModel = nullptr;
+
+	StockCansBar* cansBar = nullptr;
+
+	Sprite3D* auxiliaryLines = nullptr;
+
 };
 

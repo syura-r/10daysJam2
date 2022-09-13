@@ -16,6 +16,10 @@ void BaseEnemy::OnCollision(const CollisionInfo& info)
 			dead = true;
 		}
 	}
+	if (info.collider->GetAttribute() == COLLISION_ATTR_BULLET)
+	{
+		dead = true;
+	}
 }
 
 
