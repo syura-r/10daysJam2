@@ -144,14 +144,6 @@ void Play::Update()
 	{
 		return;
 	}
-#ifdef _DEBUG
-	//リザルト開始
-	if (Input::TriggerKey(DIK_R))
-	{
-		result->IsActive(80, 50);//缶の数とジャンプの回数
-		return;
-	}
-#endif
 
 	gameEndSelect->Update();
 	//やり直す
@@ -212,11 +204,18 @@ void Play::Update()
 		Crow* crow = new Crow();
 		objectManager->Add(crow);
 	}
-	if (Input::TriggerKey(DIK_E))//終了処理
+	//終了処理
+	if (Input::TriggerKey(DIK_E))
 	{
 		Audio::StopBGM(nowPlayingBGMName);
 		Audio::AllStopSE();
 		ShutDown();
+		return;
+	}
+	//リザルト開始
+	if (Input::TriggerKey(DIK_R))
+	{
+		result->IsActive(80, 50);//缶の数とジャンプの回数
 		return;
 	}
 #endif

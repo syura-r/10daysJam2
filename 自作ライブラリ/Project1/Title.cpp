@@ -7,7 +7,7 @@ Title::Title()
 {
 	next = Play;
 
-	camera = std::make_unique<DebugCamera>();
+	camera = std::make_unique<InGameCamera>();
 	Object3D::SetCamera(camera.get());
 
 	//ƒ‰ƒCƒg¶¬
@@ -19,8 +19,8 @@ Title::Title()
 	lightGroup->SetDirLightColor(0, { 1,1,1 });
 
 
-	cans[0] = new CanInTitle(-4.5f, 10.0f, -2.5f, 90.0f, 90.0f);
-	cans[1] = new CanInTitle(3.7f, 10.0f, -2.8f, 90.0f, 97.0f);
+	cans[0] = new CanInTitle(-2.0f, 10.0f, -2.5f, 90.0f, 90.0f);
+	cans[1] = new CanInTitle(5.8f, 10.0f, -2.8f, 90.0f, 97.0f);
 	cover = Object3D::Create(OBJLoader::GetModel("cover_title"), position_cover, scale_cover, rotation_cover, color_cover);
 
 	base = new Sprite();
@@ -48,6 +48,9 @@ void Title::Initialize()
 	isEnd = false;
 	isAllEnd = false;
 
+	camera->Initialize();
+	camera->SetMatrixView({ 0,-1.5f,10 }, { 0,-1.5f,0 }, { 0,1,0 });
+	camera->SetDistance(9.5f);
 	Object3D::SetCamera(camera.get());
 	Object3D::SetLightGroup(lightGroup.get());
 
@@ -132,11 +135,12 @@ void Title::PreDraw()
 
 void Title::PostDraw()
 {
+	PipelineState::SetPipeline("Sprite");
 	start->DrawSprite("start", position_start, 0.0f, scale_start);
 	quit->DrawSprite("quit", position_quit, 0.0f, scale_quit);
 
-	const Vector2 size_base = { 256.0f * scale_big.x, 64.0f * scale_big.y };
-	base->DrawSprite("white1x1", position_base, 0.0f, size_base, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
+	const Vector2 size_base = { 1.2f * scale_big.x, 1.0f * scale_big.y };
+	base->DrawSprite("select", position_base, 0.0f, size_base, { 1,1,1,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 
 
 	//button->DrawSprite("button_a", position_button, 0.0f, { 1,1 }, { 1,1,1,alpha_button }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");

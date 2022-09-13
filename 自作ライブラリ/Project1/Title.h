@@ -19,7 +19,7 @@ public:
 	void PostDraw()override;
 
 private:
-	std::unique_ptr<DebugCamera> camera;
+	std::unique_ptr<InGameCamera> camera;
 	std::unique_ptr<LightGroup> lightGroup;
 
 	//ƒ^ƒCƒgƒ‹ƒƒS‚ÌŠÊ

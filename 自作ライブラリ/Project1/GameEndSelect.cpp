@@ -103,7 +103,7 @@ void GameEndSelect::Draw()
 	sp_back->DrawSprite("white1x1", pos_back, 0.0f, scale, bg_color, { 0.0f,0.0f }, "NoAlphaToCoverageSprite");
 
 	//‘I‘ð‹­’²
-	sp_base->DrawSprite("white1x1", pos_base, 0.0f, { 256.0f, 64.0f }, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
+	sp_base->DrawSprite("select", pos_base, 0.0f, { 1.2f, 1.0f }, { 1,1,1,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 }
 
 void GameEndSelect::IsActive()

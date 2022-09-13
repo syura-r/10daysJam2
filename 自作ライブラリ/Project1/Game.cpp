@@ -80,12 +80,13 @@ void Game::RoadAsset()
 		Texture::LoadTexture("shock", "shock.png");
 		Texture::LoadTexture("dust", "dust.png");
 		Texture::LoadTexture("white1x1", "white1x1.png");
-		Texture::LoadTexture("number", "number.png");
+		Texture::LoadTexture("number", "number_white.png");
 		Texture::LoadTexture("wind", "wind.png");
 
 		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
 		Texture::LoadTexture("can", "stockCansBar/can.png");
 
+		Texture::LoadTexture("select", "pause/select.png");
 		Texture::LoadTexture("circle", "pause/circle.png");
 		Texture::LoadTexture("toGame", "pause/toGame.png");
 		Texture::LoadTexture("restart", "pause/restart.png");
