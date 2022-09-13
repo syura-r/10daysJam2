@@ -47,7 +47,7 @@ void GameEndSelect::Update()
 
 	//ì_ñ≈
 	const float speed_alphaChange = 0.02f;//ë¨ìx
-	const float min_alphaChange = 0.3f;//â∫å¿
+	const float min_alphaChange = 0.1f;//â∫å¿
 	const float max_alphaChange = 1.0f;//è„å¿
 	if (isUP_alphaChange)//ïsìßñæÇ…
 	{

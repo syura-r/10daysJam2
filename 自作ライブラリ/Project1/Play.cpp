@@ -133,6 +133,11 @@ void Play::Initialize()
 
 void Play::Update()
 {
+	//リザルト開始
+	if (Input::TriggerKey(DIK_R))
+	{
+		result->IsActive(true, 80, inGameTimer->GetRealTime());//「クリアしたのか」と「缶の残り数」と「経過時間」
+	}
 	result->Update();
 	//リザルトを閉じる
 	if (result->GetIsCloseResult() && !gameEndSelect->GetIsActive())
@@ -210,12 +215,6 @@ void Play::Update()
 		Audio::StopBGM(nowPlayingBGMName);
 		Audio::AllStopSE();
 		ShutDown();
-		return;
-	}
-	//リザルト開始
-	if (Input::TriggerKey(DIK_R))
-	{
-		result->IsActive(80, 50);//缶の数とジャンプの回数
 		return;
 	}
 #endif

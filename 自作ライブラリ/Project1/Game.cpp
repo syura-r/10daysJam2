@@ -84,6 +84,8 @@ void Game::RoadAsset()
 		Texture::LoadTexture("wind", "wind.png");
 
 		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
+
+		Texture::LoadTexture("frame", "stockCansBar/frame.png");
 		Texture::LoadTexture("can", "stockCansBar/can.png");
 
 		Texture::LoadTexture("select", "pause/select.png");
@@ -96,6 +98,11 @@ void Game::RoadAsset()
 
 		Texture::LoadTexture("start", "title/start.png");
 		Texture::LoadTexture("quit", "title/quit.png");
+
+		Texture::LoadTexture("clear", "result/clear.png");
+		Texture::LoadTexture("over", "result/over.png");
+		Texture::LoadTexture("life", "result/life.png");
+		Texture::LoadTexture("time", "result/time.png");
 
 		Texture::LoadTexture("button_a", "button_a.png");
 

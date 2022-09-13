@@ -96,10 +96,10 @@ void StockCansBar::Draw()
 
 	bar_icon->DrawSprite("can", position, -10.0f, { 0.45f, 0.45f });
 
+	bar_outside->DrawSprite("frame", position, 0.0f, { 1,1 }, { 1,1,1,1 }, { 0.0f,0.5f });
+
 	const Vector4 color_red = { 0.9f,0.1f,0.2f,1 };
 	const Vector4 color_blue = { 0.1f,0.2f,0.9f,1 };
 	bar_inside->DrawSprite("white1x1", position, 0.0f, { barSize_x_inside, barSize_max.y }, color_blue, { 0.0f,0.5f });
 	bar_inside_sub->DrawSprite("white1x1", position, 0.0f, { barSize_x_inside_sub, barSize_max.y }, color_red, { 0.0f,0.5f });
-
-	bar_outside->DrawSprite("white1x1", position, 0.0f, barSize_max, { 1,1,1,1 }, { 0.0f,0.5f });
 }

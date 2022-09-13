@@ -25,7 +25,7 @@ private:
 	//’·‚³
 	float barSize_x_inside = 0.0f;
 	float barSize_x_inside_sub = 0.0f;
-	const Vector2 barSize_max = { 640.0f, 32.0f };
+	const Vector2 barSize_max = { 640.0f, 64.0f };
 
 	//ŠÊ‚Ì‰Šú”‚ÆŒ»İ”
 	float firstCansCount = 0.0f;
