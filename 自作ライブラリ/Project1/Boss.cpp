@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "BossHair.h"
 #include "HitPointBar.h"
+#include "BossCrow.h"
 
 Boss::Boss()
 {
@@ -40,7 +41,6 @@ Boss::Boss()
 	Initialize();
 	Object::Update();
 	actionState = ActionState::appear;
-	magic = true;
 	colorChangeCounter = 0;
 	appearCounter = 0;
 	camera = dynamic_cast<InGameCamera*>(Object3D::GetCamera());
@@ -48,6 +48,7 @@ Boss::Boss()
 	lockOnObj->Create(FBXManager::GetModel("LockOn"));
 	lockOnObj->SetColor({ 0.6f,0,0,1 });
 	lockOnObj->SetScale(2.0f);
+	ObjectManager::GetInstance()->Add(new BossCrow(this));
 }
 
 Boss::~Boss()
@@ -59,7 +60,7 @@ void Boss::Initialize()
 {
 	actionState = ActionState::appear;
 	appearState = AppearState::masgic;
-	magic = true;
+	magic = false;
 	earthquake = false;
 	colorChangeCounter = 0;
 	appearCounter = 0;
@@ -118,6 +119,7 @@ void Boss::DrawReady()
 
 void Boss::OnCollision(const CollisionInfo& info)
 {
+	if (damage) return;
 	if (info.collider->GetAttribute() == COLLISION_ATTR_ALLIES)
 	{
 		Vector3 rejectVec = info.reject;
@@ -150,6 +152,7 @@ void Boss::StartApper()
 void Boss::StartMagic()
 {
 	magic = true;
+	ParticleEmitter::CreateGetEffect(position + Vector3{0, 0.65f, 0});
 }
 
 void Boss::EndMagic()
@@ -175,6 +178,7 @@ void Boss::Appear()
 		appearCounter++;
 		if (appearCounter <= 90)
 		{
+			ChangeColor();
 			scale = Easing::EaseInOutBack(0.3f, bigScale, 90, appearCounter);
 			BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(collider);
 			assert(boxCollider);
@@ -492,6 +496,9 @@ void Boss::ChangeColor()
 //  0  104 183
 //  29  32 136
 // 146  7  131
+	if (!magic) return;
+	if(appearState == AppearState::masgic)
+	ParticleEmitter::CreateMagicEffect(position + Vector3{0, 0.65f, 0});
 	if (colorChangeCounter < 10)
 	{
 		//”’¨Ô // 230  0   18
@@ -704,10 +711,14 @@ void Boss::Damage()
 {
 	if (!damage) return;
 	damageCounter++;
-	if (damageCounter > 5)
+	if (damageCounter == 5)
 	{
 		color.w = 1.0f;
+	}
+	if (damageCounter >= 15)
+	{
 		damageCounter = 0;
 		damage = false;
 	}
+
 }

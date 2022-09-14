@@ -178,6 +178,7 @@
     <ClCompile Include="BadGuy.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossCrow.cpp" />
     <ClCompile Include="BossHair.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="BreakBlock.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="ComputeWrapper.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Crow.cpp" />
+    <ClCompile Include="CrowFallCan.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
@@ -281,6 +283,7 @@
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossCrow.h" />
     <ClInclude Include="BossHair.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BreakBlock.h" />
@@ -295,6 +298,7 @@
     <ClInclude Include="ComputeWrapper.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Crow.h" />
+    <ClInclude Include="CrowFallCan.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectionalLight.h" />

@@ -27,7 +27,6 @@ public:
     //フィーバーエフェクト
     static void FeverEffect(const Vector3& arg_position);
 
-
     static void DeadEffect(const Vector3& arg_position, const DirectX::XMFLOAT4& arg_color);
 
     static void CreateLaser(const Vector3& arg_position, const float& arg_rot);
@@ -37,6 +36,8 @@ public:
     static void CreateBossAppearShock(const Vector3& pos);
 
     static void CreateGetEffect(const Vector3& pos);
+    static void CreateMagicEffect(const Vector3& pos);
+
     static void CreateJumpDust(const Vector3& pos);
 
 private:

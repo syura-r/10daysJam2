@@ -70,8 +70,9 @@ private:
 	Vector3 shotDir;
 	bool shotMoveFlag;
 	Vector3 shotVel;
-	const float shotReactionVal = 0.3f;
-
+	const float shotReactionVal = 0.2f;
+	int shotCounter = 0;
+	bool canShot = true;
 	//“ü—Í‚Å‚ÌƒWƒƒƒ“ƒv•â³’l
 	float pushJumpVal = 1.0f;
 

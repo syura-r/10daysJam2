@@ -107,6 +107,7 @@ void Game::RoadAsset()
 		Texture::LoadTexture("button_a", "button_a.png");
 
 		Texture::LoadTexture("AuxiliaryLines", "AuxiliaryLines.png");
+		Texture::LoadTexture("starEffect", "starEffect.png");
 
 		
 		break; 
@@ -210,6 +211,7 @@ void Game::CreatePipeline()
 		break;
 	case 2:
 		PipelineState::CreatePipeline("Particle", PARTICLE, ADD);
+		//PipelineState::CreatePipeline("NoShade", NoShade,ADD);
 		//PipelineState::CreatePipeline("FBXPolygonBreak", FBXPolygonBreak);
 		break;
 	case 3:

@@ -107,7 +107,7 @@ void Player::Update()
 				direction = { -1,0,0 };
 				downKeyFrame = true;
 			}
-			if ((Input::TriggerKey(DIK_SPACE) || Input::TriggerPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) )&& !cannotMoveRot)
+			if ((Input::TriggerKey(DIK_SPACE) || Input::TriggerPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) )&& !cannotMoveRot&&canShot)
 			{
 				Shot();
 			}
@@ -141,6 +141,17 @@ void Player::Update()
 		ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
 		ObjectManager::GetInstance()->Add(new FallCan(position - Vector3{ 0,-0.2f,0.5f }));
 		Audio::PlaySE("can", 0.1f * Audio::volume_se);
+	}
+	if (!canShot)
+	{
+		scale = Easing::EaseInOutBack(0.35f, StartScale.x, 15, shotCounter);
+		shotCounter++;
+		if (shotCounter > 15)
+		{
+			shotCounter = 0;
+			canShot = true;
+		}
+
 	}
 	//if(jump&& fallV.m128_f32[1] > 0)
 	//	myModel->PlayAnimation("jump", false, 1, false);
@@ -250,13 +261,6 @@ void Player::CheckHit()
 		{
 			//着地
 			Audio::PlaySE("jump", 0.1f * Audio::volume_se);
-			onGround = true;
-			jump = false;
-			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
-			//行列更新など
-			Object::Update();
-			changeOnGroundScale = true;
-				ParticleEmitter::CreateJumpDust(position + Vector3{0, -0.5f, 0});
 
 			if (!stumble)
 			{
@@ -610,13 +614,24 @@ void Player::Shot()
 	shotDir.Normalize();
 	const Vector3 shotReactionVel = -shotDir * shotReactionVal;
 	shotVel.x += shotReactionVel.x;
-	fallV.m128_f32[1] = shotReactionVel.y;
-	fallAcc = -0.02f * MinVal * 1.3f;
+	if (abs(shotVel.x) >= shotReactionVal * 2)
+	{
+		if (shotVel.x < 0)
+			shotVel.x = -shotReactionVal * 2;
+		else
+		{
+			shotVel.x = shotReactionVal * 2;
+		}
 
+	}
+	fallV.m128_f32[1] = shotReactionVel.y * 1.3f;
+	fallAcc = -0.02f * MinVal * 1.3f;
+	scale = 0.35f;
 	//発射処理
 	ObjectManager::GetInstance()->Add(new ShotCan(position, shotDir));
 	Audio::PlaySE("can", 0.1f * Audio::volume_se);
 	shotMoveFlag = true;
+	canShot = false;
 }
 
 void Player::ShotMove()
@@ -698,7 +713,7 @@ void Player::DrawReady()
 
 #endif
 
-	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, {0.3f,0.3f}, { 0,0.5f }, true);
+	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, { 0.04f,0.02f }, {1,1,1,color.w}, { 0,0.5f }, true);
 		pipelineName = "FBX";
 		cansBar->Draw_player();
 }
