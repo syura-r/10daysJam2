@@ -4,15 +4,16 @@
 #include "NumberSprite.h"
 #include "Timer.h"
 
-class StockCansBar
+class HitPointBar
 {
 public:
-	StockCansBar();
-	~StockCansBar();
+	HitPointBar();
+	~HitPointBar();
 
-	void Initialize(const float arg_firstCansCount);
-	void Update(const float arg_nowCansCount);
-	void Draw();
+	void Initialize(const float arg_firstCount);
+	void Update(const float arg_nowCount);
+	void Draw_player();
+	void Draw_boss();
 
 private:
 	Sprite* bar_outside = nullptr;
@@ -20,7 +21,7 @@ private:
 	Sprite* bar_inside_sub = nullptr;//‚Ç‚ê‚­‚ç‚¢Œ¸‚Á‚½‚©
 	Sprite* bar_icon = nullptr;
 
-	NumberSprite* cansCountSprite = nullptr;
+	NumberSprite* countSprite = nullptr;
 
 	//’·‚³
 	float barSize_x_inside = 0.0f;
@@ -28,9 +29,9 @@ private:
 	const Vector2 barSize_max = { 640.0f, 64.0f };
 
 	//ŠÊ‚Ì‰Šú”‚ÆŒ»İ”
-	float firstCansCount = 0.0f;
-	float nowCansCount = 0.0f;
-	float subCansCount = 0.0f;//·•ª
+	float firstCount = 0.0f;
+	float nowCount = 0.0f;
+	float subCount = 0.0f;//·•ª
 
 	//·•ª•\¦‚ğk‚ß‚é
 	struct SubSizeChange

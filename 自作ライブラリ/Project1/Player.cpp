@@ -1,11 +1,11 @@
 #include "Player.h"
 
-#include"OBJLoader.h"
-#include"SphereCollider.h"
-#include"Input.h"
-#include"DebugText.h"
-#include"CollisionManager.h"
-#include"CollisionAttribute.h"
+#include "OBJLoader.h"
+#include "SphereCollider.h"
+#include "Input.h"
+#include "DebugText.h"
+#include "CollisionManager.h"
+#include "CollisionAttribute.h"
 #include "DrawMode.h"
 #include "Easing.h"
 #include "FBXManager.h"
@@ -14,8 +14,8 @@
 #include "Audio.h"
 #include "ParticleEmitter.h"
 #include "AreaEffect.h"
-#include"HitStop.h"
-#include"StockCansBar.h"
+#include "HitStop.h"
+#include "HitPointBar.h"
 #include "PtrDelete.h"
 #include "FallCan.h"
 #include "ShotCan.h"
@@ -41,7 +41,7 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	collider->SetMove(true);
 
 	name = typeid(*this).name();
-	cansBar = new StockCansBar();
+	cansBar = new HitPointBar();
 	Initialize();
 	auxiliaryLines = new Sprite3D();
 }
@@ -710,6 +710,6 @@ void Player::DrawReady()
 
 	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, {0.3f,0.3f}, { 0,0.5f }, true);
 		pipelineName = "FBX";
-		cansBar->Draw();
+		cansBar->Draw_player();
 }
 

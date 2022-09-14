@@ -372,7 +372,7 @@
     <ClCompile Include="HitStop.cpp">
       <Filter>ソース ファイル\Tool</Filter>
     </ClCompile>
-    <ClCompile Include="StockCansBar.cpp">
+    <ClCompile Include="HitPointBar.cpp">
       <Filter>ソース ファイル\GameText</Filter>
     </ClCompile>
     <ClCompile Include="Result.cpp">
@@ -698,7 +698,7 @@
     <ClInclude Include="HitStop.h">
       <Filter>ヘッダー ファイル\Tool</Filter>
     </ClInclude>
-    <ClInclude Include="StockCansBar.h">
+    <ClInclude Include="HitPointBar.h">
       <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">
