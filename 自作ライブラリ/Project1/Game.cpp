@@ -145,6 +145,7 @@ void Game::RoadAsset()
 
 		Audio::LoadFile("select", "SE/select.wav");
 		Audio::LoadFile("decision", "SE/decision.wav");
+		Audio::LoadFile("can_title", "SE/can_title.wav");
 		Audio::LoadFile("jump", "SE/jump.wav");
 		Audio::LoadFile("can", "SE/can1.wav");
 		Audio::LoadFile("crow", "SE/crow.wav");
