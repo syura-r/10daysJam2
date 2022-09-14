@@ -66,8 +66,6 @@ void Player::Initialize()
 	changeOnGroundScale = false;
 	changeJumpScale = false;
 	changeScaleCounter = 0;
-	jumpCombo = false;
-	comboCount = 0;
 	goal = false;
 	pushJumpVal = 1.0f;
 	cansBar->Initialize(MaxJumpCount);//缶の初期数を渡す
@@ -113,8 +111,6 @@ void Player::Update()
 			{
 				Shot();
 			}
-			if (jumpCombo)
-				velocity *= 1.0f + 0.2 * jumpCombo;
 			RotCluc();
 		}
 		//加速
@@ -127,8 +123,6 @@ void Player::Update()
 	//ジャンプ動作
 	else if (!changeOnGroundScale && !jump)
 	{
-		jumpCombo = false;
-		comboCount = 0;
 		a = false;
 		jump = true;
 		onGround = false;
@@ -391,8 +385,6 @@ void Player::CheckHit()
 		goal = true;
 	}
 
-	if (damage)
-		return;
 	//クエリーコールバックの関数オブジェクト
 	PlayerQueryCallBack callback2(boxCollider);
 	//敵との交差を全検索
@@ -407,19 +399,17 @@ void Player::CheckHit()
 		HitStop::SetStopTime(5);		
 		jump = true;
 		onGround = false;
-		jumpCombo = true;
-		comboCount++;
 		//ジャンプ時上向き初速
-		jumpVYFist = 0.5f * val * (1.0f + 0.2f * comboCount);
+		jumpVYFist = 0.5f * val;
 		//下向き加速
 		fallAcc = -0.02f * val;
 		fallV = { 0,jumpVYFist,0,0 };
 	}
 	//横から当たった場合
-	else
+	else if(!damage && !cannotMoveRot)
 	{
-		restJump -= 10;
-		val += valVel * 10;
+		restJump -= 3;
+		val += valVel * 3;
 		damage = true;
 		knockBack = true;
 		if (rejectVec2.x > 0)
@@ -433,7 +423,7 @@ void Player::CheckHit()
 		//下向き加速
 		fallAcc = -0.02f * val;
 		fallV = { 0,jumpVYFist,0,0 };
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			ObjectManager::GetInstance()->Add(new FallCan(position));
 		}

@@ -28,7 +28,7 @@ private:
     FBXModel* mohikanModel = nullptr;
     FBXModel* headModel = nullptr;
     FBXModel* bodyModel = nullptr;
-    const int MaxHP = 300;
+    const int MaxHP = 200;
     int hp = MaxHP;
     const int DamageVal = 10;
     bool damage = false;

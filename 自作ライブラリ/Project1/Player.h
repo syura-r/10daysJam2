@@ -78,10 +78,6 @@ private:
 	bool a = false;
 	bool downKeyFrame = false;
 
-	bool jumpCombo;
-
-	int comboCount;
-
 	bool goal;
 
 	bool cannotMoveRot;
