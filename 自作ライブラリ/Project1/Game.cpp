@@ -158,6 +158,7 @@ void Game::RoadAsset()
 		Audio::LoadFile("crow", "SE/crow.wav");
 		Audio::LoadFile("trample", "SE/trample.wav");
 		Audio::LoadFile("damage", "SE/playerdamage.wav");
+		Audio::LoadFile("Boss_dead", "SE/dead.wav");
 
 		break;
 	case 5:
@@ -212,7 +213,7 @@ void Game::CreatePipeline()
 	case 2:
 		PipelineState::CreatePipeline("Particle", PARTICLE, ADD);
 		//PipelineState::CreatePipeline("NoShade", NoShade,ADD);
-		//PipelineState::CreatePipeline("FBXPolygonBreak", FBXPolygonBreak);
+		PipelineState::CreatePipeline("FBXPolygonBreak", FBXPolygonBreak);
 		break;
 	case 3:
 		PipelineState::CreatePipeline("NoShade", NoShade);

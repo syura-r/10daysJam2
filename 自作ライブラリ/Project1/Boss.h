@@ -3,6 +3,7 @@
 class FBXModel;
 class InGameCamera;
 class HitPointBar;
+class Sprite;
 class Boss :
     public BaseEnemy
 {
@@ -16,7 +17,7 @@ public:
     void OnCollision(const CollisionInfo& info)override;
     void StartApper();
     void StartMagic();
-    void EndMagic();
+    void Break();
 private:
     void Move();
     void Appear();
@@ -24,6 +25,7 @@ private:
     void ChangeColor();
     void CheckHit();
     void Damage();
+    void Death();
     FBXModel* mainModel = nullptr;
     FBXModel* noMohikanModel = nullptr;
     FBXModel* mohikanModel = nullptr;
@@ -49,6 +51,32 @@ private:
     float fallAcc = -0.02f * 0.4f;
     //下向き加速度の最大値
     const float fallVYMin = -0.8f;
+    bool breakModelDraw = false;
+    Sprite* flashTex = nullptr;
+    bool drawFlash;
+    float flashAlpha;
+    int flashCounter;
+
+    //死亡アニメーションフラグ
+    bool playBreakAnimation = false;
+    //死亡アニメーションの速度
+    const float breakSpeed = 0.01f;
+    ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+    float destruction;
+    float scaleFactor; //スケールの変化量
+    float positionFactor;//ポジションの変化量
+    float rotationFactor;//回転の変化量
+    int  tessellation;//ポリゴン分割度
+    bool  onEasing;//ポリゴン分割度
+    struct ConstBuffData
+    {
+        float _Destruction; //分解度合い
+        float _ScaleFactor; //スケールの変化量
+        float _PositionFactor;//ポジションの変化量
+        float _RotationFactor;//回転の変化量
+        int _Tessellation;//ポリゴン分割度
+        int _OnEasing;//イージングで分解するか
+    };
 
     InGameCamera* camera = nullptr;
     enum class ActionState

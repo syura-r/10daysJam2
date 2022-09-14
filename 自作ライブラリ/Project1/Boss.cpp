@@ -15,7 +15,9 @@
 #include "BossHair.h"
 #include "HitPointBar.h"
 #include "BossCrow.h"
+#include "BossHead.h"
 
+#include "Audio.h"
 Boss::Boss()
 {
 	mainModel = FBXManager::GetModel("Boss");
@@ -23,7 +25,8 @@ Boss::Boss()
 	mohikanModel = FBXManager::GetModel("BossHair");
 	headModel = FBXManager::GetModel("BossHead");
 	bodyModel = FBXManager::GetModel("BossBody");
-	position = { StartPosX,-5,0 };
+	StartPos = { StartPosX,-5,0 };
+	position = StartPos;
 	name = typeid(*this).name();
 	scale = 0.3f;
 	rotation.y = -135;
@@ -48,16 +51,36 @@ Boss::Boss()
 	lockOnObj->Create(FBXManager::GetModel("LockOn"));
 	lockOnObj->SetColor({ 0.6f,0,0,1 });
 	lockOnObj->SetScale(2.0f);
-	ObjectManager::GetInstance()->Add(new BossCrow(this));
+	flashTex = new Sprite();
+	HRESULT result = DirectXLib::GetInstance()->GetDevice()->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	// アップロード可能
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBuffData) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuff));
+	destruction = 0.0f;
+	scaleFactor = 1.0f;
+	positionFactor = 2.0f;
+	rotationFactor = 0.79f;
+	tessellation = 1;
+	onEasing = false;
+	StartApper();
 }
 
 Boss::~Boss()
 {
 	PtrDelete(lockOnObj);
 	PtrDelete(hpBar);
+	PtrDelete(flashTex);
+
 }
 void Boss::Initialize()
 {
+	playBreakAnimation = false;
+	drawFlash = false;
+	flashAlpha = 0;
+	flashCounter = 0;
 	actionState = ActionState::appear;
 	appearState = AppearState::masgic;
 	magic = false;
@@ -76,6 +99,11 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
+	if (Input::TriggerKey(DIK_0))
+	{
+		actionState = ActionState::death;
+		drawFlash = true;
+	}
 	switch (actionState)
 	{
 	case ActionState::await:
@@ -87,6 +115,7 @@ void Boss::Update()
 		Attack();
 		break;
 	case ActionState::death:
+		Death();
 		break;
 	case ActionState::move:
 		Move();
@@ -107,14 +136,40 @@ void Boss::Draw()
 	{
 		lockOnObj->Object::CustomDraw(true);
 	}
+	if (breakModelDraw)
+	{
+		DirectXLib::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		DirectXLib::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, constBuff->GetGPUVirtualAddress());
 
+	}
 	Object::CustomDraw(true, true);
 }
 
 void Boss::DrawReady()
 {
+	if (drawFlash)
+	{
+		flashTex->DrawSprite("white1x1", { 960,540 }, 0, { 1920,1080 }, { 1,1,1,flashAlpha });
+	}
+	ConstBuffData* constMap = nullptr;
+	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);
+	assert(SUCCEEDED(result));
+	constMap->_Destruction = destruction;
+	constMap->_ScaleFactor = scaleFactor;
+	constMap->_PositionFactor = positionFactor;
+	constMap->_RotationFactor = rotationFactor;
+	constMap->_Tessellation = tessellation;
+	constMap->_OnEasing = onEasing;
+
+
+	constBuff->Unmap(0, nullptr);
+	if(!breakModelDraw)
 	pipelineName = "FBX";
+	else
+		pipelineName = "FBXPolygonBreak";
+
 	hpBar->Draw_boss();
+
 }
 
 void Boss::OnCollision(const CollisionInfo& info)
@@ -142,11 +197,15 @@ void Boss::OnCollision(const CollisionInfo& info)
 	}
 
 	if (hp <= 0)
-		dead = true;
+	{
+		drawFlash = true;
+		actionState = ActionState::death;
+	}
 }
 
 void Boss::StartApper()
 {
+	ObjectManager::GetInstance()->Add(new BossCrow(this));
 }
 
 void Boss::StartMagic()
@@ -155,8 +214,11 @@ void Boss::StartMagic()
 	ParticleEmitter::CreateGetEffect(position + Vector3{0, 0.65f, 0});
 }
 
-void Boss::EndMagic()
+void Boss::Break()
 {
+	Audio::PlaySE("Boss_dead", Audio::volume_se * 0.5f);
+	playBreakAnimation = true;
+	camera->SetShake(120, 0.05f);
 }
 
 void Boss::Move()
@@ -720,5 +782,51 @@ void Boss::Damage()
 		damageCounter = 0;
 		damage = false;
 	}
+
+}
+
+void Boss::Death()
+{
+	if (flashCounter < 81)
+		flashCounter++;
+	if (flashCounter <= 40)
+		flashAlpha = Easing::EaseInSine(0, 1, 40, flashCounter);
+	else if (flashCounter <= 80)
+		flashAlpha = Easing::EaseOutSine(1, 0, 40, flashCounter - 40);
+	if (flashCounter == 80)
+	{
+		drawFlash = false;
+	}
+	if (flashCounter == 40)
+	{
+		player->EndPosition();
+		position = StartPos + Vector3{ 0,-2.475f,0 };
+		rotation = { 0,-135,0 };
+		scale = 1.2f;
+		BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(collider);
+		assert(boxCollider);
+		boxCollider->SetOffset({ 0,0.65f * scale.x / 0.3f,0,0 });
+		boxCollider->SetScale(scale * Vector3{ 0.6f,2.25f,0.6f });
+		object->SetModel(bodyModel);
+		Object::Update();
+		breakModelDraw = true;
+		ObjectManager::GetInstance()->Add(new BossHead(position , this));
+
+	}
+	if (playBreakAnimation)
+	{
+		destruction += breakSpeed;
+		if (destruction == 0.7f)
+		{
+			ParticleEmitter::CreateBossAppearShock(position + Vector3{ 0,0.65f * scale.y / 0.3f,0 });
+		}
+		if (destruction >= 1.0f)
+		{
+			player->BossDead();
+			dead = true;
+		}
+		return;
+	}
+
 
 }

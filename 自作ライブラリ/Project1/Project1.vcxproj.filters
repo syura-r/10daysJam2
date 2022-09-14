@@ -426,6 +426,9 @@
     <ClCompile Include="CrowFallCan.cpp">
       <Filter>ソース ファイル\GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="BossHead.cpp">
+      <Filter>ソース ファイル\GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -759,6 +762,9 @@
       <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="CrowFallCan.h">
+      <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BossHead.h">
       <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

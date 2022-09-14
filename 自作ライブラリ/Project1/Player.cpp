@@ -67,7 +67,6 @@ void Player::Initialize()
 	changeJumpScale = false;
 	changeScaleCounter = 0;
 	goal = false;
-	pushJumpVal = 1.0f;
 	cansBar->Initialize(MaxJumpCount);//缶の初期数を渡す
 	restJump = MaxJumpCount;
 	rotVel = 0;
@@ -93,7 +92,7 @@ void Player::Update()
 	{
 		//rotation.x +=3.0f;
 		//ノックバック時は移動できない
-		if (!knockBack && !stumble)
+		if (!knockBack && !stumble && canOperate)
 		{
 			if (Input::DownKey(DIK_D) || Input::CheckPadLStickRight())
 			{
@@ -121,7 +120,7 @@ void Player::Update()
 		position.z += fallV.m128_f32[2];
 	}
 	//ジャンプ動作
-	else if (!changeOnGroundScale && !jump)
+	else if (!changeOnGroundScale && !jump && canOperate)
 	{
 		a = false;
 		jump = true;
@@ -129,12 +128,11 @@ void Player::Update()
 		restJump--;
 		val += valVel;
 		//ジャンプ時上向き初速
-		jumpVYFist = 0.5f * val * pushJumpVal;
+		jumpVYFist = 0.5f * val;
 		//下向き加速
 		fallAcc = -0.02f * val;
 
 		fallV = { 0,jumpVYFist,0,0 };
-		pushJumpVal = 1.0f;
 
 		//rotVel = -360.0f / abs(jumpVYFist / fallAcc * 2.0f);
 
@@ -476,10 +474,6 @@ void Player::JumpScaleCluc()
 			changeScaleCounter = 0;
 			return;
 		}
-		if (Input::DownKey(DIK_SPACE))
-		{
-			pushJumpVal += 1.0f / (EaingTime * 2);
-		}
 
 	}
 	if (!changeJumpScale)
@@ -716,5 +710,11 @@ void Player::DrawReady()
 	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, { 0.04f,0.02f }, {1,1,1,color.w}, { 0,0.5f }, true);
 		pipelineName = "FBX";
 		cansBar->Draw_player();
+}
+
+void Player::EndPosition()
+{
+	position = EndPos;
+	canOperate = false;
 }
 

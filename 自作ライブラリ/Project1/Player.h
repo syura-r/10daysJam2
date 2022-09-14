@@ -25,7 +25,9 @@ public:
 	void Draw() override;
 	void DrawReady() override;
 	bool GetGoal() { return goal; }
-
+	void EndPosition();
+	void BossDead() {};
+	void CanOperate() { canOperate = true; }
 private:
 	void CheckHit();
 	void JumpScaleCluc();
@@ -66,6 +68,9 @@ private:
 	float stumbleVelX;
 	float stumbleAccelX;
 
+	bool canOperate = true;
+
+	const Vector3 EndPos = { 0,-7,0 };
 	//発射角度
 	Vector3 shotDir;
 	bool shotMoveFlag;
@@ -73,8 +78,6 @@ private:
 	const float shotReactionVal = 0.2f;
 	int shotCounter = 0;
 	bool canShot = true;
-	//入力でのジャンプ補正値
-	float pushJumpVal = 1.0f;
 
 	bool a = false;
 	bool downKeyFrame = false;
