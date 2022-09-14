@@ -116,9 +116,9 @@ void Play::Initialize()
 	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
 	//	objectManager->Add(mapBox);
 	//}
-	BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
-	objectManager->Add(badGuy);
-	MapLoader::LoadMap("1-1");
+	//BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
+	//objectManager->Add(badGuy);
+	MapLoader::LoadMap("1-3");
 	camera->Initialize();
 
 	isEnd = false;
