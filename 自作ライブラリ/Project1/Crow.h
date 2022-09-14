@@ -13,5 +13,9 @@ private:
 	float targetPosY;
 	const float attackVel = 0.15f;
 	const float mmoveVel = 1.0f;
+
+	void CryVoiceLoop();
+	bool isSeLoop = false;
+	int seIntervalCount = 0;
 };
 

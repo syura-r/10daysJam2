@@ -120,9 +120,9 @@ void Play::Initialize()
 	cansBar->Initialize(100);//缶の初期数を渡す
 	gameEndSelect->Initialize();
 
-	//nowPlayingBGMName = "BGM_Play";
-	//Audio::StopBGM(nowPlayingBGMName);
-	//Audio::PlayBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
+	nowPlayingBGMName = "play";
+	Audio::StopBGM(nowPlayingBGMName);
+	Audio::PlayBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
 
 
 	Input::Update();
@@ -136,6 +136,7 @@ void Play::Update()
 	//リザルト開始
 	if (Input::TriggerKey(DIK_R))
 	{
+		Audio::StopBGM(nowPlayingBGMName);
 		result->IsActive(true, 80, inGameTimer->GetRealTime());//「クリアしたのか」と「缶の残り数」と「経過時間」
 	}
 	result->Update();

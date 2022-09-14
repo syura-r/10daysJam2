@@ -132,9 +132,17 @@ void Game::RoadAsset()
 
 
 		//WAVÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");
-		Audio::LoadFile("SE_Select", "SE/Allscene_SE_Select.wav");
-		Audio::LoadFile("SE_Decision", "SE/Allscene_SE_Decision.wav");
+		Audio::LoadFile("title", "BGM/title.wav");
+		Audio::LoadFile("play", "BGM/play.wav");
+		Audio::LoadFile("result", "BGM/result.wav");
+
+		Audio::LoadFile("select", "SE/select.wav");
+		Audio::LoadFile("decision", "SE/decision.wav");
+		Audio::LoadFile("jump", "SE/jump.wav");
+		Audio::LoadFile("can", "SE/can1.wav");
+		Audio::LoadFile("crow", "SE/crow.wav");
+		Audio::LoadFile("trample", "SE/trample.wav");
+		Audio::LoadFile("damage", "SE/playerdamage.wav");
 
 		break;
 	case 5:

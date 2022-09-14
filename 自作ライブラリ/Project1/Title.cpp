@@ -74,6 +74,10 @@ void Title::Initialize()
 	alpha_button = 0.0f;
 
 	Input::Update();
+
+	nowPlayingBGMName = "title";
+	Audio::StopBGM(nowPlayingBGMName);
+	Audio::PlayBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
 }
 
 void Title::Update()
@@ -96,7 +100,8 @@ void Title::Update()
 	if ((Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)) &&
 		isCanMoveEnd)
 	{
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
+		Audio::StopBGM(nowPlayingBGMName);
 
 		if (selectNumber <= 0)
 		{
@@ -169,7 +174,7 @@ void Title::Select()
 	{
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("select", 1.0f * Audio::volume_se);
 		easingCount_scale = 0;
 	}
 

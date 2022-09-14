@@ -196,6 +196,7 @@ void Player::CheckHit()
 			&downRayCastHit, boxCollider->GetScale().y * 2.0f))
 		{
 			//’…’n
+			Audio::PlaySE("jump", 0.1f * Audio::volume_se);
 			onGround = true;
 			jump = false;
 			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
@@ -291,6 +292,7 @@ void Player::CheckHit()
 	{
 		val += valVel * 10;
 		damage = true;
+		Audio::PlaySE("damage", 0.1f * Audio::volume_se);
 		knockBack = true;
 		if (rejectVec2.x > 0)
 			knockBackVel = MaxNockBackVel;

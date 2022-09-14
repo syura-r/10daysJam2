@@ -139,7 +139,7 @@ void GameEndSelect::Select()
 		//透明度リセット
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("select", 1.0f * Audio::volume_se);
 	}
 }
 
@@ -147,7 +147,7 @@ void GameEndSelect::Decision()
 {
 	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
 	{
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
 
 		switch (selectState)
 		{

@@ -1,6 +1,7 @@
 #include "BaseEnemy.h"
 #include "CollisionAttribute.h"
 #include"BaseCollider.h"
+#include "Audio.h"
 Player* BaseEnemy::player = nullptr;
 
 void BaseEnemy::OnCollision(const CollisionInfo& info)
@@ -14,6 +15,7 @@ void BaseEnemy::OnCollision(const CollisionInfo& info)
 		if (abs(rejectVec.y) > abs(rejectVec.x))
 		{
 			dead = true;
+			Audio::PlaySE("trample", 0.1f * Audio::volume_se);
 		}
 	}
 }

@@ -97,11 +97,11 @@ void Result::Update()
 		}
 	}
 
-	//シーン切り替え
+	//リザルト終了
 	if (isCloseResult_standby &&
 		(Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE)))
 	{
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
 		isCloseResult = true;
 		activeFlag = false;
 	}
@@ -144,6 +144,10 @@ void Result::Draw()
 
 void Result::IsActive(const bool arg_isClear, const float arg_canCount, const float arg_time)
 {
+	if (!activeFlag)
+	{
+		Audio::PlaySE("result", 0.1f * Audio::volume_bgm);
+	}
 	activeFlag = true;
 
 	isClear = arg_isClear;
