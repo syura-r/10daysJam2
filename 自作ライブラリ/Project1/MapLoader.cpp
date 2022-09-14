@@ -43,8 +43,8 @@ void MapLoader::LoadMap(const std::string& mapName)
 			{
 			case 1:
 			{
-				Veranda* veranda = new Veranda(CreatePos, {0.05f,0.1f,0.1f}, { 0,0,0 });
-				objectManager->Add(veranda);
+				MapBox* mapBox = new MapBox(CreatePos);
+				objectManager->Add(mapBox);
 				break;
 			}
 			case 2:

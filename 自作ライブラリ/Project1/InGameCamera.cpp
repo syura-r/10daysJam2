@@ -10,6 +10,7 @@
 
 #include "Player.h"
 
+#include "Easing.h"
 
 InGameCamera::InGameCamera()
 {
@@ -30,6 +31,7 @@ void InGameCamera::Initialize()
 	//}
 	//SetPhi(DirectX::XMConvertToRadians(-90));
 	//SetTheta(120);
+	target = XMFLOAT3(88, -3, 0);
 	SetDistance(10);
 	Update();
 }
@@ -37,7 +39,17 @@ void InGameCamera::Initialize()
 void InGameCamera::Update()
 {
 	dirty = true;
-	if (focusObj != nullptr)
+
+	if (moveFocusObject)
+	{
+		moveFocusCounter++;
+		target.x = Easing::EaseInOutBack(moveFirstPos.x, 4, 180, moveFocusCounter);
+		if (moveFocusCounter >= 180)
+		{
+			moveFocusObject = false;
+		}
+	}
+	else if (focusObj != nullptr)
 	{
 		target = focusObj->GetPosition();
 		if (target.x < 4)
@@ -90,6 +102,15 @@ void InGameCamera::RotateYaxis(Vector2 arg_inputVec)
 	dirty = true;
 }
 
+
+void InGameCamera::SetMoveFocusObject(Object* first_object, Object* last_Object)
+{
+	moveFirstPos = first_object->GetPosition();
+	moveLastPos = last_Object->GetPosition();
+	moveFocusCounter = 0;
+	moveFocusObject = true;
+
+}
 
 void InGameCamera::SetShake(const int arg_shakeTime, const float arg_shakePower)
 {

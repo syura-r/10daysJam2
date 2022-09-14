@@ -109,7 +109,9 @@ void Game::RoadAsset()
 		Texture::LoadTexture("AuxiliaryLines", "AuxiliaryLines.png");
 		Texture::LoadTexture("starEffect", "starEffect.png");
 
-		
+		Texture::LoadTexture("CharaTex2", "CharaTex2.png");
+		Texture::LoadTexture("CharaTex3", "CharaTex3.png");
+
 		break; 
 	case 2:
 		//ObjÉÇÉfÉãÇÃì«Ç›çûÇ›
@@ -188,8 +190,9 @@ void Game::RoadAsset()
 		FBXManager::AddAnimationList("BossNoHair", "attackEnd", 180, 174);
 
 		FBXManager::AddAnimationList("Chara", "1", 0, 0);
-		FBXManager::AddAnimationList("Chara", "2", 3, 3);
-		FBXManager::AddAnimationList("Chara", "3", 61, 61);
+		FBXManager::AddAnimationList("Chara", "2", 1, 180);
+		FBXManager::AddAnimationList("Chara", "3", 60, 180);
+		FBXManager::AddAnimationList("Chara", "4", 200, 280);
 
 		break;
 	default:

@@ -82,43 +82,19 @@ void Play::Initialize()
 
 	objectManager->Reset();
 
-//	for (int i = 0; i < 10; i++)
-//{
-//		Apartment* obj = new Apartment({ 8.0f + 16 * i, -8.0f, 1.0f });
-//		objectManager->Add(obj);
-//	}
-//	for (int i = 0; i < 10; i++)
-//	{
-//		Apartment* obj = new Apartment({ 8.0f +16 * i, -1.0f, 1.0f });
-//		objectManager->Add(obj);
-//	}
-	//EndChara* chara = new EndChara();
-	//objectManager->Add(chara);
-
-	Player* player = new Player(Vector3(0, -5, 0));
+	operate = false;
+	player = new Player(Vector3(0, -5, 0));
 	objectManager->Add(player);	
+	
 	Boss* boss = new Boss();
 	objectManager->Add(boss);
 
 	BaseEnemy::SetPlayerPtr(player);
 	camera->SetFocusObject(player);
-	//for (int i = 0; i < 30; i++)
-	//{
-	//	MapBox* mapBox = new MapBox(Vector3(-5 + i, -8, 0));
-	//	objectManager->Add(mapBox);
-	//}
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	BreakBlock* mapBox = new BreakBlock(Vector3(-2 + i * 3, -3, 0));
-	//	objectManager->Add(mapBox);
-	//}
-	//for (int i = 0; i < 15; i++)
-	//{
-	//	MapBox* mapBox = new MapBox(Vector3(-6, -8 + i, 0));
-	//	objectManager->Add(mapBox);
-	//}
-	//BadGuy* badGuy = new BadGuy(Vector3(10, -5, 0));
-	//objectManager->Add(badGuy);
+	EndChara* endChara = new EndChara();
+	objectManager->Add(endChara);
+	camera->SetMoveFocusObject(endChara,player);
+
 	MapLoader::LoadMap("1-4");
 	camera->Initialize();
 
@@ -231,6 +207,7 @@ void Play::Update()
 #endif
 	
 	//タイマー////////////////////////////////
+	if(operate)
 	inGameTimer->Update();
 	result->SetTimeCount(inGameTimer->GetRealTime());
 
@@ -241,7 +218,11 @@ void Play::Update()
 	if (!HitStop::Stop())
 		objectManager->Update();
 	camera->Update();
-
+	if (!camera->GetMoveFocusObject() && !operate)
+	{
+		operate = true;
+		player->CanOperate();
+	}
 	ParticleManager::GetInstance()->UpdateDeadEffect();
 }
 

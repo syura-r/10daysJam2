@@ -11,5 +11,7 @@ public:
     void DrawReady()override;
 private:
     FBXModel* myModel;
+    bool actionStart = false;
+    bool a = false;
 };
 

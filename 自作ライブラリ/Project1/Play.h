@@ -35,7 +35,8 @@ private:
 	CollisionManager* collisionManager = nullptr;
 	ObjectManager* objectManager = nullptr;
 	std::unique_ptr<InGameCamera> camera;
-	
+	Player* player;
+	bool operate;
 	Pause* pause = nullptr;
 	InGameTimer* inGameTimer = nullptr;
 	GameEndSelect* gameEndSelect = nullptr;

@@ -1,7 +1,7 @@
 #pragma once
-#include "Sprite.h"
-#include "NumberSprite.h"
 #include "Vector.h"
+#include "NumberSprite.h"
+#include "Sprite.h"
 
 class Result
 {

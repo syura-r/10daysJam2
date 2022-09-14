@@ -121,13 +121,16 @@ void Player::Update()
 		position.z += fallV.m128_f32[2];
 	}
 	//ジャンプ動作
-	else if (!changeOnGroundScale && !jump && canOperate)
+	else if (!changeOnGroundScale && !jump && (canOperate || endMove))
 	{
 		a = false;
 		jump = true;
 		onGround = false;
-		restJump--;
-		val += valVel;
+		if (!endMove)
+		{
+			restJump--;
+			val += valVel;
+		}
 		//ジャンプ時上向き初速
 		jumpVYFist = 0.5f * val;
 		//下向き加速
@@ -167,6 +170,7 @@ void Player::Update()
 	JumpScaleCluc();
 	KnockBack();
 	StumbleCluc();
+	EndMove();
 	if (fightBoss)
 	{
 		if (position.x < 66)
@@ -200,6 +204,31 @@ void Player::Cure()
 	//残りのジャンプできる回数
 	restJump = MaxJumpCount;
 	ParticleEmitter::CreateGetEffect(position );
+
+}
+void Player::EndMove()
+{
+	if (!endMove)return;
+
+	if (!onGround&& position.x < 85)
+		position.x += 0.1f;
+
+	if (position.x > 75 && prePos.x <= 75)
+	{
+		auto camera = dynamic_cast<InGameCamera*>(Object3D::GetCamera());
+		camera->SetFocusObject(this);
+	}
+	if (position.x > 85)
+	{
+		if (onGround)
+		{
+			ObjectManager::GetInstance()->Add(new ShotCan(position, {1,0,0}));
+			Audio::PlaySE("can", 0.1f * Audio::volume_se);
+			canShot = false;
+			endMove = false;
+		}
+	}
+
 
 }
 void Player::CheckHit()
@@ -708,10 +737,10 @@ void Player::BossFightReady()
 {
 	if (!bossFightReady) return;
 
-	if (!onGround)
+	if (!onGround && position.x <= 75)
 		position.x += 0.1f;
 
-	if (position.x > 75)
+	if (position.x > 75 && onGround)
 	{
 		bossFightReady = false;
 		fightBoss = true;

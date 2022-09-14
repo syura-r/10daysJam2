@@ -50,3 +50,11 @@ void ShotCan::DrawReady()
 	pipelineName = "FBX";
 
 }
+
+void ShotCan::OnCollision(const CollisionInfo& info)
+{
+	if (info.collider->GetAttribute() == COLLISION_ATTR_GOAL)
+	{
+		dead = true;
+	}
+}

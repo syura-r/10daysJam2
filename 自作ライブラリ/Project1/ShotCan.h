@@ -8,6 +8,7 @@ public:
     void Update()override;
     void Draw()override;
     void DrawReady()override;
+    void OnCollision(const CollisionInfo& info)override;
 private:
     float fallV = 0.02f;
     int aliveCount;

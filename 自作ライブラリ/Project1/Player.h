@@ -26,11 +26,15 @@ public:
 	void DrawReady() override;
 	bool GetGoal() { return bossFightReady; }
 	void EndPosition();
-	void BossDead() {};
+	void BossDead() { 
+		endMove = true; 
+		fightBoss = false;
+	};
 	void CanOperate() { canOperate = true; }
 	bool GetFightBoss() { return fightBoss; }
 	void Cure();
 private:
+	void EndMove();
 	void CheckHit();
 	void JumpScaleCluc();
 	void KnockBack();
@@ -60,6 +64,8 @@ private:
 	//残りのジャンプできる回数
 	int restJump = MaxJumpCount;
 
+	bool endMove = false;
+
 	//回転速度
 	float rotVel;
 	//現在の回転角度
@@ -71,7 +77,7 @@ private:
 	float stumbleVelX;
 	float stumbleAccelX;
 
-	bool canOperate = true;
+	bool canOperate = false;
 
 	bool fightBoss = false;
 

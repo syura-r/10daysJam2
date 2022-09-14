@@ -134,6 +134,10 @@ public://ƒƒ“ƒoŠÖ”	~FBXModel();
 	bool PlayAnimation(bool endless = false);
 	bool PlayAnimation(const std::string& animationName,bool endless = false, const int frameTime = 1,bool blend = true);
 
+	void ChangeTexName(const std::string& name)
+	{
+		texName = name;
+	}
 
 	inline const FbxTime& GetCurrentAnimationTime() { return currentTime; }
 

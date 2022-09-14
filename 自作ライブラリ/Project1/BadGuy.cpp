@@ -7,14 +7,13 @@
 #include"CollisionManager.h"
 #include"Player.h"
 #include "PtrDelete.h"
+#include "FBXManager.h"
+
 BadGuy::BadGuy(const Vector3& arg_pos) 
 {
 	StartPos = arg_pos;
 	//アニメーション用にモデルのポインタを格納
-	myModel = FbxLoader::GetInstance()->LoadModelFromFile("Tinpira");
-	myModel->AddAnimation( "stand", 0, 0);
-	myModel->AddAnimation( "walk", 1, 120);
-	myModel->AddAnimation( "attack", 121, 180);
+	myModel = FBXManager::GetModel("badGuy");
 
 	name = typeid(*this).name();
 	scale = 0.3f;
@@ -35,7 +34,7 @@ BadGuy::BadGuy(const Vector3& arg_pos)
 
 BadGuy::~BadGuy()
 {
-	PtrDelete(myModel);
+	//PtrDelete(myModel);
 }
 
 void BadGuy::Initialize()

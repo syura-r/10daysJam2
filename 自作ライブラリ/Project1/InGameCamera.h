@@ -15,6 +15,8 @@ public:
 	{
 		focusObj = arg_object;
 	}
+	bool GetMoveFocusObject() { return moveFocusObject; }
+	void SetMoveFocusObject(Object* first_object, Object* last_Object);
 	void SetShake(const int arg_shakeTime, const float arg_shakePower);
 
 	bool IsShake() { return shakeFlag; }
@@ -72,6 +74,10 @@ private:
 	Vector3 shakeStartTargetPos;
 	Object* focusObj = nullptr;
 	void Shake();
+	bool moveFocusObject = false;
+	int moveFocusCounter;
+	Vector3 moveFirstPos;
+	Vector3 moveLastPos;
 
 	int GetIntRand(int minValue, int maxValue);
 };
