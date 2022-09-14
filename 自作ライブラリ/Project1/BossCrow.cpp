@@ -4,6 +4,7 @@
 #include "FBXManager.h"
 #include "ObjectManager.h"
 #include "CrowFallCan.h"
+#include "Player.h"
 
 BossCrow::BossCrow(Boss* bossPtr)
 {
@@ -41,6 +42,11 @@ void BossCrow::Update()
 	{
 		ObjectManager::GetInstance()->Add(new CrowFallCan(position, boss));
 	}
+	if (position.x <= player->GetPosition().x && prePos.x > player->GetPosition().x)
+	{
+		ObjectManager::GetInstance()->Add(new CrowFallCan(position, boss));
+	}
+
 	if (position.x < StartPos.x - 25)
 		dead = true;
 	Object::Update();

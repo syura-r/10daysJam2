@@ -5,6 +5,7 @@
 #include "CollisionManager.h"
 #include "Boss.h"
 #include "ParticleEmitter.h"
+#include "Player.h"
 
 CrowFallCan::CrowFallCan(const Vector3& pos, Boss* bossPtr)
 {
@@ -38,5 +39,11 @@ void CrowFallCan::Update()
 		dead = true;
 		boss->StartMagic();
 	}
+	if (CollisionManager::GetInstance()->CheckHitBox(*boxCollider, COLLISION_ATTR_ALLIES, boxCollider))
+	{
+		dead = true;
+		player->Cure();
+	}
+
 	Object::Update();
 }

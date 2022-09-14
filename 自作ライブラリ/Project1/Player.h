@@ -29,6 +29,7 @@ public:
 	void BossDead() {};
 	void CanOperate() { canOperate = true; }
 	bool GetFightBoss() { return fightBoss; }
+	void Cure();
 private:
 	void CheckHit();
 	void JumpScaleCluc();

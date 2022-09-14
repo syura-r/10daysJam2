@@ -194,6 +194,14 @@ void Player::Update()
 	else if (nowRot > 0)
 		nowRot -= 360;
 }
+void Player::Cure()
+{
+	val = MinVal;
+	//残りのジャンプできる回数
+	restJump = MaxJumpCount;
+	ParticleEmitter::CreateGetEffect(position );
+
+}
 void Player::CheckHit()
 {
 	//ボックスコライダーを取得
