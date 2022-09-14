@@ -12,16 +12,16 @@
 #include "ParticleEmitter.h"
 #include "InGameCamera.h"
 #include "Player.h"
+#include "BossHair.h"
 
 Boss::Boss()
 {
-	mainModel = FbxLoader::GetInstance()->LoadModelFromFile("Tinpira");
-	mainModel->AddAnimation("stand", 0, 0);
-	mainModel->AddAnimation("walk", 1, 120);
-	mainModel->AddAnimation("attack", 121, 180);
+	mainModel = FBXManager::GetModel("Boss");
+	noMohikanModel = FBXManager::GetModel("BossNoHair");
+	mohikanModel = FBXManager::GetModel("BossHair");
 	headModel = FBXManager::GetModel("BossHead");
 	bodyModel = FBXManager::GetModel("BossBody");
-	position = { 7,-5,0 };
+	position = { StartPosX,-5,0 };
 	name = typeid(*this).name();
 	scale = 0.3f;
 	rotation.y = -135;
@@ -42,11 +42,16 @@ Boss::Boss()
 	colorChangeCounter = 0;
 	appearCounter = 0;
 	camera = dynamic_cast<InGameCamera*>(Object3D::GetCamera());
+	lockOnObj = new Object();
+	lockOnObj->Create(FBXManager::GetModel("LockOn"));
+	lockOnObj->SetColor({ 0.6f,0,0,1 });
+	lockOnObj->SetScale(2.0f);
 }
 
 Boss::~Boss()
 {
-	PtrDelete(mainModel);
+	PtrDelete(lockOnObj);
+
 }
 void Boss::Initialize()
 {
@@ -87,11 +92,17 @@ void Boss::Update()
 		break;
 	}
 	CheckHit();
+	Damage();
 	Object::Update();
 }
 
 void Boss::Draw()
 {
+	if (attackState == AttackState::jump && actionState == ActionState::attack && attackCounter > 40 * 2 && !onGround)
+	{
+		lockOnObj->Object::CustomDraw(true);
+	}
+
 	Object::CustomDraw(true, true);
 }
 
@@ -102,6 +113,29 @@ void Boss::DrawReady()
 
 void Boss::OnCollision(const CollisionInfo& info)
 {
+	if (info.collider->GetAttribute() == COLLISION_ATTR_ALLIES)
+	{
+		Vector3 rejectVec = info.reject;
+		rejectVec.Normalize();
+		if (rejectVec.Length() <= 0)
+			return;
+		if (abs(rejectVec.y) > abs(rejectVec.x))
+		{
+			hp -= DamageVal;
+			damage = true;
+			color.w = 0;
+
+		}
+	}
+	if (info.collider->GetAttribute() == COLLISION_ATTR_BULLET)
+	{
+		hp -= DamageVal;
+		damage = true;
+		color.w = 0;
+	}
+
+	if (hp <= 0)
+		dead = true;
 }
 
 void Boss::StartApper()
@@ -217,7 +251,7 @@ void Boss::Appear()
 		if (appearCounter > 40)
 		{
 			actionState = ActionState::attack;
-			attackState = AttackState::rush;
+			attackState = AttackState::boomerang;
 			//mainModel->PlayAnimation("walk", true, 3, false);
 			//if (appearCounter % 10 == 0)
 			//{
@@ -274,7 +308,7 @@ void Boss::Attack()
 			{
 				mainModel->PlayAnimation("walk", true, 3, false);
 			}
-			else if (attackCounter >= 255 && attackCounter < 275)
+			else if (attackCounter >= 255 && attackCounter < 295)
 			{
 				if (attackCounter == 255)
 				{
@@ -286,17 +320,17 @@ void Boss::Attack()
 					fallV = { 0,jumpVYFist,0,0 };
 
 				}
-				rotation.x = Easing::EaseInOutBack(-90, 0, 20, attackCounter - 255);
+				rotation.x = Easing::EaseInOutBack(-90, 0, 40, attackCounter - 255);
 				if (!rightRush)
 				{
-					rotation.y = Easing::EaseInOutBack(-90, -270 + 45, 20, attackCounter - 255);
+					rotation.y = Easing::EaseInOutBack(-90, -270 + 45, 40, attackCounter - 255);
 				}
 				else
 				{
-					rotation.y = Easing::EaseInOutBack(-90-180, -135, 20, attackCounter - 255);
+					rotation.y = Easing::EaseInOutBack(-90 - 180, -135, 40, attackCounter - 255);
 				}
 			}
-			if (attackCounter == 315)
+			if (attackCounter == 335)
 			{
 				wallHit = false;
 				attackCounter = 0;
@@ -319,6 +353,48 @@ void Boss::Attack()
 	}
 	case AttackState::boomerang:
 	{
+		attackCounter++;
+		if (attackCounter < 114)
+		{
+			mainModel->PlayAnimation("attackReady", true, 1, false);
+			if (attackCounter % 15 == 0)
+			{
+				assert(camera);
+				camera->SetShake(5, 0.03f);
+
+			}
+		}
+		else if (attackCounter <= 163)
+		{
+			mainModel->PlayAnimation("attack", false, 1, false);
+			if (attackCounter == 163)
+			{
+				BossHair* bossHair = new BossHair(position + Vector3{ -0.1f, 1.15f , 0 }*scale.x / 0.3f, 120);
+				ObjectManager::GetInstance()->Add(bossHair);
+				object->SetModel(noMohikanModel);
+			}
+		}
+		else if (attackCounter <= 173)
+		{
+			noMohikanModel->PlayAnimation("attack", false, 1, false);
+		}
+		else if (attackCounter >= 294 && attackCounter <= 300)
+		{
+			noMohikanModel->PlayAnimation("attackEnd", false, 1, false);
+			if (attackCounter == 300)
+			{
+				object->SetModel(mainModel);
+			}
+		}
+		else if (attackCounter >= 301 && attackCounter <= 317)
+		{
+			mainModel->PlayAnimation("attackEnd", false, 1, false);
+		}
+		else if (attackCounter == 318)
+		{
+			attackCounter = 0;
+			attackState = AttackState::rush;
+		}
 		break;
 	}
 	case AttackState::jump:
@@ -356,8 +432,15 @@ void Boss::Attack()
 			fallV = {};
 			fallAcc = 0;
 
-			if (attackCounter < EaingTime * 2 + 90)
+			if (attackCounter < EaingTime * 2 + 120)
+			{
+				if (jumpCounter == 3)
+					position.x = StartPosX;
+				else
 				position.x = player->GetPosition().x;
+				lockOnObj->SetPosition({ position.x ,-7.5f,0});
+				lockOnObj->Update();
+			}
 
 		}
 		if (attackCounter == EaingTime * 2 + 180)
@@ -372,15 +455,17 @@ void Boss::Attack()
 			if (onGround)
 			{
 				attackCounter = 0;
-				if (jumpCounter < 2)
+				camera->SetShake(20, 0.3f);
+				if (jumpCounter < 3)
 				{
 					jumpCounter++;
 				}
 				else
 				{
-					attackState = AttackState::beam;
+					attackState = AttackState::boomerang;
 					rotation.y = -135;
 					jumpCounter = 0;
+					attackCounter = 0;
 				}
 			}
 		}
@@ -608,4 +693,16 @@ void Boss::CheckHit()
 		//rotation.y *= -1;
 	}
 
+}
+
+void Boss::Damage()
+{
+	if (!damage) return;
+	damageCounter++;
+	if (damageCounter > 5)
+	{
+		color.w = 1.0f;
+		damageCounter = 0;
+		damage = false;
+	}
 }

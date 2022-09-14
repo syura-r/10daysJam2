@@ -30,6 +30,8 @@ public:
 
     static void DeadEffect(const Vector3& arg_position, const DirectX::XMFLOAT4& arg_color);
 
+    static void CreateLaser(const Vector3& arg_position, const float& arg_rot);
+
 
     static void CreateShock(const Vector3& pos, const Vector3& arg_rotation = { XM_PI * 0.5f,0,0 });
     static void CreateBossAppearShock(const Vector3& pos);

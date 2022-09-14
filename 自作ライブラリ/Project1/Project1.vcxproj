@@ -178,6 +178,7 @@
     <ClCompile Include="BadGuy.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossHair.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="BreakBlock.cpp" />
     <ClCompile Include="CanInTitle.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossHair.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BreakBlock.h" />
     <ClInclude Include="CanInTitle.h" />

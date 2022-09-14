@@ -126,9 +126,15 @@ void Game::RoadAsset()
 		FBXManager::LoadModelFile("Chara", "Chara", false);
 		FBXManager::LoadModelFile("BossHead", "Tinpira_Head", false);
 		FBXManager::LoadModelFile("BossBody", "Tinpira_Body", false);
+		FBXManager::LoadModelFile("BossHair", "Tinpira_Hair", false);
+		FBXManager::LoadModelFile("Boss", "Tinpira", false);
+		FBXManager::LoadModelFile("BossNoHair", "Tinpira_B", false);
 
 
+		FBXManager::LoadModelFile("LockOn", "LockOn", false);
 
+
+		
 
 		//WAVÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
 		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");
@@ -146,6 +152,19 @@ void Game::RoadAsset()
 		FBXManager::AddAnimationList("badGuy", "stand", 0, 0);
 		FBXManager::AddAnimationList("badGuy", "walk", 1, 120);
 		FBXManager::AddAnimationList("badGuy", "attack", 121, 180);
+		FBXManager::AddAnimationList("Boss", "stand", 0, 0);
+		FBXManager::AddAnimationList("Boss", "walk", 1, 120);
+		FBXManager::AddAnimationList("Boss", "attack",121, 174);
+		FBXManager::AddAnimationList("Boss", "attackReady", 121, 159);
+
+		//FBXManager::AddAnimationList("Boss", "attack", 165, 174);
+		FBXManager::AddAnimationList("Boss", "attackEnd", 174, 158);
+
+		FBXManager::AddAnimationList("BossNoHair", "stand", 0, 0);
+		FBXManager::AddAnimationList("BossNoHair", "walk", 1, 120);
+		FBXManager::AddAnimationList("BossNoHair", "attack", 174, 180);
+		FBXManager::AddAnimationList("BossNoHair", "attackEnd", 180, 174);
+
 		FBXManager::AddAnimationList("Chara", "1", 0, 0);
 		FBXManager::AddAnimationList("Chara", "2", 3, 3);
 		FBXManager::AddAnimationList("Chara", "3", 61, 61);

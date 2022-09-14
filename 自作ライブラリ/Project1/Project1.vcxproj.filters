@@ -411,6 +411,9 @@
     <ClCompile Include="Boss.cpp">
       <Filter>ソース ファイル\GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="BossHair.cpp">
+      <Filter>ソース ファイル\GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -730,6 +733,9 @@
     </ClInclude>
     <ClInclude Include="BreakBlock.h">
       <Filter>ヘッダー ファイル\GameObject\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BossHair.h">
+      <Filter>ヘッダー ファイル\GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

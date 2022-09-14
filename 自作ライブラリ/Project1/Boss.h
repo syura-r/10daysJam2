@@ -22,11 +22,16 @@ private:
     void Attack();
     void ChangeColor();
     void CheckHit();
+    void Damage();
     FBXModel* mainModel = nullptr;
+    FBXModel* noMohikanModel = nullptr;
+    FBXModel* mohikanModel = nullptr;
     FBXModel* headModel = nullptr;
     FBXModel* bodyModel = nullptr;
     const int MaxHP = 300;
     int hp = MaxHP;
+    const int DamageVal = 10;
+    bool damage = false;
     bool magic;
     bool earthquake;
     bool onGround;
@@ -35,9 +40,10 @@ private:
     int appearCounter;
     int attackCounter;
     int jumpCounter = 0;
+    int damageCounter = 0;
     bool wallHit;
     bool rightRush;
-
+    const float StartPosX = 10;
     XMFLOAT4 preColor;
     float fallAcc = -0.02f * 0.4f;
     //â∫å¸Ç´â¡ë¨ìxÇÃç≈ëÂíl
@@ -72,5 +78,6 @@ private:
     };
     AttackState attackState;
 
+    Object* lockOnObj = nullptr;
 };
 

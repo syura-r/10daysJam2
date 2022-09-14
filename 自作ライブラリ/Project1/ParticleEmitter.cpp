@@ -442,6 +442,12 @@ void ParticleEmitter::DeadEffect(const Vector3& arg_position, const DirectX::XMF
     particleManager->AddDeadEffect(new DeadEffectParticle(arg_position, arg_color));
 }
 
+void ParticleEmitter::CreateLaser(const Vector3& arg_position, const float& arg_rot)
+{
+
+
+}
+
 float ParticleEmitter::GetRandom(float arg_min, float arg_max)
 {
     std::random_device rnd;
