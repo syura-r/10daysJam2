@@ -146,6 +146,7 @@ void Player::Update()
 
 		ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
 		ObjectManager::GetInstance()->Add(new FallCan(position - Vector3{ 0,-0.2f,0.5f }));
+		Audio::PlaySE("can", 0.1f * Audio::volume_se);
 	}
 	//if(jump&& fallV.m128_f32[1] > 0)
 	//	myModel->PlayAnimation("jump", false, 1, false);
@@ -447,6 +448,7 @@ void Player::CheckHit()
 		for (int i = 0; i < 10; i++)
 		{
 			ObjectManager::GetInstance()->Add(new FallCan(position));
+			Audio::PlaySE("can", 0.1f * Audio::volume_se);
 		}
 	}
 }
@@ -622,6 +624,7 @@ void Player::Shot()
 
 	//”­ŽËˆ—
 	ObjectManager::GetInstance()->Add(new ShotCan(position, shotDir));
+	Audio::PlaySE("can", 0.1f * Audio::volume_se);
 	shotMoveFlag = true;
 }
 
