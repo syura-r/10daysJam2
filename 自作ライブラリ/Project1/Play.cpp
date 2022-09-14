@@ -143,13 +143,8 @@ void Play::Initialize()
 
 void Play::Update()
 {
+	//リザルト////////////////////////////////
 	Result* result = Result::GetInstance();
-	//リザルト開始
-	if (Input::TriggerKey(DIK_R))
-	{
-		Audio::StopBGM(nowPlayingBGMName);
-		result->IsActive(true, inGameTimer->GetRealTime());//「クリアしたのか」と「経過時間」
-	}
 	result->Update();
 	//リザルトを閉じる
 	if (result->GetIsCloseResult() && !gameEndSelect->GetIsActive())
@@ -157,11 +152,14 @@ void Play::Update()
 		gameEndSelect->IsActive();
 		return;
 	}
-	if (result->GetActivePause())
+	//
+	if (result->GetActive())
 	{
+		Audio::StopBGM(nowPlayingBGMName);
 		return;
 	}
 
+	//リザルト後////////////////////////////////
 	gameEndSelect->Update();
 	//やり直す
 	if (gameEndSelect->GetRestart())
@@ -184,6 +182,7 @@ void Play::Update()
 		return;
 	}
 
+	//ポーズ////////////////////////////////
 	pause->Update();
 	//ゲームにもどる
 	if (pause->GetToGame())
@@ -231,8 +230,9 @@ void Play::Update()
 	}
 #endif
 	
+	//タイマー////////////////////////////////
 	inGameTimer->Update();
-
+	result->SetTimeCount(inGameTimer->GetRealTime());
 
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
 	lightGroup->SetDirLightDir(0, { lightDir[0],lightDir[1],lightDir[2],1 });
