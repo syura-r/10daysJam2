@@ -13,6 +13,7 @@
 #include "InGameCamera.h"
 #include "Player.h"
 #include "BossHair.h"
+#include "HitPointBar.h"
 
 Boss::Boss()
 {
@@ -35,6 +36,7 @@ Boss::Boss()
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider->SetMove(true);
 	name = typeid(*this).name();
+	hpBar = new HitPointBar();
 	Initialize();
 	Object::Update();
 	actionState = ActionState::appear;
@@ -51,7 +53,7 @@ Boss::Boss()
 Boss::~Boss()
 {
 	PtrDelete(lockOnObj);
-
+	PtrDelete(hpBar);
 }
 void Boss::Initialize()
 {
@@ -68,6 +70,7 @@ void Boss::Initialize()
 	//scale = { 0.3f };
 	//rotation.y = -90;
 	prePos = position;
+	hpBar->Initialize(MaxHP);
 }
 
 void Boss::Update()
@@ -94,6 +97,7 @@ void Boss::Update()
 	CheckHit();
 	Damage();
 	Object::Update();
+	hpBar->Update(hp);
 }
 
 void Boss::Draw()
@@ -109,6 +113,7 @@ void Boss::Draw()
 void Boss::DrawReady()
 {
 	pipelineName = "FBX";
+	hpBar->Draw_boss();
 }
 
 void Boss::OnCollision(const CollisionInfo& info)

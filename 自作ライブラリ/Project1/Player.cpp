@@ -1,11 +1,11 @@
 #include "Player.h"
 
-#include"OBJLoader.h"
-#include"SphereCollider.h"
-#include"Input.h"
-#include"DebugText.h"
-#include"CollisionManager.h"
-#include"CollisionAttribute.h"
+#include "OBJLoader.h"
+#include "SphereCollider.h"
+#include "Input.h"
+#include "DebugText.h"
+#include "CollisionManager.h"
+#include "CollisionAttribute.h"
 #include "DrawMode.h"
 #include "Easing.h"
 #include "FBXManager.h"
@@ -14,13 +14,13 @@
 #include "Audio.h"
 #include "ParticleEmitter.h"
 #include "AreaEffect.h"
-#include"HitStop.h"
-#include"StockCansBar.h"
+#include "HitStop.h"
+#include "HitPointBar.h"
 #include "PtrDelete.h"
 #include "FallCan.h"
 #include "ShotCan.h"
 #include "Sprite3D.h"
-
+#include "Result.h"
 
 Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 {
@@ -41,7 +41,7 @@ Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 	collider->SetMove(true);
 
 	name = typeid(*this).name();
-	cansBar = new StockCansBar();
+	cansBar = new HitPointBar();
 	Initialize();
 	auxiliaryLines = new Sprite3D();
 }
@@ -140,6 +140,7 @@ void Player::Update()
 
 		ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
 		ObjectManager::GetInstance()->Add(new FallCan(position - Vector3{ 0,-0.2f,0.5f }));
+		Audio::PlaySE("can", 0.1f * Audio::volume_se);
 	}
 	//if(jump&& fallV.m128_f32[1] > 0)
 	//	myModel->PlayAnimation("jump", false, 1, false);
@@ -159,6 +160,7 @@ void Player::Update()
 	Damage();
 	Object::Update();
 	cansBar->Update(restJump);//缶の現在数を渡す
+	Result::GetInstance()->SetCanCount(restJump);
 	Object::WorldUpdate(Vector3{ 0,0,rotVel });
 
 	//object->WorldUpdate(Vector3{ 0,0,-rotVel }, NONE);
@@ -246,6 +248,16 @@ void Player::CheckHit()
 		if (CollisionManager::GetInstance()->Raycast(downRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
 			&downRayCastHit, boxCollider->GetScale().y * 2.0f))
 		{
+			//着地
+			Audio::PlaySE("jump", 0.1f * Audio::volume_se);
+			onGround = true;
+			jump = false;
+			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
+			//行列更新など
+			Object::Update();
+			changeOnGroundScale = true;
+				ParticleEmitter::CreateJumpDust(position + Vector3{0, -0.5f, 0});
+
 			if (!stumble)
 			{
 				int gapRad = (int)nowRot % 360;
@@ -411,6 +423,7 @@ void Player::CheckHit()
 		restJump -= 3;
 		val += valVel * 3;
 		damage = true;
+		Audio::PlaySE("damage", 0.1f * Audio::volume_se);
 		knockBack = true;
 		if (rejectVec2.x > 0)
 			knockBackVel = MaxNockBackVel;
@@ -426,6 +439,7 @@ void Player::CheckHit()
 		for (int i = 0; i < 3; i++)
 		{
 			ObjectManager::GetInstance()->Add(new FallCan(position));
+			Audio::PlaySE("can", 0.1f * Audio::volume_se);
 		}
 	}
 }
@@ -601,6 +615,7 @@ void Player::Shot()
 
 	//発射処理
 	ObjectManager::GetInstance()->Add(new ShotCan(position, shotDir));
+	Audio::PlaySE("can", 0.1f * Audio::volume_se);
 	shotMoveFlag = true;
 }
 
@@ -685,6 +700,6 @@ void Player::DrawReady()
 
 	auxiliaryLines->DrawSprite("AuxiliaryLines", position, nowRot, {0.3f,0.3f}, { 0,0.5f }, true);
 		pipelineName = "FBX";
-		cansBar->Draw();
+		cansBar->Draw_player();
 }
 

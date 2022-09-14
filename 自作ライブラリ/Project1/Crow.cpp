@@ -3,6 +3,8 @@
 #include"FBXManager.h"
 #include"Easing.h"
 #include"CollisionAttribute.h"
+#include "Audio.h"
+
 Crow::Crow()
 {
 	if(Object3D::GetCamera()->GetTarget().x > 4)
@@ -40,10 +42,14 @@ void Crow::Initialize()
 	position = StartPos;
 	prePos = position;
 	moveCounter = 0;
+	isSeLoop = true;
+	seIntervalCount = 0;
 }
 
 void Crow::Update()
 {
+	CryVoiceLoop();
+
 	moveCounter++;
 	if (moveCounter <= 180 / mmoveVel)
 	{
@@ -89,6 +95,7 @@ void Crow::Update()
 		{
 			targetPosY = player->GetPosition().y;
 			velocity.z = -position.z / 60 * mmoveVel;
+			isSeLoop = false;
 		}
 	}
 	else if (moveCounter <= 460 / mmoveVel)
@@ -134,4 +141,20 @@ void Crow::Update()
 	if (moveCounter <= 460 / mmoveVel && Object3D::GetCamera()->GetTarget().x > 4)
 		position.x += player->GetMoveDistance().x;
 	Object::Update();
+}
+
+void Crow::CryVoiceLoop()
+{
+	if (!isSeLoop)
+		return;
+
+	const int seInterval = 120;
+
+	if (seIntervalCount <= 0)
+	{
+		Audio::PlaySE("crow", 0.1f * Audio::volume_se);
+		seIntervalCount = seInterval;
+	}
+
+	seIntervalCount--;
 }

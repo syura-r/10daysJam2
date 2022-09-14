@@ -84,7 +84,7 @@ void Pause::Update()
 			Audio::AllResumeSE();
 		}
 
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
 		if (!activeFlag)
 		{
 			fadeFlag = true;
@@ -190,7 +190,7 @@ void Pause::Draw()
 	sp_back->DrawSprite("white1x1", pos_back, 0.0f, scale, bg_color, { 0.0f,0.0f }, "NoAlphaToCoverageSprite");
 
 	//選択強調
-	sp_base->DrawSprite("white1x1", pos_base, 0.0f, { 256.0f, 64.0f }, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
+	sp_base->DrawSprite("select", pos_base, 0.0f, { 1.2f, 1.0f }, { 1,1,1,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 }
 
 void Pause::Select()
@@ -237,7 +237,7 @@ void Pause::Select()
 		//透明度リセット
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("select", 1.0f * Audio::volume_se);
 	}
 
 
@@ -255,7 +255,7 @@ void Pause::Decision()
 {
 	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
 	{
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
 
 		switch (selectState)
 		{
@@ -382,7 +382,7 @@ void Pause::VolumeChange()
 	//音
 	if (isChangeVolume)
 	{
-		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("select", 1.0f * Audio::volume_se);
 	}
 
 	//丸の位置変更

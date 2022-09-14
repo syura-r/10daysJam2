@@ -249,7 +249,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprite3D.cpp" />
-    <ClCompile Include="StockCansBar.cpp" />
+    <ClCompile Include="HitPointBar.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="InGameTimer.cpp" />
@@ -257,6 +257,8 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="TouchAbleObject.cpp" />
+    <ClCompile Include="TransitionItem.cpp" />
+    <ClCompile Include="TransitionManager.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Veranda.cpp" />
@@ -363,7 +365,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprite3D.h" />
-    <ClInclude Include="StockCansBar.h" />
+    <ClInclude Include="HitPointBar.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="InGameTimer.h" />
@@ -371,6 +373,8 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="TouchAbleObject.h" />
+    <ClInclude Include="TransitionItem.h" />
+    <ClInclude Include="TransitionManager.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Veranda.h" />

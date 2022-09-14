@@ -6,6 +6,7 @@
 #include"Scene.h"
 #include<unordered_map>
 #include <wrl/client.h>
+#include "TransitionManager.h"
 
 class Sprite;
 class TextureResource;
@@ -45,5 +46,6 @@ private:
 	bool migrateStart;
 	float migrateTime;
 	int migrateCounter;
+	std::unique_ptr<TransitionManager> transitionManager;
 };
 

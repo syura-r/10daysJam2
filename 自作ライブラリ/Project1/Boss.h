@@ -2,6 +2,7 @@
 #include "BaseEnemy.h"
 class FBXModel;
 class InGameCamera;
+class HitPointBar;
 class Boss :
     public BaseEnemy
 {
@@ -79,5 +80,6 @@ private:
     AttackState attackState;
 
     Object* lockOnObj = nullptr;
+    HitPointBar* hpBar = nullptr;
 };
 

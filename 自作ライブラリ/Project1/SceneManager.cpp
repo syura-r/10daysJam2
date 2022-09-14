@@ -37,6 +37,9 @@ void SceneManager::Initialize()
 	assert(SUCCEEDED(result));
 	migrateTime = 1.0f;
 	migrateCounter = 0;
+
+	transitionManager = std::make_unique<TransitionManager>();
+	transitionManager->Initialize();
 }
 
 void SceneManager::Update()
@@ -45,12 +48,30 @@ void SceneManager::Update()
 	{
 		return;
 	}
-	currentScene->Update();
 	if (currentScene->GetIsEnd())
 	{
-		Change(currentScene->NextScene());
+		//変わる前のシーンのカメラの情報を受け取る
+		if (!transitionManager->GetIsAction())
+		{
+			transitionManager->CameraChaser();
+		}
+		transitionManager->IsAction();
+
+		if (transitionManager->GetChangeTime())
+		{
+			Change(currentScene->NextScene());
+			currentScene->Update();
+
+			//新しいシーンのカメラの情報を受け取る
+			transitionManager->CameraChaser();
+		}
+	}
+	else
+	{
 		currentScene->Update();
 	}
+
+	transitionManager->Update();
 }
 
 void SceneManager::Change(Scene::SCENE name)
@@ -82,4 +103,5 @@ void SceneManager::PostDraw()
 	if (!migrateStart || migrateCounter == 60)
 		currentScene->PostDraw();
 	PipelineState::SetPipeline("Sprite");
+	transitionManager->Draw();
 }

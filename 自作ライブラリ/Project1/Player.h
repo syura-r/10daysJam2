@@ -13,7 +13,7 @@ class StandardEnemy;
 class EnergyItem;
 class PanelItem;
 class PanelCutLocus;
-class StockCansBar;
+class HitPointBar;
 class Sprite3D;
 class Player : public Object
 {
@@ -110,7 +110,7 @@ private:
 	int changeScaleCounter = 0;
 	FBXModel* myModel = nullptr;
 
-	StockCansBar* cansBar = nullptr;
+	HitPointBar* cansBar = nullptr;
 
 	Sprite3D* auxiliaryLines = nullptr;
 

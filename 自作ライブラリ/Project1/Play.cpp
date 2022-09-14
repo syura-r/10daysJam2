@@ -19,6 +19,7 @@
 #include "PtrDelete.h"
 #include "ScreenCamera.h"
 #include "InGameCamera.h"
+#include "Result.h"
 
 #include"AreaEffect.h"
 #include"Sprite3D.h"
@@ -54,7 +55,7 @@ Play::Play()
 	objectManager->AddObjectsAtOnce();
 
 	pause = new Pause();
-	result = new Result();
+	Result::GetInstance();
 	inGameTimer = new InGameTimer();
 	gameEndSelect = new GameEndSelect();
 
@@ -66,7 +67,7 @@ Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
 	PtrDelete(pause);
-	PtrDelete(result);
+	Result::GetInstance()->Finalize();
 	PtrDelete(inGameTimer);
 	PtrDelete(gameEndSelect);
 	ParticleManager::GetInstance()->ClearDeadEffect();
@@ -125,13 +126,13 @@ void Play::Initialize()
 	isAllEnd = false;
 
 	pause->Initialize();
-	result->Initialize();
+	Result::GetInstance()->Initialize();
 	inGameTimer->Initialize();
 	gameEndSelect->Initialize();
 
-	//nowPlayingBGMName = "BGM_Play";
-	//Audio::StopBGM(nowPlayingBGMName);
-	//Audio::PlayBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
+	nowPlayingBGMName = "play";
+	Audio::StopBGM(nowPlayingBGMName);
+	Audio::PlayBGM(nowPlayingBGMName, 0.1f * Audio::volume_bgm);
 
 
 	Input::Update();
@@ -142,6 +143,13 @@ void Play::Initialize()
 
 void Play::Update()
 {
+	Result* result = Result::GetInstance();
+	//リザルト開始
+	if (Input::TriggerKey(DIK_R))
+	{
+		Audio::StopBGM(nowPlayingBGMName);
+		result->IsActive(true, inGameTimer->GetRealTime());//「クリアしたのか」と「経過時間」
+	}
 	result->Update();
 	//リザルトを閉じる
 	if (result->GetIsCloseResult() && !gameEndSelect->GetIsActive())
@@ -153,14 +161,6 @@ void Play::Update()
 	{
 		return;
 	}
-#ifdef _DEBUG
-	//リザルト開始
-	if (Input::TriggerKey(DIK_R))
-	{
-		result->IsActive(80, 50);//缶の数とジャンプの回数
-		return;
-	}
-#endif
 
 	gameEndSelect->Update();
 	//やり直す
@@ -221,7 +221,8 @@ void Play::Update()
 		Crow* crow = new Crow();
 		objectManager->Add(crow);
 	}
-	if (Input::TriggerKey(DIK_E))//終了処理
+	//終了処理
+	if (Input::TriggerKey(DIK_E))
 	{
 		Audio::StopBGM(nowPlayingBGMName);
 		Audio::AllStopSE();
@@ -277,7 +278,7 @@ void Play::PostDraw()
 	}
 
 	pause->Draw();
-	result->Draw();
+	Result::GetInstance()->Draw();
 	gameEndSelect->Draw();
 }
 

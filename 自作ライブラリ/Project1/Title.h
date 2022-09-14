@@ -19,7 +19,7 @@ public:
 	void PostDraw()override;
 
 private:
-	std::unique_ptr<DebugCamera> camera;
+	std::unique_ptr<InGameCamera> camera;
 	std::unique_ptr<LightGroup> lightGroup;
 
 	//ƒ^ƒCƒgƒ‹ƒƒS‚ÌŠÊ
@@ -65,4 +65,5 @@ private:
 	const Vector2 position_button = { 1920.0f - 100.0f, 1080.0f - 70.0f };
 	float alpha_button = 0.0f;
 
+	std::string nowPlayingBGMName;
 };

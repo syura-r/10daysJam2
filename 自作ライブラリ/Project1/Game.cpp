@@ -80,12 +80,15 @@ void Game::RoadAsset()
 		Texture::LoadTexture("shock", "shock.png");
 		Texture::LoadTexture("dust", "dust.png");
 		Texture::LoadTexture("white1x1", "white1x1.png");
-		Texture::LoadTexture("number", "number.png");
+		Texture::LoadTexture("number", "number_white.png");
 		Texture::LoadTexture("wind", "wind.png");
 
 		Texture::LoadTexture("stopwatch", "timer/stopwatch.png");
+
+		Texture::LoadTexture("frame", "stockCansBar/frame.png");
 		Texture::LoadTexture("can", "stockCansBar/can.png");
 
+		Texture::LoadTexture("select", "pause/select.png");
 		Texture::LoadTexture("circle", "pause/circle.png");
 		Texture::LoadTexture("toGame", "pause/toGame.png");
 		Texture::LoadTexture("restart", "pause/restart.png");
@@ -95,6 +98,11 @@ void Game::RoadAsset()
 
 		Texture::LoadTexture("start", "title/start.png");
 		Texture::LoadTexture("quit", "title/quit.png");
+
+		Texture::LoadTexture("clear", "result/clear.png");
+		Texture::LoadTexture("over", "result/over.png");
+		Texture::LoadTexture("life", "result/life.png");
+		Texture::LoadTexture("time", "result/time.png");
 
 		Texture::LoadTexture("button_a", "button_a.png");
 
@@ -137,9 +145,18 @@ void Game::RoadAsset()
 		
 
 		//WAVÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-		//Audio::LoadFile("BGM_Title", "BGM/Title_BGM.wav");
-		Audio::LoadFile("SE_Select", "SE/Allscene_SE_Select.wav");
-		Audio::LoadFile("SE_Decision", "SE/Allscene_SE_Decision.wav");
+		Audio::LoadFile("title", "BGM/title.wav");
+		Audio::LoadFile("play", "BGM/play.wav");
+		Audio::LoadFile("result", "BGM/result.wav");
+
+		Audio::LoadFile("select", "SE/select.wav");
+		Audio::LoadFile("decision", "SE/decision.wav");
+		Audio::LoadFile("can_title", "SE/can_title.wav");
+		Audio::LoadFile("jump", "SE/jump.wav");
+		Audio::LoadFile("can", "SE/can1.wav");
+		Audio::LoadFile("crow", "SE/crow.wav");
+		Audio::LoadFile("trample", "SE/trample.wav");
+		Audio::LoadFile("damage", "SE/playerdamage.wav");
 
 		break;
 	case 5:

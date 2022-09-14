@@ -47,7 +47,7 @@ void GameEndSelect::Update()
 
 	//点滅
 	const float speed_alphaChange = 0.02f;//速度
-	const float min_alphaChange = 0.3f;//下限
+	const float min_alphaChange = 0.1f;//下限
 	const float max_alphaChange = 1.0f;//上限
 	if (isUP_alphaChange)//不透明に
 	{
@@ -103,7 +103,7 @@ void GameEndSelect::Draw()
 	sp_back->DrawSprite("white1x1", pos_back, 0.0f, scale, bg_color, { 0.0f,0.0f }, "NoAlphaToCoverageSprite");
 
 	//選択強調
-	sp_base->DrawSprite("white1x1", pos_base, 0.0f, { 256.0f, 64.0f }, { 0.3f,0.3f,0.3f,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
+	sp_base->DrawSprite("select", pos_base, 0.0f, { 1.2f, 1.0f }, { 1,1,1,alpha_base }, { 0.5f,0.5f }, "NoAlphaToCoverageSprite");
 }
 
 void GameEndSelect::IsActive()
@@ -139,7 +139,7 @@ void GameEndSelect::Select()
 		//透明度リセット
 		alpha_base = 1.0f;
 		isUP_alphaChange = false;
-		Audio::PlaySE("SE_Select", 1.0f * Audio::volume_se);
+		Audio::PlaySE("select", 1.0f * Audio::volume_se);
 	}
 }
 
@@ -147,7 +147,7 @@ void GameEndSelect::Decision()
 {
 	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
 	{
-		Audio::PlaySE("SE_Decision", 1.0f * Audio::volume_se);
+		Audio::PlaySE("decision", 1.0f * Audio::volume_se);
 
 		switch (selectState)
 		{

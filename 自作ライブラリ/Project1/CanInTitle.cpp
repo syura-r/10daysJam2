@@ -1,6 +1,7 @@
 #include "CanInTitle.h"
 #include "OBJLoader.h"
 #include "Easing.h"
+#include "Audio.h"
 
 CanInTitle::CanInTitle(
 	const float arg_positionX_first,
@@ -45,6 +46,11 @@ void CanInTitle::FrameIn()
 	{
 		isMoveEnd = true;
 		return;
+	}
+
+	if (easingCount_position == easingCountLimit_position / 5*2)
+	{
+		Audio::PlaySE("can_title", 0.1f * Audio::volume_se);
 	}
 
 	position.y = Easing::EaseOutBounce(positionY_first, positionY_end, easingCountLimit_position, easingCount_position);
