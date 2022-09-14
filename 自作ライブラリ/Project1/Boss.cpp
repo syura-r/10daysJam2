@@ -11,6 +11,8 @@
 #include "CollisionManager.h"
 #include "ParticleEmitter.h"
 #include "InGameCamera.h"
+#include "Player.h"
+
 Boss::Boss()
 {
 	mainModel = FbxLoader::GetInstance()->LoadModelFromFile("Tinpira");
@@ -19,7 +21,7 @@ Boss::Boss()
 	mainModel->AddAnimation("attack", 121, 180);
 	headModel = FBXManager::GetModel("BossHead");
 	bodyModel = FBXManager::GetModel("BossBody");
-	position = { 0,-5,0 };
+	position = { 7,-5,0 };
 	name = typeid(*this).name();
 	scale = 0.3f;
 	rotation.y = -135;
@@ -54,7 +56,10 @@ void Boss::Initialize()
 	earthquake = false;
 	colorChangeCounter = 0;
 	appearCounter = 0;
+	attackCounter = 0;
 	onGround = true;
+	wallHit = false;
+	rightRush = false;
 	//scale = { 0.3f };
 	//rotation.y = -90;
 	prePos = position;
@@ -93,6 +98,10 @@ void Boss::Draw()
 void Boss::DrawReady()
 {
 	pipelineName = "FBX";
+}
+
+void Boss::OnCollision(const CollisionInfo& info)
+{
 }
 
 void Boss::StartApper()
@@ -205,15 +214,17 @@ void Boss::Appear()
 			break;
 		}
 		appearCounter++;
-		if (appearCounter > 20)
+		if (appearCounter > 40)
 		{
-			mainModel->PlayAnimation("walk", true, 3, false);
-			if (appearCounter % 10 == 0)
-			{
-				assert(camera);
-				camera->SetShake(5, 0.05f);
+			actionState = ActionState::attack;
+			attackState = AttackState::rush;
+			//mainModel->PlayAnimation("walk", true, 3, false);
+			//if (appearCounter % 10 == 0)
+			//{
+			//	assert(camera);
+			//	camera->SetShake(5, 0.05f);
 
-			}
+			//}
 		}
 		
 
@@ -227,6 +238,158 @@ void Boss::Appear()
 
 void Boss::Attack()
 {
+	switch (attackState)
+	{
+	case AttackState::rush:
+	{
+		attackCounter++;
+		if (!wallHit)
+		{
+			mainModel->PlayAnimation("walk", true, 3, false);
+			if (attackCounter % 10 == 0)
+			{
+				assert(camera);
+				camera->SetShake(5, 0.03f);
+
+			}
+			if (attackCounter > 90)
+			{
+				if (!rightRush)
+					position.x -= 0.2f;
+				else
+					position.x += 0.2f;
+			}
+		}
+		else
+		{
+
+			onGround = false;
+			if (attackCounter <= 15)
+			{
+				mainModel->PlayAnimation("stand", true, 1, false);
+				rotation.x = Easing::EaseInOutBack(0, -90, 15, attackCounter);
+
+			}
+			if (attackCounter > 135 && attackCounter < 255)
+			{
+				mainModel->PlayAnimation("walk", true, 3, false);
+			}
+			else if (attackCounter >= 255 && attackCounter < 275)
+			{
+				if (attackCounter == 255)
+				{
+					//ジャンプ時上向き初速
+					const float jumpVYFist = 0.08f;
+					//下向き加速
+					fallAcc = -jumpVYFist / 20;
+
+					fallV = { 0,jumpVYFist,0,0 };
+
+				}
+				rotation.x = Easing::EaseInOutBack(-90, 0, 20, attackCounter - 255);
+				if (!rightRush)
+				{
+					rotation.y = Easing::EaseInOutBack(-90, -270 + 45, 20, attackCounter - 255);
+				}
+				else
+				{
+					rotation.y = Easing::EaseInOutBack(-90-180, -135, 20, attackCounter - 255);
+				}
+			}
+			if (attackCounter == 315)
+			{
+				wallHit = false;
+				attackCounter = 0;
+				if (!rightRush)
+				{
+					rightRush = true;
+				}
+				else
+				{
+					attackState = AttackState::jump;
+					rightRush = false;
+				}
+			}
+		}
+		break;
+	}
+	case AttackState::beam:
+	{
+		break;
+	}
+	case AttackState::boomerang:
+	{
+		break;
+	}
+	case AttackState::jump:
+	{
+		const float bigScale = 1.2f;
+		attackCounter++;
+		const int EaingTime = 40;
+		if (attackCounter <= EaingTime)
+		{
+			scale.x = Easing::EaseOutExpo(bigScale, bigScale * 2, EaingTime, attackCounter);
+			scale.z = Easing::EaseOutExpo(bigScale, bigScale * 2, EaingTime, attackCounter);
+			scale.y = Easing::EaseOutExpo(bigScale, bigScale * 0.5f, EaingTime, attackCounter);
+
+		}
+		else if(attackCounter <= EaingTime * 2)
+		{
+			scale.x = Easing::EaseOutExpo(bigScale * 2, bigScale, EaingTime, attackCounter - EaingTime);
+			scale.z = Easing::EaseOutExpo(bigScale * 2, bigScale, EaingTime, attackCounter - EaingTime);
+			scale.y = Easing::EaseOutExpo(bigScale * 0.5f, bigScale, EaingTime, attackCounter - EaingTime);
+
+		}
+		if (attackCounter == EaingTime * 1.5f)
+		{
+			//ジャンプ時上向き初速
+			auto jumpVYFist = 0.5f * 4.0f;
+			//下向き加速
+			fallAcc = -0.02f * 4.0f;
+
+			fallV = { 0,jumpVYFist,0,0 };
+			ParticleEmitter::CreateShock(position + Vector3{ 0, -0.5f, 0 });
+			onGround = false;
+		}
+		if (attackCounter > EaingTime * 2 && attackCounter < EaingTime * 2 + 180)
+		{
+			fallV = {};
+			fallAcc = 0;
+
+			if (attackCounter < EaingTime * 2 + 90)
+				position.x = player->GetPosition().x;
+
+		}
+		if (attackCounter == EaingTime * 2 + 180)
+		{
+			fallAcc = -0.02f * 4.0f;
+			rotation.y = -180;
+			onGround = false;
+		}
+
+		if (attackCounter > EaingTime * 2 + 180)
+		{
+			if (onGround)
+			{
+				attackCounter = 0;
+				if (jumpCounter < 2)
+				{
+					jumpCounter++;
+				}
+				else
+				{
+					attackState = AttackState::beam;
+					rotation.y = -135;
+					jumpCounter = 0;
+				}
+			}
+		}
+		break;
+	}
+
+	default:
+		break;
+	}
 }
 
 void Boss::ChangeColor()
@@ -324,10 +487,14 @@ void Boss::CheckHit()
 	//コライダー更新
 	Object::Update();
 
+
+	float dounDirSize = boxCollider->GetScale().y;
+	if(rotation.x == -90)
+		dounDirSize = boxCollider->GetScale().z;
 	//ボックスの上端から球の下端までのレイキャスト用レイを準備
 	Ray downRay;
 	downRay.start = boxCollider->center;
-	downRay.start.m128_f32[1] += boxCollider->GetScale().y;
+	downRay.start.m128_f32[1] += dounDirSize;
 	downRay.dir = { 0,-1,0,0 };
 	RaycastHit downRayCastHit;
 
@@ -338,10 +505,10 @@ void Boss::CheckHit()
 		const float absDistance = 0.2f;
 		//接地を維持
 		if (CollisionManager::GetInstance()->Raycast(downRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
-			&downRayCastHit, boxCollider->GetScale().y * 2.0f + absDistance))
+			&downRayCastHit, dounDirSize * 2.0f + absDistance))
 		{
 			onGround = true;
-			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
+			position.y -= (downRayCastHit.distance - dounDirSize * 2.0f);
 			//行列更新など
 			Object::Update();
 		}
@@ -354,24 +521,31 @@ void Boss::CheckHit()
 	//落下状態
 	else if (fallV.m128_f32[1] <= 0.0f)
 	{
-		if (CollisionManager::GetInstance()->Raycast(downRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
-			&downRayCastHit, boxCollider->GetScale().y * 2.0f))
+		if (attackState == AttackState::jump && position.y > 0 && actionState == ActionState::attack)
 		{
-			//着地
-			onGround = true;
-			position.y -= (downRayCastHit.distance - boxCollider->GetScale().y * 2.0f);
-			//行列更新など
-			Object::Update();
-			if (appearState == AppearState::earthquake && !earthquake)
-			{
-				earthquake = true;
-				assert(camera);
-				camera->SetShake(20, 0.1f);
-				ParticleEmitter::CreateBossAppearShock(position + Vector3{0,0.65f*scale.y/0.3f,0});
-			}
-			//if (fallV.m128_f32[1] <= fallVYMin + 0.3f)
-			//	ParticleEmitter::CreateJumpDust(position);
 
+		}
+		else
+		{
+			if (CollisionManager::GetInstance()->Raycast(downRay, boxCollider, COLLISION_ATTR_LANDSHAPE,
+				&downRayCastHit, dounDirSize * 2.0f))
+			{
+				//着地
+				onGround = true;
+				position.y -= (downRayCastHit.distance - dounDirSize * 2.0f);
+				//行列更新など
+				Object::Update();
+				if (appearState == AppearState::earthquake && !earthquake)
+				{
+					earthquake = true;
+					assert(camera);
+					camera->SetShake(20, 0.1f);
+					ParticleEmitter::CreateBossAppearShock(position + Vector3{ 0,0.65f * scale.y / 0.3f,0 });
+				}
+				//if (fallV.m128_f32[1] <= fallVYMin + 0.3f)
+				//	ParticleEmitter::CreateJumpDust(position);
+
+			}
 		}
 	}
 	class PlayerQueryCallBack :public QueryCallback
@@ -404,16 +578,34 @@ void Boss::CheckHit()
 	Vector3 rejectVec = callback.move;
 	rejectVec.Normalize();
 	//交差による排斥文を動かす
-	position.x += callback.move.m128_f32[0];
-	position.y += callback.move.m128_f32[1];
-	position.z += callback.move.m128_f32[2];
+	if (attackState == AttackState::jump && position.y > 0 && actionState == ActionState::attack)
+	{
 
-	if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
-		fallV.m128_f32[1] = 0;
+	}
+	else
+	{
+
+		position.x += callback.move.m128_f32[0];
+		position.y += callback.move.m128_f32[1];
+		position.z += callback.move.m128_f32[2];
+
+		if (callback.move.m128_f32[1] < 0 && fallV.m128_f32[1]>0)
+			fallV.m128_f32[1] = 0;
+	}
 	if (abs(callback.move.m128_f32[0]) > 0.01f)
 	{
-		velocity *= -1;
-		rotation.y *= -1;
+		if (attackState == AttackState::rush && actionState == ActionState::attack)
+		{
+			wallHit = true;
+			camera->SetShake(15, 0.3f);
+			attackCounter = 0;
+			if(!rightRush)
+				rotation = { 0,-90,0 };
+			else
+				rotation = { 0,-90 - 180,0 };
+		}
+		//velocity *= -1;
+		//rotation.y *= -1;
 	}
 
 }

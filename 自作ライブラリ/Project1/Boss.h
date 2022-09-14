@@ -1,9 +1,9 @@
 #pragma once
-#include "Object.h"
+#include "BaseEnemy.h"
 class FBXModel;
 class InGameCamera;
 class Boss :
-    public Object
+    public BaseEnemy
 {
 public:
     Boss();
@@ -12,6 +12,7 @@ public:
     void Update()override;
     void Draw()override;
     void DrawReady()override;
+    void OnCollision(const CollisionInfo& info)override;
     void StartApper();
     void StartMagic();
     void EndMagic();
@@ -32,10 +33,15 @@ private:
     XMVECTOR fallV = {};
     int colorChangeCounter;
     int appearCounter;
+    int attackCounter;
+    int jumpCounter = 0;
+    bool wallHit;
+    bool rightRush;
+
     XMFLOAT4 preColor;
     float fallAcc = -0.02f * 0.4f;
     //â∫å¸Ç´â¡ë¨ìxÇÃç≈ëÂíl
-    const float fallVYMin = -0.5f;
+    const float fallVYMin = -0.8f;
 
     InGameCamera* camera = nullptr;
     enum class ActionState
@@ -56,5 +62,15 @@ private:
         earthquake,
     };
     AppearState appearState;
+
+    enum class AttackState
+    {
+        rush,
+        beam,
+        jump,
+        boomerang,
+    };
+    AttackState attackState;
+
 };
 
