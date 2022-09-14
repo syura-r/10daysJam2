@@ -13,9 +13,11 @@ public:
 	void Update();
 	void Draw();
 
-	bool GetActivePause() { return activeFlag; }
+	bool GetActive() { return activeFlag; }
+
 	void SetCanCount(const float arg_canCount);
-	void IsActive(const bool arg_isClear, const float arg_time);
+	void SetTimeCount(const float arg_timeCount);
+	void IsActive(const bool arg_isClear);
 
 	bool GetIsCloseResult() { return isCloseResult; }
 

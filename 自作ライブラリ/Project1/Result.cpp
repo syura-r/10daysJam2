@@ -119,6 +119,9 @@ void Result::Update()
 		isCloseResult = true;
 		activeFlag = false;
 	}
+
+	countDisplyer_can->Update();
+	countDisplyer_time->Update();
 }
 
 void Result::Draw()
@@ -161,7 +164,12 @@ void Result::SetCanCount(const float arg_canCount)
 	countDisplyer_can->count = arg_canCount;
 }
 
-void Result::IsActive(const bool arg_isClear, const float arg_time)
+void Result::SetTimeCount(const float arg_timeCount)
+{
+	countDisplyer_time->count = arg_timeCount;
+}
+
+void Result::IsActive(const bool arg_isClear)
 {
 	if (!activeFlag)
 	{
@@ -170,7 +178,6 @@ void Result::IsActive(const bool arg_isClear, const float arg_time)
 	activeFlag = true;
 
 	isClear = arg_isClear;
-	countDisplyer_time->count = arg_time;
 }
 
 
@@ -194,6 +201,10 @@ void Result::CountDisplayer::Initialize(const float arg_position_y)
 
 void Result::CountDisplayer::Update()
 {
+	if (count < 0.0f)
+	{
+		count = 0.0f;
+	}
 }
 
 void Result::CountDisplayer::Draw(const std::string& arg_baseTexName)

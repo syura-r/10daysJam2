@@ -161,6 +161,8 @@ void Player::Update()
 	Object::Update();
 	cansBar->Update(restJump);//缶の現在数を渡す
 	Result::GetInstance()->SetCanCount(restJump);
+	if (restJump <= 0)//ゲームオーバー
+		Result::GetInstance()->IsActive(false);
 	Object::WorldUpdate(Vector3{ 0,0,rotVel });
 
 	//object->WorldUpdate(Vector3{ 0,0,-rotVel }, NONE);
