@@ -15,8 +15,7 @@ LectureBoard::~LectureBoard()
 
 void LectureBoard::Initialize()
 {
-	position = Sprite3D::GetCamera()->GetTarget();
-
+	position = {0,-3,2};
 	alpha = 1.0f;
 	easingCount = 0;
 
@@ -26,10 +25,10 @@ void LectureBoard::Initialize()
 void LectureBoard::Update()
 {
 	//ï\é¶èIóπÇ÷
-	if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
-	{
-		inputClose = true;
-	}
+	//if (Input::TriggerPadButton(XINPUT_GAMEPAD_A) || Input::TriggerKey(DIK_SPACE))
+	//{
+	//	inputClose = true;
+	//}
 	if (inputClose)
 	{
 		//èôÅXÇ…îñÇ≠
