@@ -29,6 +29,7 @@ public:
 	void Create(Model* model);
 	virtual void Initialize();
 	virtual void Update();
+	void WorldUpdate(const Vector3& rot);
 	virtual void DrawReady();
 	virtual void Draw();
 	void CustomDraw(const bool fbx = false, const bool shade = false, BLENDTYPE type = ALPHA,  const bool customPipeline = false, const int lightRootParameterIndex = 3);

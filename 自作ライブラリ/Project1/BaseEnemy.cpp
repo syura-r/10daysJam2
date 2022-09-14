@@ -18,6 +18,10 @@ void BaseEnemy::OnCollision(const CollisionInfo& info)
 			Audio::PlaySE("trample", 0.1f * Audio::volume_se);
 		}
 	}
+	if (info.collider->GetAttribute() == COLLISION_ATTR_BULLET)
+	{
+		dead = true;
+	}
 }
 
 

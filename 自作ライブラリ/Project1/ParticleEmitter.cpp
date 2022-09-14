@@ -303,6 +303,42 @@ void ParticleEmitter::CreateShock(const Vector3& pos, const Vector3& arg_rotatio
         particleManager->Add(particle, "shock");
     }
 }
+void ParticleEmitter::CreateBossAppearShock(const Vector3& pos)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        Particle* particle = new Particle();
+        particle->vsParam.position = pos;
+
+        particle->vsParam.frame = 0;
+        particle->parameter.num_frame = 15 + 20 * (i % 3);
+
+        particle->vsParam.velocity = { 0,0,0 };
+        particle->parameter.accel = { 0,0,0 };
+
+        particle->parameter.s_rotation = { 0,0,0 };
+        particle->parameter.e_rotation = { 0,0,0 };
+
+
+        particle->vsParam.scale = 1.0f;
+        particle->parameter.s_scale = 1.0f;
+        particle->parameter.e_scale = 16.0f;
+        //üŒ`•âŠÔ
+        particle->vsParam.scaleVel = (particle->parameter.e_scale - particle->parameter.s_scale) / particle->parameter.num_frame;
+
+        particle->vsParam.color = { 1,1,1,1 };
+        particle->parameter.s_color = { 0,0,0 };
+        particle->parameter.e_color = { 0.3f,0.5f,0.5f };
+
+        particle->vsParam.isDead = false;
+
+        particle->parameter.s_alpha = 1.0f;
+        particle->parameter.e_alpha = 0.0f;
+        particle->vsParam.billboardActive = true;
+
+        particleManager->Add(particle, "shock");
+    }
+}
 void ParticleEmitter::CreateGetEffect(const Vector3& pos)
 {
     for (int i = 0; i < 30; i++)

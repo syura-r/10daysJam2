@@ -282,7 +282,7 @@ void CollisionManager::CheckAllCollisions()
 	//}
 }
 
-bool CollisionManager::CheckHitBox(const Box& box, unsigned short attribute)
+bool CollisionManager::CheckHitBox(const Box& box, unsigned short attribute,BaseCollider* collider)
 {
 	std::forward_list<BaseCollider*>::iterator it;
 	it = colliders.begin();
@@ -300,6 +300,8 @@ bool CollisionManager::CheckHitBox(const Box& box, unsigned short attribute)
 
 			if (Collision::CheckOBBOBB(box, *boxB))
 			{
+				if (collider)
+					col->OnCollision(CollisionInfo(collider->GetObject3D(), collider, {}));
 				return true;
 			}
 		}

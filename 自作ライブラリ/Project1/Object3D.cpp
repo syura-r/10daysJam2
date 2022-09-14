@@ -138,15 +138,18 @@ void Object3D::WorldUpdate(const Vector3& rot,const BILLBOARD_TYPE billboardType
 	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
 	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 
-	appendRot *= XMMatrixRotationAxis(camMatWorld.r[2], rot.z);
-	appendRot *= XMMatrixRotationAxis(camMatWorld.r[0], rot.x);
-	appendRot *= XMMatrixRotationAxis(camMatWorld.r[1], rot.y);
+	appendRot *= XMMatrixRotationAxis(camMatWorld.r[2], XMConvertToRadians(rot.z));
+	appendRot *= XMMatrixRotationAxis(camMatWorld.r[0], XMConvertToRadians(rot.x));
+	appendRot *= XMMatrixRotationAxis(camMatWorld.r[1], XMConvertToRadians(rot.y));
 
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	//ÉèÅ[ÉãÉhçsóÒÇÃçáê¨
 	matWorld = XMMatrixIdentity();
 	matWorld *= matScale;
+	matWorld *= matRot;
+	matWorld *= appendRot;
+
 	//XMMATRIX matRot2 = XMMatrixIdentity();
 	//matRot2 *= XMMatrixRotationY(XMConvertToRadians(90));
 	//matWorld *= matRot2;

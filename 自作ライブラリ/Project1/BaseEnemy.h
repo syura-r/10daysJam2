@@ -15,7 +15,7 @@ public:
     }
 protected:
   static  Player* player;
-  FBXModel* myModel = nullptr;
+  FBXModel* myModel;
   Vector3 StartPos;
 };
 

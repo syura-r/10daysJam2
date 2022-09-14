@@ -54,16 +54,19 @@ void Crow::Update()
 	if (moveCounter <= 180 / mmoveVel)
 	{
 		position.x -= 0.1f * mmoveVel;
+		myModel->PlayAnimation("move", true, 1, true);
 	}
 	else if (moveCounter <= 210 / mmoveVel)
 	{
 		position.x -= 0.035f* mmoveVel;
 		position.z -= 0.035f* mmoveVel;
+		myModel->PlayAnimation("stop", true, 1, true);
 	}
 	else if (moveCounter <= 240 / mmoveVel)
 	{
 		position.x += 0.035f * mmoveVel;
 		position.z -= 0.035f * mmoveVel;
+		myModel->PlayAnimation("stop", true, 1, true);
 		if (moveCounter == (int)(240 / mmoveVel))
 		{
 			velocity.z = -0.035f * mmoveVel;
@@ -74,17 +77,20 @@ void Crow::Update()
 		position.x += 0.1f * mmoveVel;
 		position.z += velocity.z * mmoveVel;
 		velocity.z += 0.035f / 65 * mmoveVel;
+		myModel->PlayAnimation("move", true, 1, true);
 	}
 	else if (moveCounter <= 370 / mmoveVel)
 	{
 		position.x += 0.1f * mmoveVel;
 		position.z += velocity.z * mmoveVel;
 		velocity.z += 0.035f / 65 * mmoveVel;
+		myModel->PlayAnimation("move", true, 1, true);
 	}
 	else if (moveCounter <= 400 / mmoveVel)
 	{
 		position.x += 0.035f * mmoveVel;
 		position.z += 0.035f * mmoveVel;
+		myModel->PlayAnimation("stop", true, 1, true);
 		if (moveCounter == (int)(400 / mmoveVel))
 		{
 			targetPosY = player->GetPosition().y;
@@ -96,16 +102,19 @@ void Crow::Update()
 	{
 		position.y = Easing::EaseInOutSine(StartPos.y,targetPosY, 60 / mmoveVel,moveCounter - 400 / mmoveVel);
 		position.z += velocity.z * mmoveVel;
+		myModel->PlayAnimation("stop", true, 1, true);
 	}
 	else if (moveCounter <= 640 / mmoveVel)
 	{
 		position.x -= attackVel;
+		myModel->PlayAnimation("move", true, 1, true);
 	}
 	else 
 	{
 		velocity.y += 0.01f * mmoveVel;
 		position.x -= 0.1f * mmoveVel;
 		position.y += velocity.y * mmoveVel;
+		myModel->PlayAnimation("move", true, 1, true);
 		if (position.y > 1)
 			dead = true;
 	}

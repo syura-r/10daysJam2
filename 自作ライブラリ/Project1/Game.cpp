@@ -106,6 +106,9 @@ void Game::RoadAsset()
 
 		Texture::LoadTexture("button_a", "button_a.png");
 
+		Texture::LoadTexture("AuxiliaryLines", "AuxiliaryLines.png");
+
+		
 		break; 
 	case 2:
 		//Objモデルの読み込み
@@ -122,11 +125,15 @@ void Game::RoadAsset()
 		break;
 	case 4:
 		//FBXファイルの読み込み
-		FBXManager::LoadModelFile("player", "VendingMachineTex", false);
+		FBXManager::LoadModelFile("player", "VendingMachine", false);
 		FBXManager::LoadModelFile("badGuy", "Tinpira", false);
 		FBXManager::LoadModelFile("crow", "crow", false);
 		FBXManager::LoadModelFile("Veranda", "Veranda", false);
 		FBXManager::LoadModelFile("Apartment", "Apartment", false);
+		FBXManager::LoadModelFile("can", "can", false);
+		FBXManager::LoadModelFile("Chara", "Chara", false);
+		FBXManager::LoadModelFile("BossHead", "Tinpira_Head", false);
+		FBXManager::LoadModelFile("BossBody", "Tinpira_Body", false);
 
 
 
@@ -147,7 +154,18 @@ void Game::RoadAsset()
 		break;
 	case 5:
 		//FBXアニメーションの登録
-		//FBXManager::AddAnimationList("player", "walk",0,60);
+		FBXManager::AddAnimationList("player", "stand", 0, 0);
+		FBXManager::AddAnimationList("player", "jump",1,30);
+		FBXManager::AddAnimationList("player", "onGraund", 31, 60);
+		FBXManager::AddAnimationList("crow", "stop", 0, 0);
+		FBXManager::AddAnimationList("crow", "move", 1, 60);
+		FBXManager::AddAnimationList("badGuy", "stand", 0, 0);
+		FBXManager::AddAnimationList("badGuy", "walk", 1, 120);
+		FBXManager::AddAnimationList("badGuy", "attack", 121, 180);
+		FBXManager::AddAnimationList("Chara", "1", 0, 0);
+		FBXManager::AddAnimationList("Chara", "2", 3, 3);
+		FBXManager::AddAnimationList("Chara", "3", 61, 61);
+
 		break;
 	default:
 		loadAssetFinish = true;

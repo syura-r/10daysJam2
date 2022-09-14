@@ -144,7 +144,7 @@ void Sprite3D::DrawSprite(const std::string& name, const Vector3& position, cons
 		matScale = XMMatrixScaling(scale.x * width, scale.y * height, 1);
 	}
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(spriteRotation));
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	//ÉèÅ[ÉãÉhçsóÒÇÃçáê¨
