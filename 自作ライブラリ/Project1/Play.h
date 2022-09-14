@@ -11,9 +11,7 @@
 #include "Player.h"
 #include "Sprite.h"
 #include "Pause.h"
-#include "Result.h"
 #include "InGameTimer.h"
-#include "StockCansBar.h"
 #include "GameEndSelect.h"
 
 class Play :public Scene
@@ -39,7 +37,6 @@ private:
 	std::unique_ptr<InGameCamera> camera;
 	
 	Pause* pause = nullptr;
-	Result* result = nullptr;
 	InGameTimer* inGameTimer = nullptr;
 	GameEndSelect* gameEndSelect = nullptr;
 

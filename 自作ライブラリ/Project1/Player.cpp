@@ -20,7 +20,7 @@
 #include "FallCan.h"
 #include "ShotCan.h"
 #include "Sprite3D.h"
-
+#include "Result.h"
 
 Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 {
@@ -166,6 +166,7 @@ void Player::Update()
 	Damage();
 	Object::Update();
 	cansBar->Update(restJump);//ŠÊ‚ÌŒ»Ý”‚ð“n‚·
+	Result::GetInstance()->SetCanCount(restJump);
 	Object::WorldUpdate(Vector3{ 0,0,rotVel });
 
 	//object->WorldUpdate(Vector3{ 0,0,-rotVel }, NONE);

@@ -19,6 +19,7 @@
 #include "PtrDelete.h"
 #include "ScreenCamera.h"
 #include "InGameCamera.h"
+#include "Result.h"
 
 #include"AreaEffect.h"
 #include"Sprite3D.h"
@@ -54,7 +55,7 @@ Play::Play()
 	objectManager->AddObjectsAtOnce();
 
 	pause = new Pause();
-	result = new Result();
+	Result::GetInstance();
 	inGameTimer = new InGameTimer();
 	gameEndSelect = new GameEndSelect();
 
@@ -66,7 +67,7 @@ Play::~Play()
 {
 	LevelEditor::GetInstance()->Clear();
 	PtrDelete(pause);
-	PtrDelete(result);
+	Result::GetInstance()->Finalize();
 	PtrDelete(inGameTimer);
 	PtrDelete(gameEndSelect);
 	ParticleManager::GetInstance()->ClearDeadEffect();
@@ -125,7 +126,7 @@ void Play::Initialize()
 	isAllEnd = false;
 
 	pause->Initialize();
-	result->Initialize();
+	Result::GetInstance()->Initialize();
 	inGameTimer->Initialize();
 	gameEndSelect->Initialize();
 
@@ -142,11 +143,12 @@ void Play::Initialize()
 
 void Play::Update()
 {
+	Result* result = Result::GetInstance();
 	//リザルト開始
 	if (Input::TriggerKey(DIK_R))
 	{
 		Audio::StopBGM(nowPlayingBGMName);
-		result->IsActive(true, 80, inGameTimer->GetRealTime());//「クリアしたのか」と「缶の残り数」と「経過時間」
+		result->IsActive(true, inGameTimer->GetRealTime());//「クリアしたのか」と「経過時間」
 	}
 	result->Update();
 	//リザルトを閉じる
@@ -276,7 +278,7 @@ void Play::PostDraw()
 	}
 
 	pause->Draw();
-	result->Draw();
+	Result::GetInstance()->Draw();
 	gameEndSelect->Draw();
 }
 

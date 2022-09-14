@@ -6,20 +6,25 @@
 class Result
 {
 public:
-	Result();
-	~Result();
+	static Result* GetInstance();
+	void Finalize();
 
 	void Initialize();
 	void Update();
 	void Draw();
 
 	bool GetActivePause() { return activeFlag; }
-	void IsActive(const bool arg_isClear, const float arg_canCount, const float arg_time);
+	void SetCanCount(const float arg_canCount);
+	void IsActive(const bool arg_isClear, const float arg_time);
 
 	bool GetIsCloseResult() { return isCloseResult; }
 
 private:
 	//
+	Result();
+	~Result();
+	static Result* instance;
+
 	bool activeFlag = false;
 
 	//ÉQÅ[ÉÄâÊñ Çà√Ç≠

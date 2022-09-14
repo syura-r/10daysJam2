@@ -3,6 +3,8 @@
 #include "Easing.h"
 #include "Audio.h"
 
+Result* Result::instance = nullptr;
+
 Result::Result()
 {
 	sp_back = new Sprite();
@@ -22,6 +24,18 @@ Result::~Result()
 	delete countDisplyer_time;
 	delete sprite_clear;
 	delete button;
+}
+
+Result* Result::GetInstance()
+{
+	if (instance == nullptr)
+		instance = new Result();
+	return instance;
+}
+
+void Result::Finalize()
+{
+	delete instance;
 }
 
 void Result::Initialize()
@@ -142,7 +156,12 @@ void Result::Draw()
 	}
 }
 
-void Result::IsActive(const bool arg_isClear, const float arg_canCount, const float arg_time)
+void Result::SetCanCount(const float arg_canCount)
+{
+	countDisplyer_can->count = arg_canCount;
+}
+
+void Result::IsActive(const bool arg_isClear, const float arg_time)
 {
 	if (!activeFlag)
 	{
@@ -151,7 +170,6 @@ void Result::IsActive(const bool arg_isClear, const float arg_canCount, const fl
 	activeFlag = true;
 
 	isClear = arg_isClear;
-	countDisplyer_can->count = arg_canCount;
 	countDisplyer_time->count = arg_time;
 }
 
