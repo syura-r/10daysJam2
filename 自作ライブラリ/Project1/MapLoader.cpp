@@ -6,6 +6,7 @@
 #include "MapBox.h"
 #include "BadGuy.h"
 #include "Veranda.h"
+#include "Goal.h"
 void MapLoader::LoadMap(const std::string& mapName)
 {
 	std::string filepath = "Resources/Map/" +mapName + ".txt";
@@ -46,19 +47,24 @@ void MapLoader::LoadMap(const std::string& mapName)
 				objectManager->Add(veranda);
 				break;
 			}
-			//case 2:
-			//{
-			//	BadGuy* badGuy = new BadGuy(CreatePos);
-			//	objectManager->Add(badGuy);
-			//	break;
-			//}
+			case 2:
+			{
+				BadGuy* badGuy = new BadGuy(CreatePos);
+				objectManager->Add(badGuy);
+				break;
+			}
 			case 3:
 			{
 				MapBox* mapBox = new MapBox(CreatePos);
 				objectManager->Add(mapBox);
 				break;
 			}
-
+			case 4:
+			{
+				Goal* goal = new Goal(CreatePos);
+				objectManager->Add(goal);
+				break;
+			}
 			default:
 				break;
 			}

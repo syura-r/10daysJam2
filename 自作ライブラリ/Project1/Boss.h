@@ -46,7 +46,7 @@ private:
     int damageCounter = 0;
     bool wallHit;
     bool rightRush;
-    const float StartPosX = 10;
+    const float StartPosX = 82;
     XMFLOAT4 preColor;
     float fallAcc = -0.02f * 0.4f;
     //‰ºŒü‚«‰Á‘¬“x‚ÌÅ‘å’l

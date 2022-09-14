@@ -16,6 +16,7 @@
 #include "HitPointBar.h"
 #include "BossCrow.h"
 #include "BossHead.h"
+#include "BossBattleBlock.h"
 
 #include "Audio.h"
 Boss::Boss()
@@ -43,7 +44,7 @@ Boss::Boss()
 	hpBar = new HitPointBar();
 	Initialize();
 	Object::Update();
-	actionState = ActionState::appear;
+	actionState = ActionState::await;
 	colorChangeCounter = 0;
 	appearCounter = 0;
 	camera = dynamic_cast<InGameCamera*>(Object3D::GetCamera());
@@ -65,7 +66,6 @@ Boss::Boss()
 	rotationFactor = 0.79f;
 	tessellation = 1;
 	onEasing = false;
-	StartApper();
 }
 
 Boss::~Boss()
@@ -81,7 +81,7 @@ void Boss::Initialize()
 	drawFlash = false;
 	flashAlpha = 0;
 	flashCounter = 0;
-	actionState = ActionState::appear;
+	actionState = ActionState::await;
 	appearState = AppearState::masgic;
 	magic = false;
 	earthquake = false;
@@ -99,14 +99,15 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
-	if (Input::TriggerKey(DIK_0))
-	{
-		actionState = ActionState::death;
-		drawFlash = true;
-	}
+	
 	switch (actionState)
 	{
 	case ActionState::await:
+		if (player->GetFightBoss())
+		{
+			actionState = ActionState::appear;
+			StartApper();
+		}
 		break;
 	case ActionState::appear:
 		Appear();
@@ -163,11 +164,11 @@ void Boss::DrawReady()
 
 
 	constBuff->Unmap(0, nullptr);
-	if(!breakModelDraw)
-	pipelineName = "FBX";
+	if (!breakModelDraw)
+		pipelineName = "FBX";
 	else
 		pipelineName = "FBXPolygonBreak";
-
+	if(player->GetFightBoss())
 	hpBar->Draw_boss();
 
 }
@@ -322,6 +323,7 @@ void Boss::Appear()
 		appearCounter++;
 		if (appearCounter > 40)
 		{
+			player->CanOperate();
 			actionState = ActionState::attack;
 			attackState = AttackState::boomerang;
 			//mainModel->PlayAnimation("walk", true, 3, false);
@@ -700,6 +702,13 @@ void Boss::CheckHit()
 				Object::Update();
 				if (appearState == AppearState::earthquake && !earthquake)
 				{
+					for (int i = 0; i < 13; i++)
+					{
+						ObjectManager::GetInstance()->Add(new BossBattleBlock({ 65.0f,-7.0f + i,0 }, this));
+						ObjectManager::GetInstance()->Add(new BossBattleBlock({ 85.0f,-7.0f + i,0 }, this));
+
+
+					}
 					earthquake = true;
 					assert(camera);
 					camera->SetShake(20, 0.1f);

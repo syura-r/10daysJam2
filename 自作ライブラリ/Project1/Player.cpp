@@ -21,6 +21,7 @@
 #include "ShotCan.h"
 #include "Sprite3D.h"
 #include "Result.h"
+#include "InGameCamera.h"
 
 Player::Player(const Vector3& arg_pos):StartPos(arg_pos)
 {
@@ -66,7 +67,7 @@ void Player::Initialize()
 	changeOnGroundScale = false;
 	changeJumpScale = false;
 	changeScaleCounter = 0;
-	goal = false;
+	bossFightReady = false;
 	cansBar->Initialize(MaxJumpCount);//缶の初期数を渡す
 	restJump = MaxJumpCount;
 	rotVel = 0;
@@ -92,7 +93,7 @@ void Player::Update()
 	{
 		//rotation.x +=3.0f;
 		//ノックバック時は移動できない
-		if (!knockBack && !stumble && canOperate)
+		if (!knockBack && !stumble && canOperate &&!bossFightReady)
 		{
 			if (Input::DownKey(DIK_D) || Input::CheckPadLStickRight())
 			{
@@ -161,10 +162,21 @@ void Player::Update()
 	//	myModel->PlayAnimation("stand", true, 1, true);
 	//}
 	position += velocity;
+	BossFightReady();
 	ShotMove();
 	JumpScaleCluc();
 	KnockBack();
 	StumbleCluc();
+	if (fightBoss)
+	{
+		if (position.x < 66)
+			position.x = 66;
+		else if (position.x > 84)
+			position.x = 84;
+		if (position.y > 4)
+			position.y = 4;
+		Object::Update();
+	}
 	CheckHit();
 	Damage();
 	Object::Update();
@@ -398,7 +410,7 @@ void Player::CheckHit()
 
 	if (CollisionManager::GetInstance()->CheckHitBox(*boxCollider, COLLISION_ATTR_GOAL))
 	{
-		goal = true;
+		bossFightReady = true;
 	}
 
 	//クエリーコールバックの関数オブジェクト
@@ -682,6 +694,24 @@ void Player::RotCluc()
 	//Vector2 nowDirVec2 = { nowDir.x,nowDir.y };
 	//float alpha = XMConvertToDegrees(acosf(Vector2::Dot(inputDir, nowDirVec2)));
 	//rotVel = alpha;
+}
+
+void Player::BossFightReady()
+{
+	if (!bossFightReady) return;
+
+	if (!onGround)
+		position.x += 0.1f;
+
+	if (position.x > 75)
+	{
+		bossFightReady = false;
+		fightBoss = true;
+		canOperate = false;
+		auto camera = dynamic_cast<InGameCamera*>(Object3D::GetCamera());
+		camera->SetFocusObject(nullptr);
+	}
+
 }
 
 

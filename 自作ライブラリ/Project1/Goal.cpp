@@ -10,8 +10,6 @@ Goal::Goal(const Vector3& position, const Vector3& scale)
 
 	name = typeid(*this).name();
 
-	color = { 1,1,0,0.3f };
-
 	Create(OBJLoader::GetModel("box"));
 	//コライダーの追加
 	BoxCollider* collider = new BoxCollider;

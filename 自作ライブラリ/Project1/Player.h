@@ -24,10 +24,11 @@ public:
 	void Update()override;
 	void Draw() override;
 	void DrawReady() override;
-	bool GetGoal() { return goal; }
+	bool GetGoal() { return bossFightReady; }
 	void EndPosition();
 	void BossDead() {};
 	void CanOperate() { canOperate = true; }
+	bool GetFightBoss() { return fightBoss; }
 private:
 	void CheckHit();
 	void JumpScaleCluc();
@@ -37,6 +38,7 @@ private:
 	void Shot();
 	void ShotMove();
 	void RotCluc();
+	void BossFightReady();
 	//ジャンプ補正値の最小値
 	const float MinVal = 0.4f;
 	//ジャンプ補正値の最大値
@@ -70,7 +72,9 @@ private:
 
 	bool canOperate = true;
 
-	const Vector3 EndPos = { 0,-7,0 };
+	bool fightBoss = false;
+
+	const Vector3 EndPos = { 69,-7,0 };
 	//発射角度
 	Vector3 shotDir;
 	bool shotMoveFlag;
@@ -82,7 +86,7 @@ private:
 	bool a = false;
 	bool downKeyFrame = false;
 
-	bool goal;
+	bool bossFightReady;
 
 	bool cannotMoveRot;
 

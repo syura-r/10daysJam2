@@ -178,6 +178,7 @@
     <ClCompile Include="BadGuy.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossBattleBlock.cpp" />
     <ClCompile Include="BossCrow.cpp" />
     <ClCompile Include="BossHair.cpp" />
     <ClCompile Include="BossHead.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossBattleBlock.h" />
     <ClInclude Include="BossCrow.h" />
     <ClInclude Include="BossHair.h" />
     <ClInclude Include="BossHead.h" />
