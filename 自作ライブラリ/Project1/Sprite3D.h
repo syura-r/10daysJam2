@@ -27,6 +27,7 @@ public:
 	{
 		Sprite3D::camera = camera;
 	}
+	inline static Camera* GetCamera() { return Sprite3D::camera; }
 	//親スプライトをセット
 	void SetParent(Sprite3D* parent) { this->parent = parent; }
 protected:

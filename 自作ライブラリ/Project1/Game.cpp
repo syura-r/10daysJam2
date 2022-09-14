@@ -109,6 +109,9 @@ void Game::RoadAsset()
 		Texture::LoadTexture("AuxiliaryLines", "AuxiliaryLines.png");
 		Texture::LoadTexture("starEffect", "starEffect.png");
 
+		Texture::LoadTexture("lecture_key", "lecture/lecture1.png");
+		Texture::LoadTexture("lecture_pad", "lecture/lecture2.png");
+
 		
 		break; 
 	case 2:

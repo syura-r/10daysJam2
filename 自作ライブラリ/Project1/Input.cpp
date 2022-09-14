@@ -22,6 +22,7 @@ XINPUT_STATE Input::padState = {};
 XINPUT_STATE Input::prevPadState = {};
 XINPUT_VIBRATION Input::vibration = {};
 int Input::time = 0;
+DWORD Input::padConnect = {};
 
 int Input::screenHeight = 0;
 int Input::screenWidth = 0;
@@ -266,6 +267,8 @@ void Input::Update()
 		vibration.wRightMotorSpeed = 0;
 	}
 	XInputSetState(0, &vibration);
+	//ì¸óÕèÛë‘ÇéÊìæ
+	padConnect = XInputGetState(0, &padState);
 }
 
 bool Input::TriggerKey(BYTE keyCode)
@@ -438,4 +441,9 @@ bool Input::DownWASD()
 bool Input::DownArrow()
 {
 	return DownKey(DIK_RIGHT) || DownKey(DIK_LEFT) || DownKey(DIK_UP) || DownKey(DIK_DOWN);
+}
+
+int Input::GetPadConnect()
+{
+	return padConnect == ERROR_SUCCESS /*&& padConnect != ERROR_DEVICE_NOT_CONNECTED*/;
 }

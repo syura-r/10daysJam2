@@ -13,6 +13,7 @@
 #include "Pause.h"
 #include "InGameTimer.h"
 #include "GameEndSelect.h"
+#include "LectureBoard.h"
 
 class Play :public Scene
 {
@@ -39,6 +40,7 @@ private:
 	Pause* pause = nullptr;
 	InGameTimer* inGameTimer = nullptr;
 	GameEndSelect* gameEndSelect = nullptr;
+	LectureBoard* lecture = nullptr;
 
 	std::string nowPlayingBGMName;
 };

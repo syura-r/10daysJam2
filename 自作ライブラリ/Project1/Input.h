@@ -116,6 +116,9 @@ public:
 	static bool DownWASD();
 	static bool DownArrow();
 
+	//ゲームパッドの接続状況
+	static int GetPadConnect();
+
 private:
 	static ComPtr<IDirectInputDevice8> devkeyboard;
 	static ComPtr<IDirectInputDevice8> devPad;
@@ -133,6 +136,7 @@ private:
 	static XINPUT_STATE prevPadState;
 	static XINPUT_VIBRATION vibration;
 	static int time;
+	static DWORD padConnect;//ゲームパッド接続状況
 
 	static int screenWidth;
 	static int screenHeight;
