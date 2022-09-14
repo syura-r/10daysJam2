@@ -58,6 +58,7 @@ Play::Play()
 	Result::GetInstance();
 	inGameTimer = new InGameTimer();
 	gameEndSelect = new GameEndSelect();
+	lecture = new LectureBoard();
 
 	ParticleEmitter::SetObjectManager(objectManager);
 }
@@ -70,6 +71,7 @@ Play::~Play()
 	Result::GetInstance()->Finalize();
 	PtrDelete(inGameTimer);
 	PtrDelete(gameEndSelect);
+	PtrDelete(lecture);
 	ParticleManager::GetInstance()->ClearDeadEffect();
 }
 
@@ -105,6 +107,7 @@ void Play::Initialize()
 	Result::GetInstance()->Initialize();
 	inGameTimer->Initialize();
 	gameEndSelect->Initialize();
+	lecture->Initialize();
 
 	nowPlayingBGMName = "play";
 	Audio::StopBGM(nowPlayingBGMName);
@@ -211,6 +214,8 @@ void Play::Update()
 	inGameTimer->Update();
 	result->SetTimeCount(inGameTimer->GetRealTime());
 
+	lecture->Update();
+
 	lightGroup->SetAmbientColor(XMFLOAT3(coloramb));
 	lightGroup->SetDirLightDir(0, { lightDir[0],lightDir[1],lightDir[2],1 });
 	lightGroup->Update();
@@ -241,6 +246,7 @@ void Play::PreDraw()
 		LevelEditor::GetInstance()->Draw();
 	}
 #endif
+		lecture->Draw();
 		objectManager->PreDraw();
 		AreaEffect::AreaEffectsDraw();
 		ParticleManager::GetInstance()->DrawDeadEffect();

@@ -112,6 +112,10 @@ void Game::RoadAsset()
 		Texture::LoadTexture("CharaTex2", "CharaTex2.png");
 		Texture::LoadTexture("CharaTex3", "CharaTex3.png");
 
+		Texture::LoadTexture("lecture_key", "lecture/lecture1.png");
+		Texture::LoadTexture("lecture_pad", "lecture/lecture2.png");
+
+		
 		break; 
 	case 2:
 		//Objƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ

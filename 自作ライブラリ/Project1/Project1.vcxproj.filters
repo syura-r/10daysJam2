@@ -432,6 +432,9 @@
     <ClCompile Include="BossBattleBlock.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="LectureBoard.cpp">
+      <Filter>ソース ファイル\GameText</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create3DObject.h">
@@ -772,6 +775,9 @@
     </ClInclude>
     <ClInclude Include="BossBattleBlock.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LectureBoard.h">
+      <Filter>ヘッダー ファイル\GameText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
