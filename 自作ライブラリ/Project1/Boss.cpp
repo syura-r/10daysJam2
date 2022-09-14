@@ -186,7 +186,7 @@ void Boss::OnCollision(const CollisionInfo& info)
 			hp -= DamageVal;
 			damage = true;
 			color.w = 0;
-
+			Audio::PlaySE("trample", 0.4f * Audio::volume_se);
 		}
 	}
 	if (info.collider->GetAttribute() == COLLISION_ATTR_BULLET)
@@ -194,6 +194,7 @@ void Boss::OnCollision(const CollisionInfo& info)
 		hp -= DamageVal;
 		damage = true;
 		color.w = 0;
+		Audio::PlaySE("trample", 0.4f * Audio::volume_se);
 	}
 
 	if (hp <= 0)
@@ -355,6 +356,7 @@ void Boss::Attack()
 			{
 				assert(camera);
 				camera->SetShake(5, 0.03f);
+				Audio::PlaySE("footsteps", 0.25f * Audio::volume_se);
 
 			}
 			if (attackCounter > 90)
@@ -432,6 +434,7 @@ void Boss::Attack()
 			{
 				assert(camera);
 				camera->SetShake(5, 0.03f);
+				Audio::PlaySE("footsteps", 0.25f * Audio::volume_se);
 
 			}
 		}
@@ -527,6 +530,7 @@ void Boss::Attack()
 			{
 				attackCounter = 0;
 				camera->SetShake(20, 0.3f);
+				Audio::PlaySE("earthquake", 0.4f * Audio::volume_se);
 				if (jumpCounter < 3)
 				{
 					jumpCounter++;
@@ -699,6 +703,7 @@ void Boss::CheckHit()
 					earthquake = true;
 					assert(camera);
 					camera->SetShake(20, 0.1f);
+					Audio::PlaySE("earthquake", 0.4f * Audio::volume_se);
 					ParticleEmitter::CreateBossAppearShock(position + Vector3{ 0,0.65f * scale.y / 0.3f,0 });
 				}
 				//if (fallV.m128_f32[1] <= fallVYMin + 0.3f)
@@ -755,6 +760,7 @@ void Boss::CheckHit()
 	{
 		if (attackState == AttackState::rush && actionState == ActionState::attack)
 		{
+			Audio::PlaySE("earthquake", 0.4f * Audio::volume_se);
 			wallHit = true;
 			camera->SetShake(15, 0.3f);
 			attackCounter = 0;

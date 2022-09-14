@@ -159,6 +159,9 @@ void Game::RoadAsset()
 		Audio::LoadFile("trample", "SE/trample.wav");
 		Audio::LoadFile("damage", "SE/playerdamage.wav");
 		Audio::LoadFile("Boss_dead", "SE/dead.wav");
+		Audio::LoadFile("boomerang", "SE/boomerang.wav");
+		Audio::LoadFile("earthquake", "SE/earthquake.wav");
+		Audio::LoadFile("footsteps", "SE/footsteps.wav");
 
 		break;
 	case 5:

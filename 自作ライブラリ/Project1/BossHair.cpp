@@ -2,6 +2,7 @@
 #include "FBXManager.h"
 #include "BoxCollider.h"
 #include "CollisionAttribute.h"
+#include "Audio.h"
 
 BossHair::BossHair(const Vector3& pos, const int arg_deadTime)
 {
@@ -25,6 +26,7 @@ BossHair::BossHair(const Vector3& pos, const int arg_deadTime)
 }
 void BossHair::Update()
 {
+	Audio::PlaySE("boomerang", 0.1f * Audio::volume_se,true);
 	rotation.z += rotVel;
 	position += velocity;
 	velocity += aceel;
